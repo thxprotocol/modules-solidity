@@ -2,15 +2,15 @@
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
 
-import "../TMP/TMP7/IWithdrawPollProxy.sol";
+import "../TMP/TMP8/IRewardPollProxy.sol";
 import "../TMP/TMP6/LibBasePollStorage.sol";
 
 import "../TMP/RelayReceiver.sol";
 
-contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
-    function withdrawPollVote(uint256 _id, bool _agree) external override {
+contract RewardPollProxy is IRewardPollProxy, RelayReceiver {
+    function rewardPollVote(uint256 _id, bool _agree) external override {
         bytes32 position = LibBasePollStorage.getPosition(_id);
-        bytes4 sig = bytes4(keccak256("_withdrawPollVote(bool)"));
+        bytes4 sig = bytes4(keccak256("_rewardPollVote(bool)"));
         bytes memory _call = abi.encodeWithSelector(sig, _agree);
 
         (bool success, bytes memory data) = address(this).call(
@@ -19,9 +19,9 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         require(success, string(data));
     }
 
-    function withdrawPollRevokeVote(uint256 _id) external override {
+    function rewardPollRevokeVote(uint256 _id) external override {
         bytes32 position = LibBasePollStorage.getPosition(_id);
-        bytes4 sig = bytes4(keccak256("_withdrawPollRevokeVote()"));
+        bytes4 sig = bytes4(keccak256("_rewardPollRevokeVote()"));
         bytes memory _call = abi.encodeWithSelector(sig);
 
         (bool success, bytes memory data) = address(this).call(
@@ -30,9 +30,9 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         require(success, string(data));
     }
 
-    function withdrawPollFinalize(uint256 _id) external override {
+    function rewardPollFinalize(uint256 _id) external override {
         bytes32 position = LibBasePollStorage.getPosition(_id);
-        bytes4 sig = bytes4(keccak256("_withdrawPollFinalize()"));
+        bytes4 sig = bytes4(keccak256("_rewardPollFinalize()"));
         bytes memory _call = abi.encodeWithSelector(sig);
 
         (bool success, bytes memory data) = address(this).call(
@@ -41,14 +41,14 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         require(success, string(data));
     }
 
-    function withdrawPollApprovalState(uint256 _id)
+    function rewardPollApprovalState(uint256 _id)
         external
         override
         view
         returns (bool)
     {
         bytes32 position = LibBasePollStorage.getPosition(_id);
-        bytes4 sig = bytes4(keccak256("_withdrawPollApprovalState()"));
+        bytes4 sig = bytes4(keccak256("_rewardPollApprovalState()"));
         bytes memory _call = abi.encodeWithSelector(sig);
 
         (bool success, bytes memory data) = address(this).staticcall(
