@@ -11,6 +11,8 @@ interface IReward {
 
     function setRewardPollDuration(uint256 _duration) external;
 
+    function getRewardPollDuration() external view returns (uint256);
+
     function addReward(uint256 _withdrawAmount, uint256 _withdrawDuration)
         external;
 

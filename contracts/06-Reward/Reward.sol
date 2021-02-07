@@ -14,7 +14,7 @@ import "../TMP/TMP7/IWithdrawEvents.sol";
 import "../util/BasePoll.sol"; // TMP1, TMP 6
 import "../TMP/TMP6/LibBasePollStorage.sol";
 
-contract Withdraw is Access, IReward, IWithdrawEvents {
+contract Reward is Access, IReward, IWithdrawEvents {
     uint256 constant ENABLE_REWARD = 2**250;
     uint256 constant DISABLE_REWARD = 2**251;
 
@@ -22,6 +22,10 @@ contract Withdraw is Access, IReward, IWithdrawEvents {
         uint256 _duration // todo onlymanager
     ) external override {
         LibRewardPollStorage.rewardStorage().rewardPollDuration = _duration;
+    }
+
+    function getRewardPollDuration() external override view returns (uint256) {
+        return LibRewardPollStorage.rewardStorage().rewardPollDuration;
     }
 
     function addReward(uint256 _withdrawAmount, uint256 _withdrawDuration)

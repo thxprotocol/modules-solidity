@@ -9,5 +9,5 @@ interface IWithdraw {
 
     function setProposeWithdrawPollDuration(uint256 _duration) external;
 
-    function getProposeWithdrawPollDuration() external returns (uint256);
+    function getProposeWithdrawPollDuration() external view returns (uint256);
 }

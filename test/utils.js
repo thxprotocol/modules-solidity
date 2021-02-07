@@ -10,6 +10,11 @@ module.exports = {
     solution = await ethers.getContractAt("IDefaultDiamond", address);
     return solution;
   },
+  events: async (tx) => {
+    tx = await tx;
+    tx = await tx.wait();
+    return tx.events;
+  },
   diamond: async (facets) => {
     FacetCutAction = {
       Add: 0,

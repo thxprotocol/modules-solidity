@@ -8,7 +8,7 @@ const {
   ADMIN_ROLE,
 } = require("./utils.js");
 
-describe("Test Access Control", function () {
+describe("01 Access Control", function () {
   let owner;
   let voter;
   let accessControl;
