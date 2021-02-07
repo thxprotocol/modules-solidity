@@ -105,7 +105,13 @@ contract RewardPoll is BasePoll, IRewardPoll {
         finalize();
     }
 
-    function _rewardPollApprovalState() public override view returns (bool) {
+    function _rewardPollApprovalState()
+        public
+        virtual
+        override
+        view
+        returns (bool)
+    {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
         return bData.yesCounter > bData.noCounter;
     }
