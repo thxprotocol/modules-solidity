@@ -10,10 +10,8 @@ contract RewardByPoll is RewardPoll {
         virtual
         override
         view
-        returns (
-            //isReward
-            bool
-        )
+        isReward
+        returns (bool)
     {
         return true;
     }

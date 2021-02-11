@@ -18,9 +18,11 @@ contract Reward is Access, IReward, IWithdrawEvents {
     uint256 constant ENABLE_REWARD = 2**250;
     uint256 constant DISABLE_REWARD = 2**251;
 
-    function setRewardPollDuration(
-        uint256 _duration // todo onlymanager
-    ) external override {
+    function setRewardPollDuration(uint256 _duration)
+        external
+        override
+        onlyManager
+    {
         LibRewardPollStorage.rewardStorage().rewardPollDuration = _duration;
     }
 
@@ -31,7 +33,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
     function addReward(uint256 _withdrawAmount, uint256 _withdrawDuration)
         external
         override
-    // todo onlyOwner
+        onlyOwner
     {
         require(_withdrawAmount != 0, "NOT_VALID");
         require(_withdrawAmount != ENABLE_REWARD, "NOT_VALID");
@@ -52,7 +54,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
         uint256 _id,
         uint256 _withdrawAmount,
         uint256 _withdrawDuration
-    ) external override {
+    ) external override onlyOwner {
         // todo verify amount
         require(_isMember(_msgSender()), "NOT_MEMBER");
         LibRewardPollStorage.Reward storage reward = LibRewardPollStorage

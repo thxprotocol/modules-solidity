@@ -20,6 +20,21 @@ contract Access is RelayReceiver, IAccessControlEvents {
     using EnumerableSet for EnumerableSet.AddressSet;
     using Address for address;
 
+    modifier onlyOwner() {
+        require(LibDiamond.contractOwner() == _msgSender(), "NOT_OWNER");
+        _;
+    }
+
+    modifier onlyManager() {
+        require(_hasRole(MANAGER_ROLE, _msgSender()), "NOT_MANAGER");
+        _;
+    }
+
+    modifier onlyMember() {
+        require(_hasRole(MEMBER_ROLE, _msgSender()), "NOT_MEMBER");
+        _;
+    }
+
     function _hasRole(bytes32 role, address account)
         internal
         virtual

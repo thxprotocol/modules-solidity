@@ -72,7 +72,7 @@ contract Withdraw is Access, IWithdraw {
     function setProposeWithdrawPollDuration(uint256 _duration)
         external
         override
-    // todo onlymanager
+        onlyManager
     {
         LibWithdrawPollStorage
             .withdrawStorage()

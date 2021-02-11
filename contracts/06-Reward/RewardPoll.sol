@@ -17,6 +17,17 @@ contract RewardPoll is BasePoll, IRewardPoll {
     uint256 constant ENABLE_REWARD = 2**250;
     uint256 constant DISABLE_REWARD = 2**251;
 
+    modifier isReward {
+        LibBasePollStorage.BasePollStorage storage bData = baseData();
+
+
+            LibRewardPollStorage.RewardPollStorage storage rwPollData
+         = LibRewardPollStorage.rewardPollStorageId(bData.id);
+
+        require(rwPollData.withdrawAmount != 0, "NOT_REWARD_POLL");
+        _;
+    }
+
     function voteValidate(bool _agree, address _voter) internal override {
         require(_isMember(_voter), "NO_MEMBER");
     }
@@ -91,17 +102,17 @@ contract RewardPoll is BasePoll, IRewardPoll {
         return LibRewardPollStorage.rewardPollStorageId(_id).rewardIndex;
     }
 
-    function _rewardPollVote(bool _agree) external override {
+    function _rewardPollVote(bool _agree) external override isReward {
         vote(_agree);
         emit RewardPollVoted(baseData().id, _msgSender(), _agree);
     }
 
-    function _rewardPollRevokeVote() external override {
+    function _rewardPollRevokeVote() external override isReward {
         revokeVote();
         emit RewardPollRevokedVote(baseData().id, _msgSender());
     }
 
-    function _rewardPollFinalize() external override {
+    function _rewardPollFinalize() external override isReward {
         finalize();
     }
 
@@ -110,6 +121,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
         virtual
         override
         view
+        isReward
         returns (bool)
     {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
