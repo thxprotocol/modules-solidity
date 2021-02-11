@@ -1,7 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "forktest": "source .env.bash && npx hardhat node --fork https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY}; npx hardhat test"
+    "forktest": "/bin/sh .env.bash && npx hardhat node --fork https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY} > /dev/null 2>&1 & sleep 3 && npx hardhat --network fork test test/mainnet/test.js; kill $(lsof -t -i :8545)"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
