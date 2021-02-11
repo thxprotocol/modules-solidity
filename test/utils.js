@@ -3,6 +3,18 @@ const { constants } = require("ethers");
 
 module.exports = {
   // keccak256("MEMBER_ROLE")
+  FacetCutAction: {
+    Add: 0,
+    Replace: 1,
+    Remove: 2,
+  },
+  getSelectors: function (contract) {
+    const signatures = [];
+    for (const key of Object.keys(contract.functions)) {
+      signatures.push(utils.keccak256(utils.toUtf8Bytes(key)).substr(0, 10));
+    }
+    return signatures;
+  },
   assetPool: async (deploy) => {
     tx = await deploy;
     tx = await tx.wait();

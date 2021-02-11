@@ -15,6 +15,7 @@ import "./TMP/TMP8/IReward.sol";
 import "./TMP/TMP8/IRewardPoll.sol";
 import "./TMP/TMP8/IRewardPollProxy.sol";
 import "./TMP/TMP9/IGasStation.sol";
+import "./TMP/TMP10/IUpdateDiamond.sol";
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
 
@@ -34,7 +35,8 @@ interface IDefaultDiamond is
     IReward,
     IRewardPoll,
     IRewardPollProxy,
-    IGasStation
+    IGasStation,
+    IUpdateDiamond
 {
     function setupMockAccess(bytes32[] memory roles, address[] memory addr)
         external;
