@@ -9,7 +9,6 @@ import "diamond-2/contracts/libraries/LibDiamond.sol";
 
 // depends on
 import "../TMP/TMP1/IAccessControlEvents.sol";
-import "../TMP/TMP1/InternalAccessControl.sol";
 import "../TMP/TMP1/LibAccessStorage.sol";
 
 // implements
@@ -23,7 +22,6 @@ contract MemberAccess is
     IMemberID,
     IPoolRoles,
     RelayReceiver,
-    InternalAccessControl,
     IAccessControlEvents
 {
     function initializeRoles(address _owner) public override {
@@ -67,7 +65,11 @@ contract MemberAccess is
         view
         returns (bool)
     {
-        return _hasRole(getRoleAdmin(MANAGER_ROLE), _account);
+        return
+            _hasRole(
+                LibAccessStorage.roleStorage().roles[MANAGER_ROLE].adminRole,
+                _account
+            );
     }
 
     function isMemberRoleAdmin(address _account)
@@ -76,13 +78,19 @@ contract MemberAccess is
         view
         returns (bool)
     {
-        return _hasRole(getRoleAdmin(MEMBER_ROLE), _account);
+        return
+            _hasRole(
+                LibAccessStorage.roleStorage().roles[MEMBER_ROLE].adminRole,
+                _account
+            );
     }
 
     function getOwner() external override view returns (address) {
         return _getOwner();
     }
 
+    // todo warning
+    // different member id's can map to the same address
     function upgradeAddress(address _oldAddress, address _newAddress)
         external
         override
