@@ -27,6 +27,11 @@ module.exports = {
     tx = await tx.wait();
     return tx.events;
   },
+  timestamp: async (tx) => {
+    tx = await tx;
+    tx = await tx.wait();
+    return (await ethers.provider.getBlock(tx.blockNumber)).timestamp;
+  },
   diamond: async (facets) => {
     FacetCutAction = {
       Add: 0,
