@@ -30,6 +30,15 @@ contract Reward is Access, IReward, IWithdrawEvents {
         return LibRewardPollStorage.rewardStorage().rewardPollDuration;
     }
 
+    function getReward(uint256 _id)
+        public
+        override
+        view
+        returns (LibRewardPollStorage.Reward memory)
+    {
+        return LibRewardPollStorage.rewardStorage().rewards[_id - 1];
+    }
+
     function addReward(uint256 _withdrawAmount, uint256 _withdrawDuration)
         external
         override

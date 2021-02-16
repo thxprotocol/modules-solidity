@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.4;
+pragma experimental ABIEncoderV2;
+
+import "./LibRewardPollStorage.sol";
 
 interface IReward {
     event RewardPollCreated(
@@ -15,6 +18,11 @@ interface IReward {
 
     function addReward(uint256 _withdrawAmount, uint256 _withdrawDuration)
         external;
+
+    function getReward(uint256 _id)
+        external
+        view
+        returns (LibRewardPollStorage.Reward memory);
 
     function updateReward(
         uint256 _id,
