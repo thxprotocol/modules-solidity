@@ -8,6 +8,16 @@ module.exports = {
     Replace: 1,
     Remove: 2,
   },
+  helpSign: async (solution, name, args, account) => {
+    nonce = await solution.getLatestNonce(account.getAddress());
+    nonce = parseInt(nonce) + 1;
+    const call = solution.interface.encodeFunctionData(name, args);
+    const hash = web3.utils.soliditySha3(call, nonce);
+    const sig = await account.signMessage(ethers.utils.arrayify(hash));
+    tx = await solution.call(call, nonce, sig);
+    tx = await tx.wait();
+    return tx;
+  },
   getSelectors: function (contract) {
     const signatures = [];
     for (const key of Object.keys(contract.functions)) {

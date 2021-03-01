@@ -67,7 +67,6 @@ contract GasStationFacet is IGasStation {
         (bool success, bytes memory returnData) = address(this).call(
             abi.encodePacked(_call, signer)
         );
-        require(success, string(returnData));
         emit Result(success, returnData);
     }
 }
