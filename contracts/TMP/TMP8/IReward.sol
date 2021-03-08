@@ -8,7 +8,7 @@ interface IReward {
     event RewardPollCreated(
         uint256 id,
         address indexed member,
-        uint256 withdrawID,
+        uint256 rewardID,
         uint256 proposal
     );
 
