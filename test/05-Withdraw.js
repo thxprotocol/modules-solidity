@@ -123,7 +123,7 @@ describe("05 - proposeWithdraw", function () {
     const PoolRegistry = await ethers.getContractFactory("PoolRegistry");
     let poolRegistry = await PoolRegistry.deploy(
       await collector.getAddress(),
-      onePercent
+      0
     );
     expect(await withdraw.setPoolRegistry(poolRegistry.address));
     await token.approve(withdraw.address, parseEther("1100"));
@@ -192,11 +192,17 @@ describe("05 - proposeWithdraw", function () {
   });
   it("finalize", async function () {
     expect(await token.balanceOf(await poolMember.getAddress())).to.eq(0);
+    expect(await withdraw.getBalance()).to.eq(parseEther("1100"));
+    expect(await token.balanceOf(withdraw.address)).to.eq(parseEther("1100"));
+
     await ethers.provider.send("evm_increaseTime", [180]);
     await withdraw.withdrawPollFinalize(1);
     expect(await token.balanceOf(await poolMember.getAddress())).to.eq(
       parseEther("1")
     );
+
+    expect(await withdraw.getBalance()).to.eq(parseEther("1099"));
+    expect(await token.balanceOf(withdraw.address)).to.eq(parseEther("1099"));
   });
 });
 // todo test
