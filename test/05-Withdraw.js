@@ -11,6 +11,8 @@ const {
   ADMIN_ROLE,
 } = require("./utils.js");
 
+const onePercent = ethers.BigNumber.from("10").pow(16);
+
 describe("05 withdaw", function () {
   let owner;
   let voter;
@@ -82,7 +84,7 @@ describe("05 - proposeWithdraw", function () {
   let withdrawTimestamp;
 
   before(async function () {
-    [owner, voter, poolMember] = await ethers.getSigners();
+    [owner, voter, poolMember, collector] = await ethers.getSigners();
     const ExampleToken = await ethers.getContractFactory("ExampleToken");
     token = await ExampleToken.deploy(
       await owner.getAddress(),
@@ -116,10 +118,17 @@ describe("05 - proposeWithdraw", function () {
       OwnershipFacet,
     ]);
     withdraw = await assetPool(factory.deployAssetPool());
-
-    await token.transfer(withdraw.address, parseEther("1000"));
-
     await withdraw.addToken(token.address);
+
+    const PoolRegistry = await ethers.getContractFactory("PoolRegistry");
+    let poolRegistry = await PoolRegistry.deploy(
+      await collector.getAddress(),
+      onePercent
+    );
+    expect(await withdraw.setPoolRegistry(poolRegistry.address));
+    await token.approve(withdraw.address, parseEther("1100"));
+    await withdraw.deposit(parseEther("1100"));
+
     await withdraw.initializeRoles(await owner.getAddress());
     await withdraw.setProposeWithdrawPollDuration(100);
     await withdraw.addMember(await poolMember.getAddress());
