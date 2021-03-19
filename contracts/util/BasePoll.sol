@@ -3,7 +3,7 @@ pragma solidity ^0.7.4;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-import "../TMP/TMP6/LibBasePollStorage.sol"; 
+import "../TMP/TMP6/LibBasePollStorage.sol";
 import "./Access.sol"; // TMP 1
 
 abstract contract BasePoll is Access {
