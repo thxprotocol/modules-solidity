@@ -65,8 +65,30 @@ module.exports = {
         functionSelectors: getSelectors(f),
       });
     }
-    AssetPoolFactory = await ethers.getContractFactory("AssetPoolFactory");
-    return AssetPoolFactory.deploy(diamondCut);
+
+    factoryFacets = [
+      await ethers.getContractFactory("AssetPoolFactoryFacet"),
+      await ethers.getContractFactory("OwnershipFacet"),
+    ];
+    diamondCutFactory = [];
+    for (let i = 0; i < factoryFacets.length; i++) {
+      const f = await factoryFacets[i].deploy();
+      diamondCutFactory.push({
+        action: FacetCutAction.Add,
+        facetAddress: f.address,
+        functionSelectors: getSelectors(f),
+      });
+    }
+
+    [owner] = await ethers.getSigners();
+    const Diamond = await ethers.getContractFactory("Diamond");
+    diamond = await Diamond.deploy(diamondCutFactory, [
+      await owner.getAddress(),
+    ]);
+    factory = await ethers.getContractAt("IAssetPoolFactory", diamond.address);
+    await factory.initialize(diamondCut);
+
+    return factory;
   },
   MEMBER_ROLE:
     "0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636",

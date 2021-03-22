@@ -43,6 +43,7 @@ contract GasStationFacet is IGasStation {
     }
 
     function setSigning(bool _enabled) public override {
+        require(msg.sender == LibGasStationStorage.gsStorage().admin, "AUTH");
         LibGasStationStorage.gsStorage().enabled = _enabled;
     }
 

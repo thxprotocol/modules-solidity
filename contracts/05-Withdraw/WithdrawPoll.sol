@@ -2,6 +2,8 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
@@ -18,6 +20,9 @@ import "../TMP/TMP5/LibTokenStorage.sol";
 import "../TMP/TMP2/LibMemberAccessStorage.sol";
 
 contract WithdrawPoll is BasePoll, IWithdrawPoll {
+    using SafeERC20 for IERC20;
+    using SafeMath for uint256;
+
     modifier isWithdraw {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
@@ -40,11 +45,14 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
          = LibWithdrawPollStorage.withdrawPollStorageId(_id);
 
         if (approved) {
-            IERC20 token = LibTokenStorage.tokenStorage().token;
+            LibTokenStorage.TokenStorage storage s = LibTokenStorage
+                .tokenStorage();
+            s.balance = s.balance.sub(wpPollData.amount);
+
             address benef = LibMemberAccessStorage
                 .memberStorage()
                 .memberToAddress[wpPollData.beneficiary];
-            token.transfer(benef, wpPollData.amount);
+            s.token.safeTransfer(benef, wpPollData.amount);
             emit Withdrawn(_id, benef, wpPollData.amount);
         }
 

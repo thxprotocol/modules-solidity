@@ -9,6 +9,8 @@ library LibTokenStorage {
     );
 
     struct TokenStorage {
+        address registry;
+        uint256 balance;
         IERC20 token;
     }
 
