@@ -29,6 +29,7 @@ contract Token is IToken {
     }
 
     function deposit(uint256 _amount) external override {
+        require(_amount > 0, "ZERO_AMOUNT");
         LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
         IPoolRegistry registry = IPoolRegistry(s.registry);
@@ -36,7 +37,9 @@ contract Token is IToken {
         uint256 fee = _amount.mul(registry.feePercentage()).div(10**18);
         uint256 amount = _amount.sub(fee);
 
-        s.token.safeTransferFrom(msg.sender, registry.feeCollector(), fee);
+        if (fee > 0) {
+            s.token.safeTransferFrom(msg.sender, registry.feeCollector(), fee);
+        }
         s.balance = s.balance.add(amount);
         s.token.safeTransferFrom(msg.sender, address(this), amount);
     }
