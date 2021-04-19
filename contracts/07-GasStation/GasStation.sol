@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.4;
 
-import "./LibSignature.sol";
-import "../TMP/TMP9/LibGasStationStorage.sol";
-import "../TMP/TMP9/IGasStation.sol";
-import "diamond-2/contracts/libraries/LibDiamond.sol";
+import './LibSignature.sol';
+import '../TMP/TMP9/LibGasStationStorage.sol';
+import '../TMP/TMP9/IGasStation.sol';
+import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 contract GasStationFacet is IGasStation {
     function initializeGasStation(address _admin) external override {
         require(msg.sender == LibDiamond.diamondStorage().contractOwner);
         LibGasStationStorage.gsStorage().admin = _admin;
+        LibGasStationStorage.gsStorage().enabled = true;
     }
 
-    function getGasStationAdmin() external override view returns (address) {
+    function getGasStationAdmin() external view override returns (address) {
         return LibGasStationStorage.gsStorage().admin;
     }
 
@@ -20,12 +21,7 @@ contract GasStationFacet is IGasStation {
      * @dev Get the latest nonce of a given signer
      * @param _signer Address of the signer
      */
-    function getLatestNonce(address _signer)
-        external
-        override
-        view
-        returns (uint256)
-    {
+    function getLatestNonce(address _signer) external view override returns (uint256) {
         return LibGasStationStorage.gsStorage().signerNonce[_signer];
     }
 
@@ -35,15 +31,14 @@ contract GasStationFacet is IGasStation {
      * @param _nonce Nonce of the signer
      */
     function validateNonce(address _signer, uint256 _nonce) private {
-        LibGasStationStorage.GSStorage storage s = LibGasStationStorage
-            .gsStorage();
+        LibGasStationStorage.GSStorage storage s = LibGasStationStorage.gsStorage();
 
-        require(s.signerNonce[_signer] + 1 == _nonce, "INVALID_NONCE");
+        require(s.signerNonce[_signer] + 1 == _nonce, 'INVALID_NONCE');
         s.signerNonce[_signer] = _nonce;
     }
 
     function setSigning(bool _enabled) public override {
-        require(msg.sender == LibGasStationStorage.gsStorage().admin, "AUTH");
+        require(msg.sender == LibGasStationStorage.gsStorage().admin, 'AUTH');
         LibGasStationStorage.gsStorage().enabled = _enabled;
     }
 
@@ -53,21 +48,14 @@ contract GasStationFacet is IGasStation {
         uint256 _nonce,
         bytes memory _sig
     ) external override {
-        require(
-            msg.sender == LibGasStationStorage.gsStorage().admin,
-            "ONLY_ADMIN"
-        );
-        require(LibGasStationStorage.gsStorage().enabled, "SIGNING_DISABLED");
+        require(msg.sender == LibGasStationStorage.gsStorage().admin, 'ONLY_ADMIN');
+        require(LibGasStationStorage.gsStorage().enabled, 'SIGNING_DISABLED');
 
-        bytes32 message = LibSignature.prefixed(
-            keccak256(abi.encodePacked(_call, _nonce))
-        );
+        bytes32 message = LibSignature.prefixed(keccak256(abi.encodePacked(_call, _nonce)));
         address signer = LibSignature.recoverSigner(message, _sig);
 
         validateNonce(signer, _nonce);
-        (bool success, bytes memory returnData) = address(this).call(
-            abi.encodePacked(_call, signer)
-        );
+        (bool success, bytes memory returnData) = address(this).call(abi.encodePacked(_call, signer));
         emit Result(success, returnData);
     }
 }

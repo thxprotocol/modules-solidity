@@ -2,18 +2,15 @@
 pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
-import "../RelayDiamond.sol";
-import "../IDefaultDiamond.sol";
-import "./IAssetPoolFactory.sol";
-import "./LibFactoryStorage.sol";
+import '../RelayDiamond.sol';
+import '../IDefaultDiamond.sol';
+import './IAssetPoolFactory.sol';
+import './LibFactoryStorage.sol';
 
-import "diamond-2/contracts/libraries/LibDiamond.sol";
+import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 contract AssetPoolFactoryFacet is IAssetPoolFactory {
-    function initialize(IDiamondCut.FacetCut[] memory _facets)
-        external
-        override
-    {
+    function initialize(IDiamondCut.FacetCut[] memory _facets) external override {
         LibDiamond.enforceIsContractOwner();
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
 
@@ -35,6 +32,7 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         RelayDiamond d = new RelayDiamond(s.defaultCut, address(this));
         IDefaultDiamond assetPool = IDefaultDiamond(address(d));
         assetPool.transferOwnership(s.defaultController);
+        assetPool.initializeRoles(s.defaultController);
         s.assetPools.push(address(d));
         s.isAssetPool[address(d)] = true;
         emit AssetPoolDeployed(address(d));
