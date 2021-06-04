@@ -33,7 +33,6 @@ describe("Pool", function () {
         OwnershipFacet,
       ]);
       memberAccess = await assetPool(factory.deployAssetPool());
-      await memberAccess.initializeRoles(await owner.getAddress());
     });
   });
 });

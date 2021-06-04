@@ -45,7 +45,6 @@ describe("05 withdaw", function () {
       OwnershipFacet,
     ]);
     withdraw = await assetPool(factory.deployAssetPool());
-    await withdraw.initializeRoles(await owner.getAddress());
     await withdraw.setProposeWithdrawPollDuration(100);
   });
   it("Initial state", async function () {
@@ -129,7 +128,6 @@ describe("05 - proposeWithdraw", function () {
     await token.approve(withdraw.address, parseEther("1100"));
     await withdraw.deposit(parseEther("1100"));
 
-    await withdraw.initializeRoles(await owner.getAddress());
     await withdraw.setProposeWithdrawPollDuration(100);
     await withdraw.addMember(await poolMember.getAddress());
   });

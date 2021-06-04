@@ -50,7 +50,6 @@ describe("07 GasStation", function () {
       GasStationFacet,
     ]);
     solution = await assetPool(factory.deployAssetPool());
-    await solution.initializeRoles(await owner.getAddress());
     await solution.initializeGasStation(await owner.getAddress());
     await solution.setSigning(true);
   });
@@ -128,7 +127,6 @@ describe("07 GasStation", function () {
         GasStationFacet,
       ]);
       solution = await assetPool(factory.deployAssetPool());
-      await solution.initializeRoles(await owner.getAddress());
       await solution.initializeGasStation(await owner.getAddress());
       await solution.setSigning(true);
       await solution.addMember(await voter.getAddress());

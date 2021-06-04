@@ -20,11 +20,13 @@ import '../TMP/RelayReceiver.sol';
 
 contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEvents {
     function initializeRoles(address _owner) public override {
+        require(LibMemberAccessStorage.memberStorage().memberCounter == 0, 'INIT');
+
         LibMemberAccessStorage.memberStorage().memberCounter = 1000;
-        setupMember(_owner);
         _setupRole(DEFAULT_ADMIN_ROLE, _owner);
         _setupRole(MEMBER_ROLE, _owner);
         _setupRole(MANAGER_ROLE, _owner);
+        setupMember(_owner);
     }
 
     function isMember(address _account) external view override returns (bool) {
@@ -32,11 +34,13 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
     }
 
     function addMember(address _account) external override {
+        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
         setupMember(_account);
         _grantRole(MEMBER_ROLE, _account);
     }
 
     function removeMember(address _account) external override {
+        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
         _revokeRole(MEMBER_ROLE, _account);
     }
 
@@ -45,11 +49,13 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
     }
 
     function addManager(address _account) external override {
+        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
         setupMember(_account);
         _grantRole(MANAGER_ROLE, _account);
     }
 
     function removeManager(address _account) external override {
+        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
         require(_msgSender() != _account, 'OWN_ACCOUNT');
         _revokeRole(MANAGER_ROLE, _account);
     }

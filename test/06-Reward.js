@@ -40,7 +40,6 @@ describe("06 reward", function () {
       OwnershipFacet,
     ]);
     withdraw = await assetPool(factory.deployAssetPool());
-    await withdraw.initializeRoles(await owner.getAddress());
     await withdraw.setRewardPollDuration(100);
   });
   it("Initial state", async function () {
@@ -96,7 +95,6 @@ describe("06 reward - claim", function () {
       OwnershipFacet,
     ]);
     solution = await assetPool(factory.deployAssetPool());
-    await solution.initializeRoles(await owner.getAddress());
     await solution.setRewardPollDuration(100);
     await solution.addReward(parseEther("5"), 250);
 
