@@ -15,6 +15,9 @@ contract Token is IToken {
     using SafeMath for uint256;
 
     function setPoolRegistry(address _registry) external override {
+        require(LibTokenStorage.tokenStorage().registry == address(0), 'INIT');
+        require(_registry != address(0), 'ZERO');
+
         LibDiamond.enforceIsContractOwner();
         LibTokenStorage.tokenStorage().registry = _registry;
         emit RegistryUpdated(address(0), _registry);
@@ -45,9 +48,10 @@ contract Token is IToken {
     }
 
     function addToken(address _token) external override {
-        LibDiamond.enforceIsContractOwner();
-        require(LibTokenStorage.tokenStorage().token == IERC20(0), 'SET');
+        require(LibTokenStorage.tokenStorage().token == IERC20(0), 'INIT');
+        require(_token != address(0), 'ZERO');
 
+        LibDiamond.enforceIsContractOwner();
         LibTokenStorage.tokenStorage().token = IERC20(_token);
         emit TokenUpdated(address(0), _token);
     }
