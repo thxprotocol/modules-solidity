@@ -30,7 +30,6 @@ describe("03 member access", function () {
       OwnershipFacet,
     ]);
     memberAccess = await assetPool(factory.deployAssetPool());
-    await memberAccess.initializeRoles(await owner.getAddress());
   });
   it("Initial state", async function () {
     expect(await memberAccess.isMember(await owner.getAddress())).to.eq(true);

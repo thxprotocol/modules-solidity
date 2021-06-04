@@ -18,6 +18,7 @@ describe("04 token", function () {
 
   before(async function () {
     [owner, voter, collector] = await ethers.getSigners();
+    const MemberAccess = await ethers.getContractFactory("MemberAccess");
     const Token = await ethers.getContractFactory("Token");
     const DiamondCutFacet = await ethers.getContractFactory("DiamondCutFacet");
     const DiamondLoupeFacet = await ethers.getContractFactory(
@@ -26,6 +27,7 @@ describe("04 token", function () {
     const OwnershipFacet = await ethers.getContractFactory("OwnershipFacet");
 
     const factory = await diamond([
+      MemberAccess,
       Token,
       DiamondCutFacet,
       DiamondLoupeFacet,
