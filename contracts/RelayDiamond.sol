@@ -9,11 +9,11 @@ pragma experimental ABIEncoderV2;
 * Implementation of a diamond.
 /******************************************************************************/
 
-import "diamond-2/contracts/libraries/LibDiamond.sol";
-import "diamond-2/contracts/interfaces/IDiamondLoupe.sol";
-import "diamond-2/contracts/interfaces/IDiamondCut.sol";
-import "diamond-2/contracts/interfaces/IERC173.sol";
-import "diamond-2/contracts/interfaces/IERC165.sol";
+import 'diamond-2/contracts/libraries/LibDiamond.sol';
+import 'diamond-2/contracts/interfaces/IDiamondLoupe.sol';
+import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
+import 'diamond-2/contracts/interfaces/IERC173.sol';
+import 'diamond-2/contracts/interfaces/IERC165.sol';
 
 contract RelayDiamond {
     constructor(IDiamondCut.FacetCut[] memory _diamondCut, address _owner) payable {
@@ -39,11 +39,10 @@ contract RelayDiamond {
         }
         address facet = address(bytes20(ds.facets[msg.sig]));
 
-        require(facet != address(0), "Diamond: Function does not exist");
+        require(facet != address(0), 'Diamond: Function does not exist');
         assembly {
             calldatacopy(0, 0, calldatasize())
-            if eq(caller(), address())
-            {
+            if eq(caller(), address()) {
                 let result := delegatecall(gas(), facet, 0, calldatasize(), 0, 0)
                 returndatacopy(0, 0, returndatasize())
                 switch result

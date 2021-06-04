@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.4;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import '@openzeppelin/contracts/math/SafeMath.sol';
 
-import "../TMP/TMP6/LibBasePollStorage.sol";
-import "./Access.sol"; // TMP 1
+import '../TMP/TMP6/LibBasePollStorage.sol';
+import './Access.sol'; // TMP 1
 
 abstract contract BasePoll is Access {
     using SafeMath for uint256;
@@ -15,11 +15,7 @@ abstract contract BasePoll is Access {
 
     modifier checkTime() {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
-        require(
-            block.timestamp >= bData.startTime &&
-                block.timestamp <= bData.endTime,
-            "IS_NO_VALID_TIME"
-        );
+        require(block.timestamp >= bData.startTime && block.timestamp <= bData.endTime, 'IS_NO_VALID_TIME');
         _;
     }
 
@@ -28,7 +24,7 @@ abstract contract BasePoll is Access {
      */
     function finalize() internal {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
-        require(block.timestamp >= bData.endTime, "WRONG_STATE");
+        require(block.timestamp >= bData.endTime, 'WRONG_STATE');
         onPollFinish(bData.id);
         delete bData.id;
         delete bData.startTime;
@@ -47,7 +43,7 @@ abstract contract BasePoll is Access {
         voteValidate(_agree, _msgSender());
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
-        require(bData.votesByAddress[_msgSender()].time == 0, "HAS_VOTED");
+        require(bData.votesByAddress[_msgSender()].time == 0, 'HAS_VOTED');
         uint256 voiceWeight = 1;
 
         if (_agree) {
@@ -70,7 +66,7 @@ abstract contract BasePoll is Access {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
         address _voter = _msgSender();
 
-        require(bData.votesByAddress[_voter].time > 0, "HAS_NOT_VOTED");
+        require(bData.votesByAddress[_voter].time > 0, 'HAS_NOT_VOTED');
 
         uint256 voiceWeight = bData.votesByAddress[_voter].weight;
         bool agree = bData.votesByAddress[_voter].agree;
@@ -87,11 +83,7 @@ abstract contract BasePoll is Access {
         }
     }
 
-    function baseData()
-        internal
-        pure
-        returns (LibBasePollStorage.BasePollStorage storage)
-    {
+    function baseData() internal pure returns (LibBasePollStorage.BasePollStorage storage) {
         return LibBasePollStorage.basePollStorage(bps());
     }
 

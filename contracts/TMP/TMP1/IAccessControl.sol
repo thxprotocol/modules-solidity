@@ -2,17 +2,11 @@
 pragma solidity ^0.7.4;
 
 interface IAccessControl {
-    function hasRole(bytes32 role, address account)
-        external
-        view
-        returns (bool);
+    function hasRole(bytes32 role, address account) external view returns (bool);
 
     function getRoleMemberCount(bytes32 role) external view returns (uint256);
 
-    function getRoleMember(bytes32 role, uint256 index)
-        external
-        view
-        returns (address);
+    function getRoleMember(bytes32 role, uint256 index) external view returns (address);
 
     function getRoleAdmin(bytes32 role) external view returns (bytes32);
 

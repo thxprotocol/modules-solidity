@@ -3,8 +3,8 @@
 
 pragma solidity >=0.6.0 <0.8.0;
 
-import "../TMP/TMP1/IAccessControl.sol";
-import "../TMP/TMP1/IAccessControlEvents.sol";
+import '../TMP/TMP1/IAccessControl.sol';
+import '../TMP/TMP1/IAccessControlEvents.sol';
 
 contract AccessControlMock is IAccessControl, IAccessControlEvents {
     // TODO, consider moving storage to lib, for diamond tests
@@ -14,12 +14,7 @@ contract AccessControlMock is IAccessControl, IAccessControlEvents {
         hasRoleMock = _value;
     }
 
-    function hasRole(bytes32 role, address account)
-        external
-        override
-        view
-        returns (bool)
-    {
+    function hasRole(bytes32 role, address account) external view override returns (bool) {
         return hasRoleMock;
     }
 
@@ -29,12 +24,7 @@ contract AccessControlMock is IAccessControl, IAccessControlEvents {
         getRoleMemberCountMock = _value;
     }
 
-    function getRoleMemberCount(bytes32 role)
-        public
-        override
-        view
-        returns (uint256)
-    {
+    function getRoleMemberCount(bytes32 role) public view override returns (uint256) {
         return getRoleMemberCountMock;
     }
 
@@ -44,12 +34,7 @@ contract AccessControlMock is IAccessControl, IAccessControlEvents {
         getRoleMemberMock = _value;
     }
 
-    function getRoleMember(bytes32 role, uint256 index)
-        public
-        override
-        view
-        returns (address)
-    {
+    function getRoleMember(bytes32 role, uint256 index) public view override returns (address) {
         return getRoleMemberMock;
     }
 
@@ -59,7 +44,7 @@ contract AccessControlMock is IAccessControl, IAccessControlEvents {
         getRoleAdminMock = _value;
     }
 
-    function getRoleAdmin(bytes32 role) public override view returns (bytes32) {
+    function getRoleAdmin(bytes32 role) public view override returns (bytes32) {
         return getRoleAdminMock;
     }
 

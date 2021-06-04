@@ -22,10 +22,7 @@ contract RelayReceiver {
         // solhint-disable-next-line no-inline-assembly
         assembly {
             // Load the 32 bytes word from memory with the address on the lower 20 bytes, and mask those.
-            result := and(
-                mload(add(array, index)),
-                0xffffffffffffffffffffffffffffffffffffffff
-            )
+            result := and(mload(add(array, index)), 0xffffffffffffffffffffffffffffffffffffffff)
         }
         return result;
     }

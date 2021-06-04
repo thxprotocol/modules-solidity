@@ -2,7 +2,7 @@
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
 
-import "./LibBasePollStorage.sol";
+import './LibBasePollStorage.sol';
 
 interface IBasePoll {
     function getStartTime(uint256 _id) external view returns (uint256);
@@ -15,8 +15,5 @@ interface IBasePoll {
 
     function getTotalVoted(uint256 _id) external view returns (uint256);
 
-    function getVoteByAddress(uint256 _id, address _address)
-        external
-        view
-        returns (LibBasePollStorage.Vote memory);
+    function getVoteByAddress(uint256 _id, address _address) external view returns (LibBasePollStorage.Vote memory);
 }

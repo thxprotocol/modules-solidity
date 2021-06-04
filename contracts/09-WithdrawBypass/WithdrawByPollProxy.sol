@@ -2,6 +2,6 @@
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
 
-import "../05-Withdraw/WithdrawPollProxy.sol";
+import '../05-Withdraw/WithdrawPollProxy.sol';
 
 contract WithdrawByPollProxy is WithdrawPollProxy {}

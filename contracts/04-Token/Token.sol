@@ -1,14 +1,14 @@
 //SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.0;
 
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
+import '@openzeppelin/contracts/math/SafeMath.sol';
 
-import "diamond-2/contracts/libraries/LibDiamond.sol";
+import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
-import "../IPoolRegistry.sol";
-import "../TMP/TMP5/IToken.sol";
-import "../TMP/TMP5/LibTokenStorage.sol";
+import '../IPoolRegistry.sol';
+import '../TMP/TMP5/IToken.sol';
+import '../TMP/TMP5/LibTokenStorage.sol';
 
 contract Token is IToken {
     using SafeERC20 for IERC20;
@@ -20,16 +20,16 @@ contract Token is IToken {
         emit RegistryUpdated(address(0), _registry);
     }
 
-    function getPoolRegistry() external override view returns (address) {
+    function getPoolRegistry() external view override returns (address) {
         return LibTokenStorage.tokenStorage().registry;
     }
 
-    function getBalance() external override view returns (uint256) {
+    function getBalance() external view override returns (uint256) {
         return LibTokenStorage.tokenStorage().balance;
     }
 
     function deposit(uint256 _amount) external override {
-        require(_amount > 0, "ZERO_AMOUNT");
+        require(_amount > 0, 'ZERO_AMOUNT');
         LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
         IPoolRegistry registry = IPoolRegistry(s.registry);
@@ -46,13 +46,13 @@ contract Token is IToken {
 
     function addToken(address _token) external override {
         LibDiamond.enforceIsContractOwner();
-        require(LibTokenStorage.tokenStorage().token == IERC20(0), "SET");
+        require(LibTokenStorage.tokenStorage().token == IERC20(0), 'SET');
 
         LibTokenStorage.tokenStorage().token = IERC20(_token);
         emit TokenUpdated(address(0), _token);
     }
 
-    function getToken() external override view returns (address) {
+    function getToken() external view override returns (address) {
         return address(LibTokenStorage.tokenStorage().token);
     }
 }

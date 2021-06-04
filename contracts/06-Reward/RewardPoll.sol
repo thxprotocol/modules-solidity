@@ -2,16 +2,16 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/EnumerableSet.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "diamond-2/contracts/libraries/LibDiamond.sol";
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/utils/EnumerableSet.sol';
+import '@openzeppelin/contracts/utils/Address.sol';
+import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 // Implements
-import "../util/BasePoll.sol"; // TMP1, TMP 6
-import "../TMP/TMP6/LibBasePollStorage.sol";
-import "../TMP/TMP8/IRewardPoll.sol";
-import "../TMP/TMP8/LibRewardPollStorage.sol";
+import '../util/BasePoll.sol'; // TMP1, TMP 6
+import '../TMP/TMP6/LibBasePollStorage.sol';
+import '../TMP/TMP8/IRewardPoll.sol';
+import '../TMP/TMP8/LibRewardPollStorage.sol';
 
 contract RewardPoll is BasePoll, IRewardPoll {
     uint256 constant ENABLE_REWARD = 2**250;
@@ -20,29 +20,24 @@ contract RewardPoll is BasePoll, IRewardPoll {
     modifier isReward {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
+        LibRewardPollStorage.RewardPollStorage storage rwPollData = LibRewardPollStorage.rewardPollStorageId(bData.id);
 
-            LibRewardPollStorage.RewardPollStorage storage rwPollData
-         = LibRewardPollStorage.rewardPollStorageId(bData.id);
-
-        require(rwPollData.withdrawAmount != 0, "NOT_REWARD_POLL");
+        require(rwPollData.withdrawAmount != 0, 'NOT_REWARD_POLL');
         _;
     }
 
     function voteValidate(bool _agree, address _voter) internal override {
-        require(_isMember(_voter), "NO_MEMBER");
+        require(_isMember(_voter), 'NO_MEMBER');
     }
 
     /**
      * @dev callback called after poll finalization
      */
     function onPollFinish(uint256 _id) internal override {
+        LibRewardPollStorage.RewardPollStorage storage rwPollData = LibRewardPollStorage.rewardPollStorageId(_id);
 
-            LibRewardPollStorage.RewardPollStorage storage rwPollData
-         = LibRewardPollStorage.rewardPollStorageId(_id);
-
-        LibRewardPollStorage.Reward storage reward = LibRewardPollStorage
-            .rewardStorage()
-            .rewards[rwPollData.rewardIndex];
+        LibRewardPollStorage.Reward storage reward =
+            LibRewardPollStorage.rewardStorage().rewards[rwPollData.rewardIndex];
 
         bool approved = _rewardPollApprovalState();
         if (approved) {
@@ -54,19 +49,13 @@ contract RewardPoll is BasePoll, IRewardPoll {
                 emit RewardPollDisabled(_id);
             } else {
                 // initial state
-                if (
-                    reward.withdrawAmount == 0 && reward.withdrawDuration == 0
-                ) {
+                if (reward.withdrawAmount == 0 && reward.withdrawDuration == 0) {
                     reward.state = LibRewardPollStorage.RewardState.Enabled;
                     emit RewardPollEnabled(_id);
                 }
                 reward.withdrawAmount = rwPollData.withdrawAmount;
                 reward.withdrawDuration = rwPollData.withdrawDuration;
-                emit RewardPollUpdated(
-                    _id,
-                    reward.withdrawAmount,
-                    reward.withdrawDuration
-                );
+                emit RewardPollUpdated(_id, reward.withdrawAmount, reward.withdrawDuration);
             }
         }
         emit RewardPollFinalized(_id, approved);
@@ -75,30 +64,15 @@ contract RewardPoll is BasePoll, IRewardPoll {
         delete rwPollData.withdrawDuration;
     }
 
-    function getWithdrawAmount(uint256 _id)
-        external
-        override
-        view
-        returns (uint256)
-    {
+    function getWithdrawAmount(uint256 _id) external view override returns (uint256) {
         return LibRewardPollStorage.rewardPollStorageId(_id).withdrawAmount;
     }
 
-    function getWithdrawDuration(uint256 _id)
-        external
-        override
-        view
-        returns (uint256)
-    {
+    function getWithdrawDuration(uint256 _id) external view override returns (uint256) {
         return LibRewardPollStorage.rewardPollStorageId(_id).withdrawDuration;
     }
 
-    function getRewardIndex(uint256 _id)
-        external
-        override
-        view
-        returns (uint256)
-    {
+    function getRewardIndex(uint256 _id) external view override returns (uint256) {
         return LibRewardPollStorage.rewardPollStorageId(_id).rewardIndex;
     }
 
@@ -116,14 +90,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
         finalize();
     }
 
-    function _rewardPollApprovalState()
-        public
-        virtual
-        override
-        view
-        isReward
-        returns (bool)
-    {
+    function _rewardPollApprovalState() public view virtual override isReward returns (bool) {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
         return bData.yesCounter > bData.noCounter;
     }

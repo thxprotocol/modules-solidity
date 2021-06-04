@@ -2,9 +2,9 @@
 pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
-import "diamond-2/contracts/libraries/LibDiamond.sol";
-import "diamond-2/contracts/interfaces/IDiamondCut.sol";
-import "../TMP/TMP10/IUpdateDiamond.sol";
+import 'diamond-2/contracts/libraries/LibDiamond.sol';
+import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
+import '../TMP/TMP10/IUpdateDiamond.sol';
 
 contract UpdateDiamond is IUpdateDiamond {
     function updateAssetPool(bytes4[] memory _selectors, address _newAddress)
@@ -12,10 +12,7 @@ contract UpdateDiamond is IUpdateDiamond {
         override
         returns (uint256, bytes32)
     {
-        require(
-            LibDiamond.diamondStorage().contractOwner == msg.sender,
-            "NOT_OWNER"
-        );
+        require(LibDiamond.diamondStorage().contractOwner == msg.sender, 'NOT_OWNER');
         return
             LibDiamond.addReplaceRemoveFacetSelectors(
                 0,

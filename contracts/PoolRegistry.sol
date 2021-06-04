@@ -2,10 +2,10 @@
 pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
-import "./RelayDiamond.sol";
-import "./IPoolRegistry.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "diamond-2/contracts/interfaces/IDiamondCut.sol";
+import './RelayDiamond.sol';
+import './IPoolRegistry.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
 
 contract PoolRegistry is IPoolRegistry, Ownable {
     address public override feeCollector;

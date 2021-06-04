@@ -2,9 +2,7 @@
 pragma solidity ^0.7.4;
 
 library LibMemberAccessStorage {
-    bytes32 constant MEMBER_ACCESS_STORAGE_POSITION = keccak256(
-        "diamond.standard.member.access.storage"
-    );
+    bytes32 constant MEMBER_ACCESS_STORAGE_POSITION = keccak256('diamond.standard.member.access.storage');
 
     struct MemberStorage {
         uint256 memberCounter;

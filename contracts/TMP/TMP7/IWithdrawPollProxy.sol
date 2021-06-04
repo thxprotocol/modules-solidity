@@ -8,8 +8,5 @@ interface IWithdrawPollProxy {
 
     function withdrawPollFinalize(uint256 _id) external;
 
-    function withdrawPollApprovalState(uint256 _id)
-        external
-        view
-        returns (bool);
+    function withdrawPollApprovalState(uint256 _id) external view returns (bool);
 }

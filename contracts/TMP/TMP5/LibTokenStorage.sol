@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.4;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 library LibTokenStorage {
-    bytes32 constant TOKEN_STORAGE_POSITION = keccak256(
-        "diamond.standard.token.storage"
-    );
+    bytes32 constant TOKEN_STORAGE_POSITION = keccak256('diamond.standard.token.storage');
 
     struct TokenStorage {
         address registry;

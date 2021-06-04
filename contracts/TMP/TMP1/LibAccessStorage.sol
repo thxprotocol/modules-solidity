@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.4;
-import "@openzeppelin/contracts/utils/EnumerableSet.sol";
+import '@openzeppelin/contracts/utils/EnumerableSet.sol';
 
 library LibAccessStorage {
     // TODO test with conflicting storage (with other pools)
     // set storage pointer based upon assigned id (by factory)
-    
-    bytes32 constant ACCESS_STORAGE_POSITION = keccak256(
-        "diamond.standard.access.storage"
-    );
+
+    bytes32 constant ACCESS_STORAGE_POSITION = keccak256('diamond.standard.access.storage');
 
     struct RoleStorage {
         mapping(bytes32 => RoleData) roles;
