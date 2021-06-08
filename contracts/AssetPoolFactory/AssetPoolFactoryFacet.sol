@@ -37,4 +37,9 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         s.isAssetPool[address(d)] = true;
         emit AssetPoolDeployed(address(d));
     }
+
+    function isAssetPool(address _assetPool) external override returns (bool) {
+        LibFactoryStorage.Data storage s = LibFactoryStorage.s();
+        s.isAssetPool[_assetPool];
+    }
 }

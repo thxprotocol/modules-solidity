@@ -12,4 +12,6 @@ interface IAssetPoolFactory {
     function setDefaultController(address _controller) external;
 
     function deployAssetPool() external;
+
+    function isAssetPool(address _assetPool) external returns (bool);
 }
