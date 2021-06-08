@@ -25,7 +25,16 @@ task('accounts', 'Prints the list of accounts', async () => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-    solidity: '0.7.4',
+    solidity: {
+        compilers: [
+            {
+                version: '0.5.16',
+            },
+            {
+                version: '0.7.6',
+            },
+        ],
+    },
     networks: {
         goerli: {
             url: `https://goerli.infura.io/v3/${INFURA_API_KEY}`,

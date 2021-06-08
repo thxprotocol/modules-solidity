@@ -7,6 +7,8 @@ import '@openzeppelin/contracts/math/SafeMath.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 import '../IPoolRegistry.sol';
+import '../FeeCollector/IFeeCollector.sol';
+
 import '../TMP/TMP5/IToken.sol';
 import '../TMP/TMP5/LibTokenStorage.sol';
 
@@ -42,6 +44,7 @@ contract Token is IToken {
 
         if (fee > 0) {
             s.token.safeTransferFrom(msg.sender, registry.feeCollector(), fee);
+            IFeeCollector(registry.feeCollector()).registerFee(address(s.token), fee);
         }
         s.balance = s.balance.add(amount);
         s.token.safeTransferFrom(msg.sender, address(this), amount);

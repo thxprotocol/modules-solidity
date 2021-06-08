@@ -1,7 +1,7 @@
 {
     "name": "hardhat-project",
     "scripts": {
-        "prettier": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
+        "prettier": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol test/*.js test/**/*.js",
         "prettier-diff": "prettier --list-different  contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "forktest": "/bin/sh .env.bash && npx hardhat node --fork https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY} > /dev/null 2>&1 & sleep 3 && npx hardhat --network fork test test/mainnet/test.js; kill $(lsof -t -i :8545)"
     },
@@ -26,8 +26,10 @@
     "dependencies": {
         "@nomiclabs/hardhat-etherscan": "^2.1.1",
         "@openzeppelin/contracts": "^3.3.0",
+        "@uniswap/v2-core": "https://github.com/QuickSwap/quickswap-core.git",
         "diamond-2": "^1.4.0",
         "dotenv": "^8.2.0",
-        "prettier-plugin-solidity": "^1.0.0-beta.11"
+        "prettier-plugin-solidity": "^1.0.0-beta.11",
+        "quickswap-periphery": "https://github.com/QuickSwap/QuickSwap-periphery.git"
     }
 }
