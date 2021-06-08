@@ -23,6 +23,8 @@ import 'quickswap-periphery/contracts/interfaces/IUniswapV2Router02.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
 
+import '../util/Access.sol'; // TMP 1
+
 /// @title THX Fee Collector
 /// @author Peter Polman
 /// @notice Functions in this contract are called periodically
@@ -31,25 +33,13 @@ contract FeeCollectorFacet is IFeeCollector {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
-    modifier onlyAssetPool {
-        LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
-
-        require(IAssetPoolFactory(s.assetPoolFactory).isAssetPool(msg.sender), 'NOT_ASSET_POOL');
-        _;
-    }
-
     // @param _admin The address of the admin that controls the contract
     // @param _assetPoolFactory The address of the THX asset pool factory
     // @param _thx The address of the THX ERC20 token
-    function initialize(
-        address _admin,
-        address _assetPoolFactory,
-        address _thx
-    ) external override {
+    function initializeCollector(address _assetPoolFactory, address _thx) external override {
         LibDiamond.enforceIsContractOwner();
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
 
-        s.defaultController = _admin;
         s.assetPoolFactory = _assetPoolFactory;
         s.thx = _thx;
 
@@ -60,8 +50,8 @@ contract FeeCollectorFacet is IFeeCollector {
 
     // @param _token The address of the token that was deposited to the asset pool
     // @param _fee The amount of tokens transfered to the collector
-    function registerFee(address _token, uint256 _fee) external override onlyAssetPool {
-        LibDiamond.enforceIsContractOwner();
+    function registerFee(address _token, uint256 _fee) external override {
+        // TODO Can only be called by asset pool contracts
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
 
         s.totalFeesPerToken[_token] = s.totalFeesPerToken[_token].add(_fee);
@@ -106,13 +96,18 @@ contract FeeCollectorFacet is IFeeCollector {
 }
 
 contract MockFeeCollectorFacet is FeeCollectorFacet {
-    function setQuickswapFactory(address _factory) external {
+    function setUniswapV2Factory(address _factory) external {
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
         s.factory = _factory;
     }
 
-    function setQuickswapRouter(address _router) external {
+    function setUniswapV2Router02(address _router) external {
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
         s.router = _router;
+    }
+
+    function setWETH(address _weth) external {
+        LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
+        s.weth = _weth;
     }
 }

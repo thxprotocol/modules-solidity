@@ -5,7 +5,6 @@ library LibFeeCollectorStorage {
     bytes32 constant FEECOLLECTOR_STORAGE_POSITION = keccak256('diamond.standard.feecollector.storage');
 
     struct Data {
-        address defaultController;
         address assetPoolFactory;
         address thx;
         address weth;

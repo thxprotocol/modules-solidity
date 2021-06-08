@@ -7,7 +7,7 @@ import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
 
-contract MockIUniswapV2Router02 {
+contract MockUniswapV2Router02 {
     using SafeERC20 for IERC20;
 
     function swapExactTokensForTokens(

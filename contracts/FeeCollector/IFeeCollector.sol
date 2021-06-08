@@ -6,11 +6,7 @@ interface IFeeCollector {
     event FeeCollected(address token, uint256 amount);
     event FeeSwapped(address token, uint256 amount);
 
-    function initialize(
-        address _admin,
-        address _assetPoolFactory,
-        address _thx
-    ) external;
+    function initializeCollector(address _assetPoolFactory, address _thx) external;
 
     function registerFee(address _token, uint256 _fee) external;
 

@@ -69,6 +69,7 @@ module.exports = {
         factoryFacets = [
             await ethers.getContractFactory('AssetPoolFactoryFacet'),
             await ethers.getContractFactory('OwnershipFacet'),
+            await ethers.getContractFactory('MockFeeCollectorFacet'),
         ];
         diamondCutFactory = [];
         for (let i = 0; i < factoryFacets.length; i++) {
