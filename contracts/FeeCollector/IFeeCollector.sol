@@ -8,6 +8,8 @@ interface IFeeCollector {
 
     function initializeCollector(address _assetPoolFactory, address _thx) external;
 
+    function getTotalFeeForToken(address _token) external view returns (uint256);
+
     function registerFee(address _token, uint256 _fee) external;
 
     function swapExactTokensForTHX(

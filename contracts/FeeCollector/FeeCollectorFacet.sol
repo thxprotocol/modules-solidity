@@ -25,6 +25,8 @@ import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
 
 import '../util/Access.sol'; // TMP 1
 
+import 'hardhat/console.sol';
+
 /// @title THX Fee Collector
 /// @author Peter Polman
 /// @notice Functions in this contract are called periodically
@@ -48,13 +50,19 @@ contract FeeCollectorFacet is IFeeCollector {
         s.weth = 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619;
     }
 
+    // @param _token The address of a pool token that has registered fees.
+    function getTotalFeeForToken(address _token) external view override returns (uint256) {
+        LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
+        return s.totalFeeForToken[_token];
+    }
+
     // @param _token The address of the token that was deposited to the asset pool
     // @param _fee The amount of tokens transfered to the collector
     function registerFee(address _token, uint256 _fee) external override {
         // TODO Can only be called by asset pool contracts
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
 
-        s.totalFeesPerToken[_token] = s.totalFeesPerToken[_token].add(_fee);
+        s.totalFeeForToken[_token] = s.totalFeeForToken[_token].add(_fee);
 
         emit FeeCollected(_token, _fee);
     }
@@ -70,17 +78,20 @@ contract FeeCollectorFacet is IFeeCollector {
         LibDiamond.enforceIsContractOwner();
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
 
-        uint256 amountToSwap = s.totalFeesPerToken[_token];
+        uint256 amountToSwap = s.totalFeeForToken[_token];
 
         if (amountToSwap > 0) {
             IERC20(_token).safeApprove(s.router, amountToSwap);
 
             address[] storage path;
 
-            // IERC20 weth = address(IUniswapV2Factory(s.factory).WETH());
+            address pair1 = IUniswapV2Factory(s.factory).getPair(_token, s.weth); // TODO Revert if not exist or have no liquidity
+            address pair2 = IUniswapV2Factory(s.factory).getPair(s.weth, s.thx);
 
-            path.push(IUniswapV2Factory(s.factory).getPair(_token, s.weth)); // TODO Revert if not exist or have no liquidity
-            path.push(IUniswapV2Factory(s.factory).getPair(s.weth, s.thx));
+            path.push(pair1);
+            path.push(pair2);
+
+            console.log(amountToSwap, _minOut, _deadline, block.timestamp);
 
             IUniswapV2Router02(s.router).swapExactTokensForTokens(
                 amountToSwap,

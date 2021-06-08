@@ -10,7 +10,7 @@ library LibFeeCollectorStorage {
         address weth;
         address factory;
         address router;
-        mapping(address => uint256) totalFeesPerToken;
+        mapping(address => uint256) totalFeeForToken;
     }
 
     function s() internal pure returns (Data storage bs) {
