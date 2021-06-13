@@ -1,6 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.4;
 
+/******************************************************************************\
+* @title GasStation
+* @author Evert Kors <evert@thx.network>
+* @notice Manage gas costs for relayed contract calls.
+* 
+* Implementations:
+* TMP-9 Gas Station: https://github.com/thxprotocol/modules/issues/9
+/******************************************************************************/
+
 import './LibSignature.sol';
 import '../TMP/TMP9/LibGasStationStorage.sol';
 import '../TMP/TMP9/IGasStation.sol';

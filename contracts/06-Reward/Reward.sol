@@ -1,6 +1,21 @@
-//SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
+
+/******************************************************************************\
+* @title Reward Distribution
+* @author Evert Kors <evert@thx.network>
+* @notice Configure reward distribution.
+* 
+* Implementations: 
+* TMP-8 Rewards: https://github.com/thxprotocol/modules/issues/7
+* 
+* Dependencies:
+* TMP-1 Access Control: https://github.com/thxprotocol/modules/issues/1
+* TMP-2 Member ID: https://github.com/thxprotocol/modules/issues/2
+* TMP-6 Base Poll: https://github.com/thxprotocol/modules/issues/6
+* TMP-7 Withdrawal: https://github.com/thxprotocol/modules/issues/6
+/******************************************************************************/
 
 // Implements
 import '../TMP/TMP8/IReward.sol';
