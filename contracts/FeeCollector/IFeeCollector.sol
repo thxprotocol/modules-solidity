@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+
 pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
@@ -13,7 +14,7 @@ interface IFeeCollector {
     function registerFee(address _token, uint256 _fee) external;
 
     function swapExactTokensForTHX(
-        address _token,
+        address[] calldata _path,
         uint256 _minOut,
         uint256 _deadline
     ) external;
