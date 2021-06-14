@@ -55,8 +55,9 @@ contract FeeCollectorFacet is IFeeCollector {
      * @param _fee The amount of tokens transfered to the collector
      */
     function registerFee(address _token, uint256 _fee) external override {
-        // TODO Can only be called by asset pool contracts
         LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
+        require(s.assetPoolFactory != address(0), 'NO_POOL_FACTORY');
+        require(IAssetPoolFactory(s.assetPoolFactory).isAssetPool(msg.sender), 'NOT_POOL');
 
         s.totalFeeForToken[_token] = s.totalFeeForToken[_token].add(_fee);
 

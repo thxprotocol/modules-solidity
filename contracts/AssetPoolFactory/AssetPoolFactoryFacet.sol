@@ -52,6 +52,6 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
 
     function isAssetPool(address _assetPool) external override returns (bool) {
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
-        s.isAssetPool[_assetPool];
+        return s.isAssetPool[_assetPool];
     }
 }

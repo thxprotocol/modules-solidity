@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.0;
 
+import 'hardhat/console.sol';
+
 /******************************************************************************\
 * @title Asset Pool ERC20 asset type.
 * @author Evert Kors <evert@thx.network>
