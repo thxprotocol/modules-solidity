@@ -1,6 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
+
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
+
+/******************************************************************************\
+* @title Withdraw Poll Proxy
+* @author Evert Kors <evert@thx.network>
+* @notice Supports relayed withdraw poll calls.
+* 
+* Implementations:
+* TMP-6 Base poll: https://github.com/thxprotocol/modules/issues/6
+* TMP-7 Withdrawals: https://github.com/thxprotocol/modules/issues/7
+/******************************************************************************/
 
 import '../TMP/TMP7/IWithdrawPollProxy.sol';
 import '../TMP/TMP6/LibBasePollStorage.sol';

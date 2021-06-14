@@ -1,6 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
+
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
+
+/******************************************************************************\
+* @title Base Poll Proxy
+* @author Evert Kors <evert@thx.network>
+* @notice Expose base poll storage.
+* 
+* Implementations: 
+* TMP-6 Base Poll: https://github.com/thxprotocol/modules/issues/6
+/******************************************************************************/
 
 import '../TMP/TMP6/LibBasePollStorage.sol';
 import '../TMP/TMP6/IBasePoll.sol';

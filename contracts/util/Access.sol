@@ -1,7 +1,16 @@
-// contracts/AssetPool.sol
 // SPDX-License-Identifier: Apache-2.0
 
 pragma solidity ^0.7.4;
+
+/******************************************************************************\
+* @title Access
+* @author Evert Kors <evert@thx.network>
+* @notice Implement role-based access control.
+* 
+* @dev
+* Implementations: 
+* TMP-1 Access Control: https://github.com/thxprotocol/modules/issues/1
+/******************************************************************************/
 
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
@@ -35,16 +44,32 @@ contract Access is RelayReceiver, IAccessControlEvents {
         _;
     }
 
+    /**
+     * @dev Checks if account bears role.
+     * @param role Bytes32 array representing the role.
+     * @param account Address of the account
+     * @return if role member storage array contains the given account address.
+     */
     function _hasRole(bytes32 role, address account) internal view virtual returns (bool) {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         return rs.roles[role].members.contains(account);
     }
 
+    /**
+     * @dev Called in initialize methods.
+     * @param role Bytes32 array representing the role.
+     * @param account Address of the account
+     */
     function _setupRole(bytes32 role, address account) internal virtual {
         _grantRole(role, account);
     }
 
+    /**
+     * @dev Called during initialization
+     * @param role Bytes32 array representing the role.
+     * @param adminRole Address of the role admin
+     */
     function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
@@ -52,6 +77,10 @@ contract Access is RelayReceiver, IAccessControlEvents {
         rs.roles[role].adminRole = adminRole;
     }
 
+    /**
+     * @param role Bytes32 array representing the role.
+     * @param account Address of the account
+     */
     function _grantRole(bytes32 role, address account) internal virtual {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
@@ -60,6 +89,10 @@ contract Access is RelayReceiver, IAccessControlEvents {
         }
     }
 
+    /**
+     * @param role Bytes32 array representing the role.
+     * @param account Address of the account
+     */
     function _revokeRole(bytes32 role, address account) internal virtual {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 

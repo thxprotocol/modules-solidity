@@ -1,7 +1,15 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 // source: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/AccessControl.sol
 
 pragma solidity >=0.6.0 <0.8.0;
+
+/******************************************************************************\
+* @author Evert Kors <evert@thx.network>
+* @dev Only used during tests.
+* 
+* Implementations: 
+* TMP-1 Access Control: https://github.com/thxprotocol/modules/issues/1
+/******************************************************************************/
 
 import '../TMP/TMP1/IAccessControl.sol';
 import '../TMP/TMP1/IAccessControlEvents.sol';

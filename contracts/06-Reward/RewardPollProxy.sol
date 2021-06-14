@@ -2,6 +2,16 @@
 pragma solidity ^0.7.4;
 pragma experimental ABIEncoderV2;
 
+/******************************************************************************\
+* @title Reward Poll Proxy
+* @author Evert Kors <evert@thx.network>
+* @notice Supports relayed reward poll calls.
+* 
+* Implementations:
+* TMP-6 Base poll: https://github.com/thxprotocol/modules/issues/6
+* TMP-8 Rewards: https://github.com/thxprotocol/modules/issues/8
+/******************************************************************************/
+
 import '../TMP/TMP8/IRewardPollProxy.sol';
 import '../TMP/TMP6/LibBasePollStorage.sol';
 

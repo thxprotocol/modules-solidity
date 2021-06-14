@@ -1,6 +1,20 @@
-//SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
+
+/******************************************************************************\
+* @title Withdraw Poll
+* @author Evert Kors <evert@thx.network>
+* @notice Extends base polls with withdrawal information.
+* 
+* Dependencies:
+* TMP-3 Member ID: https://github.com/thxprotocol/modules/issues/2
+* TMP-5 Token: https://github.com/thxprotocol/modules/issues/5
+* 
+* Implementations:
+* TMP-6 Base poll: https://github.com/thxprotocol/modules/issues/6
+* TMP-7 Withdrawals: https://github.com/thxprotocol/modules/issues/7
+/******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
 import '@openzeppelin/contracts/math/SafeMath.sol';
@@ -23,6 +37,9 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
+    /**
+     * @dev used to check if poll is a withdrawPoll
+     */
     modifier isWithdraw {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
@@ -34,6 +51,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     }
 
     /**
+     * @param _id The ID of the poll that should be finished.
      * @dev callback called after poll finalization
      */
     function onPollFinish(uint256 _id) internal override {
@@ -63,14 +81,27 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
         delete wpPollData.amount;
     }
 
+    /**
+     * @param _agree boolean representing yes or no vote.
+     * @param _voter Address of the manager account that casts the vote.
+     * @dev Only managers can vote for withdrawPolls.
+     */
     function voteValidate(bool _agree, address _voter) internal override {
         require(_isManager(_voter), 'NO_MANAGER');
     }
 
+    /**
+     * @param _id ID of the withdrawPoll to get the beneficiary for.
+     * @return address of the beneficicary of the reward.
+     */
     function getBeneficiary(uint256 _id) public view override returns (uint256) {
         return LibWithdrawPollStorage.withdrawPollStorageId(_id).beneficiary;
     }
 
+    /**
+     * @param _id ID of the withdrawPoll to get the reward size for.
+     * @return size of the withdrawal.
+     */
     function getAmount(uint256 _id) public view override returns (uint256) {
         return LibWithdrawPollStorage.withdrawPollStorageId(_id).amount;
     }

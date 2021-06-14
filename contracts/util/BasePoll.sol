@@ -20,7 +20,7 @@ abstract contract BasePoll is Access {
     }
 
     /**
-     * Finalize poll and call onPollFinish callback with result
+     * @notice Finalize poll and call onPollFinish callback with result
      */
     function finalize() internal {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
@@ -60,7 +60,7 @@ abstract contract BasePoll is Access {
     }
 
     /**
-     * @dev Revoke user`s vote
+     * @notice Revoke user`s vote
      */
     function revokeVote() internal checkTime {
         LibBasePollStorage.BasePollStorage storage bData = baseData();

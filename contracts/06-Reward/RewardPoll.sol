@@ -1,6 +1,16 @@
-//SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
+
+/******************************************************************************\
+* @title Reward Poll
+* @author Evert Kors <evert@thx.network>
+* @notice Extends base polls with reward information.
+* 
+* Implementations:
+* TMP-6 Base poll: https://github.com/thxprotocol/modules/issues/6
+* TMP-8 Rewards: https://github.com/thxprotocol/modules/issues/8
+/******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';

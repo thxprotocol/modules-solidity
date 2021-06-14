@@ -2,6 +2,13 @@
 
 pragma solidity ^0.7.4;
 
+/******************************************************************************\
+* @title ERC20 Limited Supply
+* @author Peter Polman <peter@thx.network>
+* @notice Used for point systems with a limited supply. Mints the full supply to the to argument given in the contructor. 
+* @dev Not upgradable contract.
+/******************************************************************************/
+
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
 contract TokenLimitedSupply is ERC20 {
