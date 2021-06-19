@@ -87,6 +87,9 @@ abstract contract BasePoll is Access {
         return LibBasePollStorage.basePollStorage(bps());
     }
 
+    /**
+     * @dev This function gets the poll ID of message data that is appended with an address
+     */
     function bps() internal pure returns (bytes32 rt) {
         // These fields are not accessible from assembly
         bytes memory array = msg.data;

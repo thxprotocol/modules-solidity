@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { events, diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
+const { events, diamond, assetPool, ENABLE_REWARD, DISABLE_REWARD } = require('./utils.js');
 
 describe('06 reward', function () {
     let owner;
@@ -49,7 +49,7 @@ describe('06 reward', function () {
         expect(await withdraw.getWithdrawDuration(1)).to.eq(500);
         expect(await withdraw.getRewardIndex(1)).to.eq(0);
     });
-    it('Test withdrawPollVote', async function () {
+    it('Test rewardPollVote', async function () {
         expect(await withdraw.getYesCounter(1)).to.eq(0);
         await withdraw.rewardPollVote(1, true);
         expect(await withdraw.getYesCounter(1)).to.eq(1);
@@ -123,13 +123,22 @@ describe('06 reward - claim', function () {
     it('Claim non reward', async function () {
         await expect(solution.connect(owner).claimReward(2)).to.be.reverted;
     });
-    // it("Claim disabled reward", async function () {
-    //   ev = await events(solution.updateReward(1, DISABLE_REWARD, 0));
-    //   const pollid = ev[0].args.id;
-    //   await solution.rewardPollVote(pollid, true);
-    //   await ethers.provider.send("evm_increaseTime", [180]);
-    //   await solution.rewardPollFinalize(pollid);
+    it('Claim disabled reward', async function () {
+        ev = await events(solution.updateReward(1, DISABLE_REWARD, 0));
+        const pollid = ev[0].args.id;
+        await solution.rewardPollVote(pollid, true);
+        await ethers.provider.send('evm_increaseTime', [180]);
+        await solution.rewardPollFinalize(pollid);
 
-    //   await expect(solution.claimReward(1)).to.be.revertedWith("IS_NOT_ENABLED");
-    // });
+        await expect(solution.claimReward(1)).to.be.revertedWith('IS_NOT_ENABLED');
+    });
+    it('Claim re-enabled reward', async function () {
+        ev = await events(solution.updateReward(1, ENABLE_REWARD, 0));
+        const pollid = ev[0].args.id;
+        await solution.rewardPollVote(pollid, true);
+        await ethers.provider.send('evm_increaseTime', [180]);
+        await solution.rewardPollFinalize(pollid);
+
+        await expect(solution.claimReward(1)).to.emit(solution, 'WithdrawPollCreated');
+    });
 });

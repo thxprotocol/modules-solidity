@@ -5,7 +5,7 @@ const { events, diamond, timestamp, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
-describe('05 withdaw', function () {
+describe('05 withdraw', function () {
     let owner;
     let voter;
     let withdraw;

@@ -42,6 +42,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
 
     /**
      * @dev callback called after poll finalization
+     * @param _id ID of the reward poll
      */
     function onPollFinish(uint256 _id) internal override {
         LibRewardPollStorage.RewardPollStorage storage rwPollData = LibRewardPollStorage.rewardPollStorageId(_id);
@@ -74,23 +75,42 @@ contract RewardPoll is BasePoll, IRewardPoll {
         delete rwPollData.withdrawDuration;
     }
 
+    /**
+     * @param _id ID of the reward
+     * @return The amound a member can withdraw for this reward.
+     */
     function getWithdrawAmount(uint256 _id) external view override returns (uint256) {
         return LibRewardPollStorage.rewardPollStorageId(_id).withdrawAmount;
     }
 
+    /**
+     * @param _id ID of the reward
+     * @return The duration of the optional withdraw poll for this reward.
+     */
     function getWithdrawDuration(uint256 _id) external view override returns (uint256) {
         return LibRewardPollStorage.rewardPollStorageId(_id).withdrawDuration;
     }
 
+    /**
+     * @param _id ID of the reward
+     * @return The storage index of the reward.
+     */
     function getRewardIndex(uint256 _id) external view override returns (uint256) {
         return LibRewardPollStorage.rewardPollStorageId(_id).rewardIndex;
     }
 
+    /**
+     * @param _agree Bool reflecting vote for the poll
+     * @dev calls generic vote() function and emits reward poll specific event.
+     */
     function _rewardPollVote(bool _agree) external override isReward {
         vote(_agree);
         emit RewardPollVoted(baseData().id, _msgSender(), _agree);
     }
 
+    /**
+     * @dev calls abstract revokeVote() function and emits reward poll specific event.
+     */
     function _rewardPollRevokeVote() external override isReward {
         revokeVote();
         emit RewardPollRevokedVote(baseData().id, _msgSender());

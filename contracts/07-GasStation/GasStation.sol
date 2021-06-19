@@ -16,12 +16,18 @@ import '../TMP/TMP9/IGasStation.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 contract GasStationFacet is IGasStation {
+    /**
+     * @param _admin Admin will ve responsible for paying the gas.
+     */
     function initializeGasStation(address _admin) external override {
         require(msg.sender == LibDiamond.diamondStorage().contractOwner);
         LibGasStationStorage.gsStorage().admin = _admin;
         LibGasStationStorage.gsStorage().enabled = true;
     }
 
+    /**
+     * @return the Gas Station admin address
+     */
     function getGasStationAdmin() external view override returns (address) {
         return LibGasStationStorage.gsStorage().admin;
     }
@@ -46,12 +52,21 @@ contract GasStationFacet is IGasStation {
         s.signerNonce[_signer] = _nonce;
     }
 
+    /**
+     * @dev Enables or disables signing for the pool
+     * @param _enabled Boolean reflecting the state of signing
+     */
     function setSigning(bool _enabled) public override {
         require(msg.sender == LibGasStationStorage.gsStorage().admin, 'AUTH');
         LibGasStationStorage.gsStorage().enabled = _enabled;
     }
 
     // Multinonce? https://github.com/PISAresearch/metamask-comp#multinonce
+    /**
+     * @param _call Encoded function + arguments data
+     * @param _nonce Latest nonce for the original sender
+     * @param _sig Signed message
+     */
     function call(
         bytes memory _call,
         uint256 _nonce,

@@ -92,4 +92,6 @@ module.exports = {
     // keccak256("MANAGER_ROLE")
     MANAGER_ROLE: '0x241ecf16d79d0f8dbfb92cbc07fe17840425976cf0667f022fe9877caa831b08',
     ADMIN_ROLE: constants.HashZero,
+    ENABLE_REWARD: ethers.BigNumber.from('2').pow(250),
+    DISABLE_REWARD: ethers.BigNumber.from('2').pow(251),
 };
