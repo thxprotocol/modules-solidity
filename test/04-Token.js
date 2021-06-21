@@ -1,7 +1,9 @@
 const { expect } = require('chai');
-const { parseEther } = require('ethers/lib/utils');
+const { parseEther, parseUnits, formatEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
 const { diamond, assetPool } = require('./utils.js');
+const { MerkleTree } = require('./merkleTree');
+const { soliditySha3 } = require('web3-utils');
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
@@ -12,7 +14,7 @@ describe('04 token', function () {
     let collector;
 
     before(async function () {
-        [owner] = await ethers.getSigners();
+        [owner, claimer] = await ethers.getSigners();
         const MemberAccess = await ethers.getContractFactory('MemberAccess');
         const Token = await ethers.getContractFactory('Token');
         const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
@@ -78,5 +80,46 @@ describe('04 token', function () {
             .withArgs(erc20.address, totalFeeForToken);
         expect(await collector.getTotalFeeForToken(erc20.address)).to.eq(0);
         expect(await thx.balanceOf(collector.address)).to.eq(parseEther('2'));
+    });
+
+    describe('04.1 Test claim', async () => {
+        const WEEK = 1;
+        let redeem, merkleTree, elements, claimBalance;
+
+        before(async () => {
+            redeem = await ethers.getContractAt('MerkleRedeem', await collector.getRedeem());
+
+            // Give the claimer a share of tokens
+            await thx.transfer(await claimer.getAddress(), parseEther('100'));
+
+            const ratio = (await thx.balanceOf(await claimer.getAddress())) / (await thx.totalSupply());
+            const claimBalanceDecimal = formatEther(await thx.balanceOf(collector.address)) * ratio;
+
+            claimBalance = parseUnits(parseEther(claimBalanceDecimal.toString()).toString(), 'wei').toString();
+            elements = [soliditySha3(await claimer.getAddress(), claimBalance)];
+            merkleTree = new MerkleTree(elements);
+        });
+
+        it('store allocation', async function () {
+            const root = merkleTree.getHexRoot();
+
+            await collector.seedAllocations(WEEK, root, await thx.balanceOf(collector.address));
+
+            const proof = merkleTree.getHexProof(elements[0]);
+
+            expect(await redeem.verifyClaim(await claimer.getAddress(), WEEK, claimBalance, proof)).to.eq(true);
+        });
+
+        it('claim allocation', async function () {
+            const proof = merkleTree.getHexProof(elements[0]);
+
+            expect(redeem.claimWeek(await claimer.getAddress(), WEEK, claimBalance, proof))
+                .to.emit(redeem, 'Claimed')
+                .withArgs(await claimer.getAddress(), claimBalance);
+
+            expect(await thx.balanceOf(await claimer.getAddress())).to.eq(parseEther('100.2'));
+            expect(await redeem.claimed(WEEK, await claimer.getAddress())).to.eq(true);
+            expect(await thx.balanceOf(redeem.address)).to.eq(parseEther('1.8'));
+        });
     });
 });

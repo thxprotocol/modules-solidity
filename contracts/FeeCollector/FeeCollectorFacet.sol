@@ -12,6 +12,7 @@ pragma experimental ABIEncoderV2;
 import '../RelayDiamond.sol';
 import '../IDefaultDiamond.sol';
 import '../AssetPoolFactory/IAssetPoolFactory.sol';
+import '../util/MerkleRedeem.sol';
 import './IFeeCollector.sol';
 import './LibFeeCollectorStorage.sol';
 
@@ -36,6 +37,8 @@ contract FeeCollectorFacet is IFeeCollector {
 
         s.assetPoolFactory = _assetPoolFactory;
         s.thx = _thx;
+
+        s.redeem = new MerkleRedeem(_thx);
 
         s.router = 0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff;
         s.factory = 0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32;
@@ -93,6 +96,34 @@ contract FeeCollectorFacet is IFeeCollector {
 
             emit FeeSwapped(_path[0], amountToSwap);
         }
+    }
+
+    /**
+     * @param _week Week to allocate the claims for.
+     * @param _merkleRoot MerkleTree root for the chosen block id.
+     * @param _totalAllocation Sum of all the allocations for this week.
+     */
+    function seedAllocations(
+        uint256 _week,
+        bytes32 _merkleRoot,
+        uint256 _totalAllocation
+    ) external {
+        LibDiamond.enforceIsContractOwner();
+        LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
+
+        require(address(s.redeem) != address(0), 'NO_REDEEM');
+
+        IERC20(s.thx).approve(address(s.redeem), _totalAllocation);
+        s.redeem.seedAllocations(_week, _merkleRoot, _totalAllocation);
+    }
+
+    /**
+     * @return address of the MerkleRedeem contract.
+     */
+    function getRedeem() public view returns (address) {
+        LibFeeCollectorStorage.Data storage s = LibFeeCollectorStorage.s();
+
+        return address(s.redeem);
     }
 }
 

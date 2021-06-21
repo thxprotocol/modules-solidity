@@ -2,6 +2,8 @@
 
 pragma solidity ^0.7.4;
 
+import '../util/MerkleRedeem.sol';
+
 library LibFeeCollectorStorage {
     bytes32 constant FEECOLLECTOR_STORAGE_POSITION = keccak256('diamond.standard.feecollector.storage');
 
@@ -11,6 +13,7 @@ library LibFeeCollectorStorage {
         address weth;
         address factory;
         address router;
+        MerkleRedeem redeem;
         mapping(address => uint256) totalFeeForToken;
     }
 
