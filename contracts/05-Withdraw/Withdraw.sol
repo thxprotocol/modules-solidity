@@ -75,7 +75,6 @@ contract Withdraw is Access, IWithdraw {
         wpStorage.beneficiary = LibMemberAccessStorage.memberStorage().addressToMember[_beneficiary];
 
         emit WithdrawPollCreated(bst.pollCounter, wpStorage.beneficiary);
-        return baseStorage.id;
     }
 
     /**
