@@ -48,7 +48,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
      * @param _id The ID of the reward
      * @return the reward information
      */
-    function getReward(uint256 _id) public view override returns (LibRewardPollStorage.Reward memory) {
+    function getReward(uint256 _id) external view override returns (LibRewardPollStorage.Reward memory) {
         return LibRewardPollStorage.rewardStorage().rewards[_id - 1];
     }
 

@@ -18,7 +18,7 @@ contract TokenUnlimitedAccount is ERC20 {
         string memory _name,
         string memory _symbol,
         address _unlimited
-    ) public ERC20(_name, _symbol) {
+    ) ERC20(_name, _symbol) {
         unlimited = _unlimited;
     }
 

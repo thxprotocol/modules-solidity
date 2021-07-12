@@ -18,7 +18,7 @@ contract AccessControlMock is IAccessControl, IAccessControlEvents {
     // TODO, consider moving storage to lib, for diamond tests
     bool hasRoleMock;
 
-    function mockHasRole(bool _value) public {
+    function mockHasRole(bool _value) external {
         hasRoleMock = _value;
     }
 
@@ -28,31 +28,31 @@ contract AccessControlMock is IAccessControl, IAccessControlEvents {
 
     uint256 getRoleMemberCountMock;
 
-    function mockGetRoleMemberCount(uint256 _value) public {
+    function mockGetRoleMemberCount(uint256 _value) external {
         getRoleMemberCountMock = _value;
     }
 
-    function getRoleMemberCount(bytes32 role) public view override returns (uint256) {
+    function getRoleMemberCount(bytes32 role) external view override returns (uint256) {
         return getRoleMemberCountMock;
     }
 
     address getRoleMemberMock;
 
-    function mockGetRoleMember(address _value) public {
+    function mockGetRoleMember(address _value) external {
         getRoleMemberMock = _value;
     }
 
-    function getRoleMember(bytes32 role, uint256 index) public view override returns (address) {
+    function getRoleMember(bytes32 role, uint256 index) external view override returns (address) {
         return getRoleMemberMock;
     }
 
     bytes32 getRoleAdminMock;
 
-    function mockGetRoleAdmin(bytes32 _value) public {
+    function mockGetRoleAdmin(bytes32 _value) external {
         getRoleAdminMock = _value;
     }
 
-    function getRoleAdmin(bytes32 role) public view override returns (bytes32) {
+    function getRoleAdmin(bytes32 role) external view override returns (bytes32) {
         return getRoleAdminMock;
     }
 

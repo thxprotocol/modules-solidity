@@ -36,7 +36,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
      * @param _owner Address of the account that should own the contract.
      * @dev Should be called right after deploying the contract. _owner will become member, manager and role admin.
      */
-    function initializeRoles(address _owner) public override {
+    function initializeRoles(address _owner) external override {
         require(LibMemberAccessStorage.memberStorage().memberCounter == 0, 'INIT');
 
         LibMemberAccessStorage.memberStorage().memberCounter = 1000;

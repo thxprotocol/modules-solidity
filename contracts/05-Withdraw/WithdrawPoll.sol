@@ -95,7 +95,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
      * @param _id ID of the withdrawPoll to get the beneficiary for.
      * @return address of the beneficicary of the reward.
      */
-    function getBeneficiary(uint256 _id) public view override returns (uint256) {
+    function getBeneficiary(uint256 _id) external view override returns (uint256) {
         return LibWithdrawPollStorage.withdrawPollStorageId(_id).beneficiary;
     }
 
@@ -103,7 +103,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
      * @param _id ID of the withdrawPoll to get the reward size for.
      * @return size of the withdrawal.
      */
-    function getAmount(uint256 _id) public view override returns (uint256) {
+    function getAmount(uint256 _id) external view override returns (uint256) {
         return LibWithdrawPollStorage.withdrawPollStorageId(_id).amount;
     }
 

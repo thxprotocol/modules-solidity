@@ -15,7 +15,7 @@ contract PoolRegistry is IPoolRegistry, Ownable {
      * @param _feeCollector Address of the FeeCollector contract.
      * @param _feeCollector Integer representing the deposit fee percentage.
      */
-    constructor(address _feeCollector, uint256 _feePercentage) public {
+    constructor(address _feeCollector, uint256 _feePercentage) {
         feeCollector = _feeCollector;
         feePercentage = _feePercentage;
     }

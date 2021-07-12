@@ -56,7 +56,7 @@ contract GasStationFacet is IGasStation {
      * @dev Enables or disables signing for the pool
      * @param _enabled Boolean reflecting the state of signing
      */
-    function setSigning(bool _enabled) public override {
+    function setSigning(bool _enabled) external override {
         require(msg.sender == LibGasStationStorage.gsStorage().admin, 'AUTH');
         LibGasStationStorage.gsStorage().enabled = _enabled;
     }

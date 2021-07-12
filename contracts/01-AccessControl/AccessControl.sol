@@ -40,7 +40,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
      * @param role Role to get the count for.
      * @return the amount of members for the role.
      */
-    function getRoleMemberCount(bytes32 role) public view override returns (uint256) {
+    function getRoleMemberCount(bytes32 role) external view override returns (uint256) {
         return LibAccessStorage.roleStorage().roles[role].members.length();
     }
 
@@ -50,7 +50,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
      * @param index Index of the pool member.
      * @return member address.
      */
-    function getRoleMember(bytes32 role, uint256 index) public view override returns (address) {
+    function getRoleMember(bytes32 role, uint256 index) external view override returns (address) {
         return LibAccessStorage.roleStorage().roles[role].members.at(index);
     }
 
@@ -59,7 +59,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
      * @param role Bytes32 array representing the role
      * @return Bytes32 array of the administrative role for the given role.
      */
-    function getRoleAdmin(bytes32 role) public view override returns (bytes32) {
+    function getRoleAdmin(bytes32 role) external view override returns (bytes32) {
         return LibAccessStorage.roleStorage().roles[role].adminRole;
     }
 
