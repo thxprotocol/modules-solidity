@@ -21,6 +21,10 @@ interface IReward {
         uint256 _withdrawDuration
     ) external;
 
+    function enableReward(uint256 _id) external;
+
+    function disableReward(uint256 _id) external;
+
     function claimRewardFor(uint256 _id, address _beneficiary) external;
 
     function claimReward(uint256 _id) external;

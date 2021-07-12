@@ -30,10 +30,6 @@ import '../util/BasePoll.sol'; // TMP1, TMP 6
 import '../TMP/TMP6/LibBasePollStorage.sol';
 
 contract Reward is Access, IReward, IWithdrawEvents {
-    // Magic numbers reflecting reward state.
-    uint256 constant ENABLE_REWARD = 2**250;
-    uint256 constant DISABLE_REWARD = 2**251;
-
     /**
      * @param _duration The duration of the reward poll
      */
@@ -63,8 +59,6 @@ contract Reward is Access, IReward, IWithdrawEvents {
      */
     function addReward(uint256 _withdrawAmount, uint256 _withdrawDuration) external override onlyOwner {
         require(_withdrawAmount != 0, 'NOT_VALID');
-        require(_withdrawAmount != ENABLE_REWARD, 'NOT_VALID');
-        require(_withdrawAmount != DISABLE_REWARD, 'NOT_VALID');
         LibRewardPollStorage.Reward memory reward;
 
         reward.id = LibRewardPollStorage.rewardStorage().rewards.length + 1;
@@ -95,21 +89,37 @@ contract Reward is Access, IReward, IWithdrawEvents {
         require(!(_withdrawAmount == 0 && _withdrawDuration == 0), 'NOT_ALLOWED');
 
         require(
-            !(_withdrawAmount == ENABLE_REWARD && reward.state == LibRewardPollStorage.RewardState.Enabled),
-            'ALREADY_ENABLED'
-        );
-
-        require(
-            !(_withdrawAmount == DISABLE_REWARD && reward.state == LibRewardPollStorage.RewardState.Disabled),
-            'ALREADY_DISABLED'
-        );
-
-        require(
             !(reward.withdrawAmount == _withdrawAmount && reward.withdrawDuration == _withdrawDuration),
             'IS_EQUAL'
         );
 
         reward.pollId = _createRewardPoll(_id, _withdrawAmount, _withdrawDuration);
+    }
+
+    /**
+     * @dev Enable an existing reward, should be disabled and can only be called by managers.
+     * @param _id The ID of the reward to claim.
+     */
+    function enableReward(uint256 _id) external override onlyOwner {
+        require(_isManager(_msgSender()), 'NOT_MANAGER');
+
+        LibRewardPollStorage.Reward storage reward = LibRewardPollStorage.rewardStorage().rewards[_id - 1];
+        require(reward.state != LibRewardPollStorage.RewardState.Enabled, 'ALREADY_ENABLED');
+
+        reward.state = LibRewardPollStorage.RewardState.Enabled;
+    }
+
+    /**
+     * @dev Disable an existing reward, should be enabled and can only be called by managers.
+     * @param _id The ID of the reward to claim.
+     */
+    function disableReward(uint256 _id) external override onlyOwner {
+        require(_isManager(_msgSender()), 'NOT_MANAGER');
+
+        LibRewardPollStorage.Reward storage reward = LibRewardPollStorage.rewardStorage().rewards[_id - 1];
+        require(reward.state != LibRewardPollStorage.RewardState.Disabled, 'ALREADY_DISABLED');
+
+        reward.state = LibRewardPollStorage.RewardState.Disabled;
     }
 
     /**
@@ -154,8 +164,9 @@ contract Reward is Access, IReward, IWithdrawEvents {
         baseStorage.startTime = block.timestamp;
         baseStorage.endTime = block.timestamp + _duration;
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage =
-            LibWithdrawPollStorage.withdrawPollStorageId(bst.pollCounter);
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage = LibWithdrawPollStorage.withdrawPollStorageId(
+            bst.pollCounter
+        );
 
         wpStorage.amount = _amount;
         wpStorage.beneficiary = LibMemberAccessStorage.memberStorage().addressToMember[_beneficiary];
@@ -182,8 +193,9 @@ contract Reward is Access, IReward, IWithdrawEvents {
 
         LibRewardPollStorage.RewardStorage storage rewardStorage = LibRewardPollStorage.rewardStorage();
 
-        LibRewardPollStorage.RewardPollStorage storage rpStorage =
-            LibRewardPollStorage.rewardPollStorageId(bst.pollCounter);
+        LibRewardPollStorage.RewardPollStorage storage rpStorage = LibRewardPollStorage.rewardPollStorageId(
+            bst.pollCounter
+        );
 
         baseStorage.id = bst.pollCounter;
         baseStorage.startTime = block.timestamp;

@@ -67,8 +67,9 @@ contract Withdraw is Access, IWithdraw {
         baseStorage.startTime = block.timestamp;
         baseStorage.endTime = block.timestamp + _duration;
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage =
-            LibWithdrawPollStorage.withdrawPollStorageId(bst.pollCounter);
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage = LibWithdrawPollStorage.withdrawPollStorageId(
+            bst.pollCounter
+        );
 
         wpStorage.amount = _amount;
         wpStorage.beneficiary = LibMemberAccessStorage.memberStorage().addressToMember[_beneficiary];
