@@ -36,7 +36,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
         _;
     }
 
-    function voteValidate(address _voter) internal override {
+    function voteValidate(address _voter) internal view override {
         require(_isMember(_voter), 'NO_MEMBER');
     }
 

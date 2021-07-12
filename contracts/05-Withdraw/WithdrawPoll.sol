@@ -90,7 +90,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
      * @param _voter Address of the manager account that casts the vote.
      * @dev Only managers can vote for withdrawPolls.
      */
-    function voteValidate(address _voter) internal override {
+    function voteValidate(address _voter) internal view override {
         require(_isManager(_voter), 'NO_MANAGER');
     }
 
