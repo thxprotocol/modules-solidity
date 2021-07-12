@@ -107,21 +107,21 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
         return LibWithdrawPollStorage.withdrawPollStorageId(_id).amount;
     }
 
-    function _withdrawPollVote(bool _agree) external override isWithdraw {
+    function _withdrawPollVote(bool _agree) external override isWithdraw isSelf {
         vote(_agree);
         emit WithdrawPollVoted(baseData().id, _msgSender(), _agree);
     }
 
-    function _withdrawPollRevokeVote() external override isWithdraw {
+    function _withdrawPollRevokeVote() external override isWithdraw isSelf {
         revokeVote();
         emit WithdrawPollRevokedVote(baseData().id, _msgSender());
     }
 
-    function _withdrawPollFinalize() external override isWithdraw {
+    function _withdrawPollFinalize() external override isWithdraw isSelf {
         finalize();
     }
 
-    function _withdrawPollApprovalState() public view virtual override isWithdraw returns (bool) {
+    function _withdrawPollApprovalState() public view virtual override isWithdraw isSelf returns (bool) {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
         return bData.yesCounter > bData.noCounter;
     }

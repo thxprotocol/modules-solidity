@@ -9,6 +9,11 @@ import './Access.sol'; // TMP 1
 abstract contract BasePoll is Access {
     using SafeMath for uint256;
 
+    modifier isSelf {
+        require(msg.sender == address(this));
+        _;
+    }
+
     function onPollFinish(uint256 _id) internal virtual;
 
     function voteValidate(address _voter) internal virtual;

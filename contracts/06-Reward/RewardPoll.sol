@@ -104,7 +104,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
      * @param _agree Bool reflecting vote for the poll
      * @dev calls generic vote() function and emits reward poll specific event.
      */
-    function _rewardPollVote(bool _agree) external override isReward {
+    function _rewardPollVote(bool _agree) external override isReward isSelf {
         vote(_agree);
         emit RewardPollVoted(baseData().id, _msgSender(), _agree);
     }
@@ -112,16 +112,16 @@ contract RewardPoll is BasePoll, IRewardPoll {
     /**
      * @dev calls abstract revokeVote() function and emits reward poll specific event.
      */
-    function _rewardPollRevokeVote() external override isReward {
+    function _rewardPollRevokeVote() external override isReward isSelf {
         revokeVote();
         emit RewardPollRevokedVote(baseData().id, _msgSender());
     }
 
-    function _rewardPollFinalize() external override isReward {
+    function _rewardPollFinalize() external override isReward isSelf {
         finalize();
     }
 
-    function _rewardPollApprovalState() public view virtual override isReward returns (bool) {
+    function _rewardPollApprovalState() public view virtual override isReward isSelf returns (bool) {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
         return bData.yesCounter > bData.noCounter;
     }
