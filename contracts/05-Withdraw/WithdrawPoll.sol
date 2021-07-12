@@ -65,9 +65,12 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
         if (approved) {
             LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
+            // Checks for pool balance to exceed withdraw amount
             if (s.balance >= wpPollData.amount) {
                 s.balance = s.balance.sub(wpPollData.amount);
-            } else {
+            }
+            // Checks for token to not be an unlimited supply token
+            else if (s.token.totalSupply() != 0) {
                 revert('INSUFFICIENT_FUNDS');
             }
 
