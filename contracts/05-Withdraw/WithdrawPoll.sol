@@ -43,8 +43,9 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     modifier isWithdraw {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData =
-            LibWithdrawPollStorage.withdrawPollStorageId(bData.id);
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData = LibWithdrawPollStorage.withdrawPollStorageId(
+            bData.id
+        );
 
         require(wpPollData.beneficiary != 0, 'NOT_WITHDRAW_POLL');
         _;
@@ -57,8 +58,9 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     function onPollFinish(uint256 _id) internal override {
         bool approved = _withdrawPollApprovalState();
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData =
-            LibWithdrawPollStorage.withdrawPollStorageId(_id);
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData = LibWithdrawPollStorage.withdrawPollStorageId(
+            _id
+        );
 
         if (approved) {
             LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
@@ -82,11 +84,10 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     }
 
     /**
-     * @param _agree boolean representing yes or no vote.
      * @param _voter Address of the manager account that casts the vote.
      * @dev Only managers can vote for withdrawPolls.
      */
-    function voteValidate(bool _agree, address _voter) internal override {
+    function voteValidate(address _voter) internal override {
         require(_isManager(_voter), 'NO_MANAGER');
     }
 

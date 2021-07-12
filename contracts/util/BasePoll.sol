@@ -11,7 +11,7 @@ abstract contract BasePoll is Access {
 
     function onPollFinish(uint256 _id) internal virtual;
 
-    function voteValidate(bool _agree, address _voter) internal virtual;
+    function voteValidate(address _voter) internal virtual;
 
     modifier checkTime() {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
@@ -40,7 +40,7 @@ abstract contract BasePoll is Access {
      * @param _agree True if user endorses the proposal else False
      */
     function vote(bool _agree) internal checkTime {
-        voteValidate(_agree, _msgSender());
+        voteValidate(_msgSender());
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
         require(bData.votesByAddress[_msgSender()].time == 0, 'HAS_VOTED');
