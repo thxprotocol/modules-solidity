@@ -68,7 +68,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
             if (s.balance >= wpPollData.amount) {
                 s.balance = s.balance.sub(wpPollData.amount);
             } else {
-                revert('Insufficient funds');
+                revert('INSUFFICIENT_FUNDS');
             }
 
             address benef = LibMemberAccessStorage.memberStorage().memberToAddress[wpPollData.beneficiary];
