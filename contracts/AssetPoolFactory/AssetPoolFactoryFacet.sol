@@ -19,7 +19,7 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
 
         s.defaultController = msg.sender;
-        for (uint256 i; i < _facets.length; i++) {
+        for (uint256 i = 0; i < _facets.length; i++) {
             s.defaultCut.push(_facets[i]);
         }
     }
