@@ -68,6 +68,7 @@ module.exports = {
 
         factoryFacets = [
             await ethers.getContractFactory('AssetPoolFactoryFacet'),
+            await ethers.getContractFactory('AssetPoolFactoryUpdateFacet'),
             await ethers.getContractFactory('OwnershipFacet'),
         ];
         diamondCutFactory = [];
@@ -83,7 +84,7 @@ module.exports = {
         [owner] = await ethers.getSigners();
         const Diamond = await ethers.getContractFactory('Diamond');
         diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
-        factory = await ethers.getContractAt('IAssetPoolFactory', diamond.address);
+        factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
         await factory.initialize(diamondCut);
 
         return factory;
