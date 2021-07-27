@@ -1,10 +1,23 @@
 {
-    "name": "hardhat-project",
+    "name": "@thxnetwork/artifacts",
+    "version": "1.0.0",
     "scripts": {
         "prettier": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "prettier-diff": "prettier --list-different  contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
-        "forktest": "/bin/sh .env.bash && npx hardhat node --fork https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY} > /dev/null 2>&1 & sleep 3 && npx hardhat --network fork test test/mainnet/test.js; kill $(lsof -t -i :8545)"
+        "forktest": "/bin/sh .env.bash && npx hardhat node --fork https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY} > /dev/null 2>&1 & sleep 3 && npx hardhat --network fork test test/mainnet/test.js; kill $(lsof -t -i :8545)",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm run test",
+        "preversion": "npm run lint",
+        "version": "npm run format && git add -A src",
+        "postversion": "git push && git push --tags",
+        "format": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
+        "lint": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
+        "build": "npx hardhat compile",
+        "test": "npx hardhat test"
     },
+    "files": [
+        "artifacts/**/*"
+    ],
     "prettier": {
         "tabWidth": 4,
         "singleQuote": true,
@@ -29,5 +42,20 @@
         "diamond-2": "^1.4.0",
         "dotenv": "^8.2.0",
         "prettier-plugin-solidity": "^1.0.0-beta.11"
-    }
+    },
+    "description": "Maintainer: [Peter Polman](mailto:peter@thx.network) - [THX Discord](https://discord.gg/6n6QK8Qk) - [THX Slack](https://thx.page.link/slack)",
+    "main": "hardhat.config.js",
+    "directories": {
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/thxprotocol/modules-solidity.git"
+    },
+    "author": "Peter Polman",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/thxprotocol/modules-solidity/issues"
+    },
+    "homepage": "https://github.com/thxprotocol/modules-solidity#readme"
 }
