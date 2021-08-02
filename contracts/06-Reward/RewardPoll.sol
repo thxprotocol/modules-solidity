@@ -47,9 +47,8 @@ contract RewardPoll is BasePoll, IRewardPoll {
     function onPollFinish(uint256 _id) internal override {
         LibRewardPollStorage.RewardPollStorage storage rwPollData = LibRewardPollStorage.rewardPollStorageId(_id);
 
-        LibRewardPollStorage.Reward storage reward = LibRewardPollStorage.rewardStorage().rewards[
-            rwPollData.rewardIndex
-        ];
+        LibRewardPollStorage.Reward storage reward =
+            LibRewardPollStorage.rewardStorage().rewards[rwPollData.rewardIndex];
 
         bool approved = _rewardPollApprovalState();
         if (approved) {

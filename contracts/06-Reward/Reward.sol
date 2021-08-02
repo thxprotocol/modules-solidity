@@ -164,9 +164,8 @@ contract Reward is Access, IReward, IWithdrawEvents {
         baseStorage.startTime = block.timestamp;
         baseStorage.endTime = block.timestamp + _duration;
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage = LibWithdrawPollStorage.withdrawPollStorageId(
-            bst.pollCounter
-        );
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage =
+            LibWithdrawPollStorage.withdrawPollStorageId(bst.pollCounter);
 
         wpStorage.amount = _amount;
         wpStorage.beneficiary = LibMemberAccessStorage.memberStorage().addressToMember[_beneficiary];
@@ -193,9 +192,8 @@ contract Reward is Access, IReward, IWithdrawEvents {
 
         LibRewardPollStorage.RewardStorage storage rewardStorage = LibRewardPollStorage.rewardStorage();
 
-        LibRewardPollStorage.RewardPollStorage storage rpStorage = LibRewardPollStorage.rewardPollStorageId(
-            bst.pollCounter
-        );
+        LibRewardPollStorage.RewardPollStorage storage rpStorage =
+            LibRewardPollStorage.rewardPollStorageId(bst.pollCounter);
 
         baseStorage.id = bst.pollCounter;
         baseStorage.startTime = block.timestamp;

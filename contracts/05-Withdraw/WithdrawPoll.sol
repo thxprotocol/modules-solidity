@@ -43,9 +43,8 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     modifier isWithdraw() {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData = LibWithdrawPollStorage.withdrawPollStorageId(
-            bData.id
-        );
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData =
+            LibWithdrawPollStorage.withdrawPollStorageId(bData.id);
 
         require(wpPollData.beneficiary != 0, 'NOT_WITHDRAW_POLL');
         _;
@@ -58,9 +57,8 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     function onPollFinish(uint256 _id) internal override {
         bool approved = _withdrawPollApprovalState();
 
-        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData = LibWithdrawPollStorage.withdrawPollStorageId(
-            _id
-        );
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData =
+            LibWithdrawPollStorage.withdrawPollStorageId(_id);
 
         if (approved) {
             LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
