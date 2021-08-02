@@ -40,7 +40,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     /**
      * @dev used to check if poll is a withdrawPoll
      */
-    modifier isWithdraw {
+    modifier isWithdraw() {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
         LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData = LibWithdrawPollStorage.withdrawPollStorageId(
@@ -66,12 +66,12 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
             LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
             // Checks for pool balance to exceed withdraw amount
-            if (s.balance >= wpPollData.amount) {
+            // Skip this check for pools with 0 balance, since these
+            // might have connected an TokenUnlimitedAccount.
+            // When balance is insufficient, safeTransfer will fail
+            // according to its design.
+            if (s.balance != 0 && s.balance >= wpPollData.amount) {
                 s.balance = s.balance.sub(wpPollData.amount);
-            }
-            // Checks for token to not be an unlimited supply token
-            else if (s.token.totalSupply() != 0) {
-                revert('INSUFFICIENT_FUNDS');
             }
 
             address benef = LibMemberAccessStorage.memberStorage().memberToAddress[wpPollData.beneficiary];

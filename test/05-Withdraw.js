@@ -7,7 +7,6 @@ const onePercent = ethers.BigNumber.from('10').pow(16);
 
 describe('05 withdraw', function () {
     let owner;
-    let voter;
     let withdraw;
 
     before(async function () {
@@ -63,8 +62,6 @@ describe('05 - proposeWithdraw', function () {
     let voter;
     let poolMember;
     let token;
-    let reward;
-    let _beforeDeployment;
 
     let withdrawTimestamp;
 
@@ -169,5 +166,67 @@ describe('05 - proposeWithdraw', function () {
         expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('1099'));
     });
 });
+
+describe('05 - tokenUnlimitedAccount', function () {
+    let withdraw;
+    let poolMember;
+    let token;
+
+    before(async function () {
+        [owner, voter, poolMember, collector] = await ethers.getSigners();
+
+        const MemberAccess = await ethers.getContractFactory('MemberAccess');
+        const Token = await ethers.getContractFactory('Token');
+        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
+        const Withdraw = await ethers.getContractFactory('Withdraw');
+        const WithdrawPoll = await ethers.getContractFactory('WithdrawPoll');
+        const WithdrawPollProxy = await ethers.getContractFactory('WithdrawPollProxy');
+
+        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
+        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
+        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
+
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+
+        const TokenUnlimitedAccount = await ethers.getContractFactory('TokenUnlimitedAccount');
+
+        const factory = await diamond([
+            MemberAccess,
+            Token,
+            BasePollProxy,
+            Withdraw,
+            WithdrawPoll,
+            WithdrawPollProxy,
+            DiamondCutFacet,
+            DiamondLoupeFacet,
+            OwnershipFacet,
+        ]);
+        withdraw = await assetPool(factory.deployAssetPool());
+        token = await TokenUnlimitedAccount.deploy('Test Token', 'TST', withdraw.address);
+        await withdraw.addToken(token.address);
+
+        const registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+
+        await withdraw.setPoolRegistry(registry.address);
+        await withdraw.setProposeWithdrawPollDuration(100);
+        await withdraw.addMember(await poolMember.getAddress());
+        await withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress());
+        await withdraw.withdrawPollVote(1, true);
+    });
+
+    it('finalize', async function () {
+        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(0);
+        expect(await withdraw.getBalance()).to.eq(0);
+        expect(await token.balanceOf(withdraw.address)).to.eq(0);
+
+        await ethers.provider.send('evm_increaseTime', [180]);
+        await withdraw.withdrawPollFinalize(1);
+        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('1'));
+
+        expect(await withdraw.getBalance()).to.eq(0);
+        expect(await token.balanceOf(withdraw.address)).to.eq(0);
+    });
+});
+
 // todo test
 // withdrawPollRevokeVote
