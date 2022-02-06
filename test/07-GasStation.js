@@ -1,19 +1,12 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { constants } = require('ethers');
-const { events, diamond, assetPool, helpSign, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
+const { diamond, assetPool, helpSign } = require('./utils.js');
 
 describe('07 GasStation', function () {
     let solution;
 
     let owner;
     let voter;
-    let token;
-    let reward;
-    let _beforeDeployment;
-
-    let rewardTimestamp;
-    let withdrawTimestamp;
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();

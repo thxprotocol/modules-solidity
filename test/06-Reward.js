@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { events, diamond, assetPool, ENABLE_REWARD, DISABLE_REWARD } = require('./utils.js');
+const { events, diamond, assetPool } = require('./utils.js');
 
 describe('06 reward', function () {
     let owner;

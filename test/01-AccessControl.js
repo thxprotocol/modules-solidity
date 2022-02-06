@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const { parseEther } = require('ethers/lib/utils');
 const { diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
 
 describe('01 Access Control', function () {
