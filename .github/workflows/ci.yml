@@ -3,25 +3,25 @@ name: Smart Contract CI
 on: [push, pull_request]
 
 jobs:
-    # test:
-    #     runs-on: ubuntu-latest
+    test:
+        runs-on: ubuntu-latest
 
-    #     steps:
-    #         - uses: actions/checkout@v2
-    #         - name: Install Node.js
-    #           uses: actions/setup-node@v1
-    #           with:
-    #               node-version: 16.x
-    #         - name: Install dependencies
-    #           run: npm ci
-    #         - name: Run tests
-    #           run: npx hardhat test
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.x
+            - name: Install dependencies
+              run: npm ci
+            - name: Run tests
+              run: npx hardhat test
 
     buildAndPushImage:
         name: Build and Push docker image
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-ci'
-        # needs: test
+        needs: test
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -67,6 +67,6 @@ jobs:
               with:
                   context: .
                   push: true
-                  platforms: linux/amd64,linux/arm64
+                  platforms: linux/amd64 #,linux/arm64
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}

@@ -3,6 +3,8 @@ FROM ${ARCH}node:16-alpine
 
 WORKDIR /usr/src/app
 
+RUN apk add bash
+
 COPY package*.json ./
 
 RUN apk add --virtual .build g++ make py3-pip && \
@@ -13,4 +15,4 @@ COPY . .
 
 RUN npm run prepare
 
-CMD [ "npx", "hardhat", "node" ]
+CMD "./scripts/init-docker.sh" 
