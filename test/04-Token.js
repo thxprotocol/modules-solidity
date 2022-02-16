@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
+const { diamond, assetPool } = require('./utils.js');
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 

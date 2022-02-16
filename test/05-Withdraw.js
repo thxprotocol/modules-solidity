@@ -1,9 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { events, diamond, timestamp, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
-
-const onePercent = ethers.BigNumber.from('10').pow(16);
+const { events, diamond, timestamp, assetPool } = require('./utils.js');
 
 describe('05 withdraw', function () {
     let owner;
