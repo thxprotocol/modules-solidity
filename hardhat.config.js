@@ -43,7 +43,15 @@ module.exports = {
                 },
                 {
                     balance: '100000000000000000000',
-                    privateKey: '97093724e1748ebfa6aa2d2ec4ec68df8678423ab9a12eb2d27ddc74e35e5db9',
+                    privateKey: '0x97093724e1748ebfa6aa2d2ec4ec68df8678423ab9a12eb2d27ddc74e35e5db9',
+                },
+                {
+                    balance: '100000000000000000000',
+                    privateKey: '5a05e38394194379795422d2e8c1d33e90033d90defec4880174c39198f707e3',
+                },
+                {
+                    balance: '100000000000000000000',
+                    privateKey: 'eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0',
                 },
             ],
         },
