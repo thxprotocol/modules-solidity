@@ -35,6 +35,18 @@ module.exports = {
         },
     },
     networks: {
+        hardhat: {
+            accounts: [
+                {
+                    balance: '100000000000000000000',
+                    privateKey: '873c254263b17925b686f971d7724267710895f1585bb0533db8e693a2af32ff',
+                },
+                {
+                    balance: '100000000000000000000',
+                    privateKey: '97093724e1748ebfa6aa2d2ec4ec68df8678423ab9a12eb2d27ddc74e35e5db9',
+                },
+            ],
+        },
         goerli: {
             url: `https://goerli.infura.io/v3/${INFURA_API_KEY}`,
             accounts: [GOERLI_PRIVATE_KEY].filter((item) => item !== ''),
