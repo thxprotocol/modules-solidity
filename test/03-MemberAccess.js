@@ -1,7 +1,6 @@
 const { expect } = require('chai');
-const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
+const { diamond, assetPool } = require('./utils.js');
 
 describe('03 member access', function () {
     let owner;
