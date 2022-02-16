@@ -46,7 +46,7 @@
         "prettier-plugin-solidity": "^1.0.0-beta.11"
     },
     "description": "Maintainer: [Peter Polman](mailto:peter@thx.network) - [THX Discord](https://discord.gg/6n6QK8Qk) - [THX Slack](https://thx.page.link/slack)",
-    "main": "hardhat.config.js",
+    "main": "hardhat.config.ts",
     "directories": {
         "test": "test"
     },
