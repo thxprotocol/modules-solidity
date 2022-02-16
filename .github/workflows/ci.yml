@@ -20,7 +20,7 @@ jobs:
     buildAndPushImage:
         name: Build and Push docker image
         runs-on: ubuntu-latest
-        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-ci' )&& startsWith(github.event.head_commit.message, 'publish:')
+        if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'publish:')
         needs: test
         steps:
             - name: Checkout
