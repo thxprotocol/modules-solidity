@@ -15,7 +15,7 @@ enum FacetCutAction {
     Remove = 2,
 }
 
-export async function main() {
+export async function deployFactory() {
     const [owner] = await ethers.getSigners();
     const networks = {
         localhost: {
@@ -107,16 +107,10 @@ export async function main() {
     });
 
     const RelayDiamond = await ethers.getContractFactory('RelayDiamond');
-    const factory = await RelayDiamond.deploy(factoryDiamond, await owner.getAddress());
+    const diamond = await RelayDiamond.deploy(factoryDiamond, await owner.getAddress());
+    const factory = await ethers.getContractAt('IAssetPoolFactory', diamond.address);
 
-    console.log('Factory:', factory.address);
+    await factory.initialize(defaultDiamond);
+
+    return factory.address;
 }
-
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
