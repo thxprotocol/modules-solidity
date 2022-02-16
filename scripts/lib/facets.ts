@@ -33,7 +33,6 @@ async function main() {
 
         facets[artifact] = facet.address;
     }
-    console.log(facets);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
