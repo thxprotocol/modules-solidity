@@ -1,6 +1,11 @@
-FROM node:16-alpine
+ARG ARCH=
+FROM ${ARCH}node:16-alpine
 
 WORKDIR /usr/src/app
+
+RUN apk add bash
+
+RUN npm config set fetch-retry-maxtimeout 100000
 
 COPY package*.json ./
 
@@ -12,4 +17,4 @@ COPY . .
 
 RUN npm run prepare
 
-CMD [ "npx", "hardhat", "node" ]
+CMD "./scripts/init-docker.sh" 

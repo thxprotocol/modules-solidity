@@ -10,7 +10,7 @@ Default Asset Pools are connected to an ERC20 contract. The pool is controlled b
 npx hardhat node
 ```
 
-## Deployemt
+## Deployment
 
 Deploy facets, factory and registry on localhost network
 
