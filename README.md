@@ -4,7 +4,7 @@ Maintainer: [Peter Polman](mailto:peter@thx.network) - [THX Discord](https://dis
 
 Default Asset Pools are connected to an ERC20 contract. The pool is controlled by a permissioned (OAuth2.0) REST API which is responsible for paying the gas costs used to manage the pool. Access to the pool is managed with a flexible role-based access mechanism. Pools can hold various reward configurations for the connected ERC20 tokent contract and will manage the distribution of those token rewards with a withdrawal system. The poll system used to govern the reward configuration and withdrawals is optional.
 
-## Running localhost network
+## Running network localhost
 
 ```
 npx hardhat node
