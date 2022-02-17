@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { task } from 'hardhat/config';
+import { extendEnvironment, task } from 'hardhat/config';
 
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
@@ -12,18 +12,17 @@ dotenv.config();
 const INFURA_API_KEY = process.env.INFURA_API_KEY || '';
 const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task('accounts', 'Prints the list of accounts', async (args, hre) => {
-    const accounts = await hre.ethers.getSigners();
-
-    for (const account of accounts) {
-        console.log(account.address);
-    }
-});
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
+
+extendEnvironment((hre) => {
+    const Web3 = require('web3');
+    hre.Web3 = Web3;
+
+    // hre.network.provider is an EIP1193-compatible provider.
+    hre.web3 = new Web3(hre.network.provider);
+});
 
 /**
  * @type import('hardhat/config').HardhatUserConfig

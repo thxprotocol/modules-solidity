@@ -1,5 +1,3 @@
-import { ethers } from 'hardhat';
-
 import { deployFacets } from './lib/facets';
 import { deployFactory } from './lib/factory';
 import { deployRegistry } from './lib/registry';
