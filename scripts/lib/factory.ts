@@ -48,7 +48,7 @@ export async function deployFactory() {
     const MemberAccess = await ethers.getContractAt('MemberAccess', networks.localhost.MemberAccess);
     const Token = await ethers.getContractAt('Token', networks.localhost.Token);
     const BasePollProxy = await ethers.getContractAt('BasePollProxy', networks.localhost.BasePollProxy);
-    const GasStation = await ethers.getContractAt('GasStationFacet', networks.localhost.BasePollProxy);
+    const GasStation = await ethers.getContractAt('GasStationFacet', networks.localhost.GasStationFacet);
     const Withdraw = await ethers.getContractAt('Withdraw', networks.localhost.Withdraw);
     const WithdrawPoll = await ethers.getContractAt('WithdrawPoll', networks.localhost.WithdrawPoll);
     const WithdrawPollProxy = await ethers.getContractAt('WithdrawPollProxy', networks.localhost.WithdrawPollProxy);
