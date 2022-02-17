@@ -106,8 +106,8 @@ export async function deployFactory() {
         };
     });
 
-    const RelayDiamond = await ethers.getContractFactory('RelayDiamond');
-    const diamond = await RelayDiamond.deploy(factoryDiamond, await owner.getAddress());
+    const DiamondFactory = await ethers.getContractFactory('Diamond');
+    const diamond = await DiamondFactory.deploy(factoryDiamond, [await owner.getAddress()]);
     const factory = await ethers.getContractAt('IAssetPoolFactory', diamond.address);
 
     await factory.initialize(defaultDiamond);
