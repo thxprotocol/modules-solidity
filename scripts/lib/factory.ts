@@ -105,7 +105,7 @@ export async function deployFactory() {
             functionSelectors: getSelectors(facet),
         };
     });
-
+    // tiny change
     const DiamondFactory = await ethers.getContractFactory('Diamond');
     const diamond = await DiamondFactory.deploy(factoryDiamond, [await owner.getAddress()]);
     const factory = await ethers.getContractAt('IAssetPoolFactory', diamond.address);
