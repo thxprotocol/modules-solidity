@@ -3,9 +3,7 @@ FROM ${ARCH}node:16-alpine
 
 WORKDIR /usr/src/app
 
-RUN apk add bash
-
-RUN npm config set fetch-retry-maxtimeout 100000
+RUN apk add bash && npm install -g npm@8.5.1
 
 COPY package*.json ./
 
