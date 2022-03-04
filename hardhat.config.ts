@@ -11,8 +11,6 @@ const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
-console.log(INFURA_PROJECT_ID, POLYGON_PRIVATE_KEY);
-
 extendEnvironment((hre) => {
     const Web3 = require('web3');
     hre.Web3 = Web3;

@@ -4,8 +4,8 @@ import { deployRegistry } from './lib/registry';
 
 export async function exec() {
     console.log('Facets:', await deployFacets());
-    // console.log('Factory:', await deployFactory());
-    // console.log('Registry:', await deployRegistry());
+    console.log('Factory:', await deployFactory());
+    console.log('Registry:', await deployRegistry());
 }
 
 exec()

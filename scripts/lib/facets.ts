@@ -32,7 +32,7 @@ export async function deployFacets() {
         Artifacts.MemberAccess,
         Artifacts.Token,
         Artifacts.BasePollProxy,
-        Artifacts.GasStationFacet,
+        Artifacts.RelayHubFacet,
         Artifacts.UpdateDiamond,
         Artifacts.Withdraw,
         Artifacts.WithdrawPoll,
