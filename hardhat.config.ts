@@ -1,33 +1,24 @@
 import dotenv from 'dotenv';
-import { extendEnvironment, task } from 'hardhat/config';
+import { extendEnvironment } from 'hardhat/config';
 
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
-import { parseUnits } from 'ethers/lib/utils';
 
-dotenv.config();
+dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.ci' : '.env' });
 
-// This is a sample Hardhat task. To learn how to create your own go o
-// https://hardhat.org/guides/create-task.html
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+console.log(INFURA_PROJECT_ID, POLYGON_PRIVATE_KEY);
 
 extendEnvironment((hre) => {
     const Web3 = require('web3');
     hre.Web3 = Web3;
-
-    // hre.network.provider is an EIP1193-compatible provider.
     hre.web3 = new Web3(hre.network.provider);
 });
 
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
 module.exports = {
     defaultNetwork: 'hardhat',
     solidity: {
@@ -77,8 +68,6 @@ module.exports = {
         },
     },
     etherscan: {
-        // Your API key for Etherscan
-        // Obtain one at https://etherscan.io/
         apiKey: ETHERSCAN_API,
     },
 };
