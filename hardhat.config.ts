@@ -4,13 +4,14 @@ import { extendEnvironment, task } from 'hardhat/config';
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
+import { parseUnits } from 'ethers/lib/utils';
 
 dotenv.config();
 
 // This is a sample Hardhat task. To learn how to create your own go o
 // https://hardhat.org/guides/create-task.html
-const INFURA_API_KEY = process.env.INFURA_API_KEY || '';
-const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY || '';
+const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
+const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
 // You need to export an object to set up your config
@@ -59,14 +60,19 @@ module.exports = {
                 },
             ],
         },
-        goerli: {
-            url: `https://goerli.infura.io/v3/${INFURA_API_KEY}`,
-            accounts: [GOERLI_PRIVATE_KEY].filter((item) => item !== ''),
-            timeout: 2483647,
-        },
         fork: {
             url: `http://127.0.0.1:8545/`,
             accounts: ['eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0'],
+            timeout: 2483647,
+        },
+        maticmum: {
+            url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
+            accounts: [POLYGON_PRIVATE_KEY],
+            timeout: 2483647,
+        },
+        matic: {
+            url: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
+            accounts: [POLYGON_PRIVATE_KEY],
             timeout: 2483647,
         },
     },
