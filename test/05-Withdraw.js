@@ -128,17 +128,12 @@ describe('05 - proposeWithdraw', function () {
     it('propose reward as non member', async function () {
         await expect(
             withdraw.connect(voter).proposeWithdraw(parseEther('1'), await owner.getAddress()),
-        ).to.be.revertedWith('NOT_MEMBER');
+        ).to.be.revertedWith('NOT_OWNER');
     });
-    it('propose rewardFor non member', async function () {
+    it('propose rewardFor for non member', async function () {
         await expect(withdraw.proposeWithdraw(parseEther('1'), await voter.getAddress())).to.be.revertedWith(
             'NOT_MEMBER',
         );
-    });
-    it('propose rewardFor member as non member', async function () {
-        await expect(
-            withdraw.connect(voter).proposeWithdraw(parseEther('1'), await voter.getAddress()),
-        ).to.be.revertedWith('NOT_MEMBER');
     });
     it('vote', async function () {
         voteTxTimestamp = await timestamp(withdraw.withdrawPollVote(1, true));
