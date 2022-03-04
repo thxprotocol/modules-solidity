@@ -29,22 +29,20 @@
     },
     "devDependencies": {
         "@nomiclabs/hardhat-ethers": "^2.0.1",
+        "@nomiclabs/hardhat-etherscan": "^2.1.1",
         "@nomiclabs/hardhat-waffle": "^2.0.1",
         "@nomiclabs/hardhat-web3": "^2.0.0",
+        "@openzeppelin/contracts": "^3.3.0",
         "chai": "^4.2.0",
+        "diamond-2": "^1.4.0",
+        "dotenv": "^8.2.0",
         "ethereum-waffle": "^3.2.2",
         "ethers": "^5.0.26",
         "hardhat": "^2.8.1",
+        "prettier-plugin-solidity": "^1.0.0-beta.11",
         "ts-node": "^10.5.0",
         "typescript": "^4.5.5",
         "web3": "^1.7.0"
-    },
-    "dependencies": {
-        "@nomiclabs/hardhat-etherscan": "^2.1.1",
-        "@openzeppelin/contracts": "^3.3.0",
-        "diamond-2": "^1.4.0",
-        "dotenv": "^8.2.0",
-        "prettier-plugin-solidity": "^1.0.0-beta.11"
     },
     "description": "Maintainer: [Peter Polman](mailto:peter@thx.network) - [THX Discord](https://discord.gg/6n6QK8Qk) - [THX Slack](https://thx.page.link/slack)",
     "main": "hardhat.config.ts",
