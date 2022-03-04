@@ -36,7 +36,7 @@ contract Withdraw is Access, IWithdraw {
      * @param _beneficiary Beneficiary of the reward.
      */
     function proposeWithdraw(uint256 _amount, address _beneficiary) external override onlyOwner {
-        // TODO verify amount
+        require(_amount != 0, 'NOT_VALID');
         require(_isMember(_beneficiary), 'NOT_MEMBER');
 
         _createWithdrawPoll(
