@@ -16,6 +16,8 @@ jobs:
               run: npm ci
             - name: Run tests
               run: npx hardhat test
+              env:
+                  NODE_ENV: test
 
     buildAndPushImage:
         name: Build and Push docker image
