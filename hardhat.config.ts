@@ -5,7 +5,7 @@ import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
 
-dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.ci' : '.env' });
+dotenv.config();
 
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
@@ -17,7 +17,7 @@ extendEnvironment((hre) => {
     hre.web3 = new Web3(hre.network.provider);
 });
 
-module.exports = {
+const config: any = {
     defaultNetwork: 'hardhat',
     solidity: {
         version: '0.7.4',
@@ -54,18 +54,26 @@ module.exports = {
             accounts: ['eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0'],
             timeout: 2483647,
         },
-        maticmum: {
-            url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
-            accounts: [POLYGON_PRIVATE_KEY],
-            timeout: 2483647,
-        },
-        matic: {
-            url: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-            accounts: [POLYGON_PRIVATE_KEY],
-            timeout: 2483647,
-        },
-    },
-    etherscan: {
-        apiKey: ETHERSCAN_API,
     },
 };
+
+if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
+    config.networks.maticmum = {
+        url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
+        accounts: [POLYGON_PRIVATE_KEY],
+        timeout: 2483647,
+    };
+    config.networks.matic = {
+        url: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
+        accounts: [POLYGON_PRIVATE_KEY],
+        timeout: 2483647,
+    };
+}
+
+if (ETHERSCAN_API) {
+    config.etherscan = {
+        apiKey: ETHERSCAN_API,
+    };
+}
+
+module.exports = config;
