@@ -12,7 +12,6 @@
         "format": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "lint": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "build": "npx hardhat compile",
-        "pretest": "npm run build",
         "test": "npx hardhat test",
         "deploy": "npx hardhat run --network localhost ./scripts/deploy.ts"
     },
