@@ -13,10 +13,9 @@ pragma solidity ^0.7.4;
 import '@openzeppelin/contracts/cryptography/ECDSA.sol';
 import '../TMP/TMP9/LibRelayHubStorage.sol';
 import '../TMP/TMP9/IRelayHub.sol';
-import '../TMP/RelayReceiver.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
-contract RelayHubFacet is IRelayHub, RelayReceiver {
+contract RelayHubFacet is IRelayHub {
     /**
      * @dev Get the latest nonce of a given signer
      * @param _signer Address of the signer

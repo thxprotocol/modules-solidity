@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { events, diamond, timestamp, assetPool } = require('./utils.js');
+const { events, diamond, timestamp, assetPool, helpSign, hex2a } = require('./utils.js');
 
 describe('05 withdraw', function () {
     let owner;
@@ -74,6 +74,7 @@ describe('05 - proposeWithdraw', function () {
         const Withdraw = await ethers.getContractFactory('Withdraw');
         const WithdrawPoll = await ethers.getContractFactory('WithdrawPoll');
         const WithdrawPollProxy = await ethers.getContractFactory('WithdrawPollProxy');
+        const RelayHubFacet = await ethers.getContractFactory('RelayHubFacet');
 
         const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
         const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
@@ -89,6 +90,7 @@ describe('05 - proposeWithdraw', function () {
             DiamondCutFacet,
             DiamondLoupeFacet,
             OwnershipFacet,
+            RelayHubFacet,
         ]);
         withdraw = await assetPool(factory.deployAssetPool());
         await withdraw.addToken(token.address);
@@ -100,7 +102,15 @@ describe('05 - proposeWithdraw', function () {
         await withdraw.deposit(parseEther('1100'));
 
         await withdraw.setProposeWithdrawPollDuration(100);
-        await withdraw.addMember(await poolMember.getAddress());
+    });
+    it('Relayed addMember by owner', async function () {
+        const call = withdraw.interface.encodeFunctionData('addMember', [await poolMember.getAddress()]);
+        const nonce = Number(await solution.getLatestNonce(owner.address)) + 2;
+        const hash = web3.utils.soliditySha3(call, nonce);
+        const sig = await owner.signMessage(ethers.utils.arrayify(hash));
+        const tx = await helpSign(solution, 'call', [call, nonce, sig], owner);
+
+        expect(tx.events[tx.events.length - 1].args.success).to.eq(true);
     });
     it('Test proposeWithdraw', async function () {
         const ev = await events(withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress()));

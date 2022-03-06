@@ -21,7 +21,7 @@ module.exports = {
         return str.trim();
     },
     helpSign: async (solution, name, args, account) => {
-        nonce = await solution.getLatestNonce(account.getAddress());
+        nonce = await solution.getLatestNonce(account.address);
         nonce = parseInt(nonce) + 1;
         const call = solution.interface.encodeFunctionData(name, args);
         const hash = web3.utils.soliditySha3(call, nonce);
