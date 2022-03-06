@@ -1,7 +1,9 @@
 import { web3 } from 'hardhat';
 import { utils } from 'ethers/lib';
+import { parseUnits } from 'ethers/lib/utils';
 
-const PRIVATE_KEY = '0x873c254263b17925b686f971d7724267710895f1585bb0533db8e693a2af32ff';
+const PRIVATE_KEY =
+    process.env.POLYGON_PRIVATE_KEY || '0x873c254263b17925b686f971d7724267710895f1585bb0533db8e693a2af32ff';
 const MINIMUM_GAS_LIMIT = 54680;
 
 export const COLLECTOR = '0x960911a62FdDf7BA84D0d3aD016EF7D15966F7Dc';
@@ -35,12 +37,13 @@ export async function deployContract(abi: any, bytecode: any, arg: any[]) {
             arguments: arg,
         })
         .encodeABI();
-    const nonce = await web3.eth.getTransactionCount(admin.address, 'pending');
+    const nonce = await web3.eth.getTransactionCount(admin.address, 'latest');
     const sig = await web3.eth.accounts.signTransaction(
         {
             gas,
             data,
             nonce,
+            maxPriorityFeePerGas: String(parseUnits('50', 'gwei')),
         },
         PRIVATE_KEY,
     );
@@ -56,7 +59,7 @@ export async function sendTransaction(to: string, fn: any) {
     const data = fn.encodeABI();
     const estimate = await fn.estimateGas({ from: admin.address });
     const gas = estimate < MINIMUM_GAS_LIMIT ? MINIMUM_GAS_LIMIT : estimate;
-    const nonce = await web3.eth.getTransactionCount(admin.address, 'pending');
+    const nonce = await web3.eth.getTransactionCount(admin.address, 'latest');
     const sig = await web3.eth.accounts.signTransaction(
         {
             gas,
@@ -64,6 +67,7 @@ export async function sendTransaction(to: string, fn: any) {
             from,
             data,
             nonce,
+            maxPriorityFeePerGas: String(parseUnits('50', 'gwei')),
         },
         PRIVATE_KEY,
     );

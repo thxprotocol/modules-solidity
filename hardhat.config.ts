@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import Web3 from 'web3';
 import { extendEnvironment } from 'hardhat/config';
 
 import '@nomiclabs/hardhat-waffle';
@@ -12,9 +13,8 @@ const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
 extendEnvironment((hre) => {
-    const Web3 = require('web3');
     hre.Web3 = Web3;
-    hre.web3 = new Web3(hre.network.provider);
+    hre.web3 = new Web3(hre.network.provider as any);
 });
 
 const config: any = {
