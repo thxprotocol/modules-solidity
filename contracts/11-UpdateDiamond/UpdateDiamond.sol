@@ -5,8 +5,9 @@ pragma experimental ABIEncoderV2;
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
 import '../TMP/TMP10/IUpdateDiamond.sol';
+import '../TMP/RelayReceiver.sol';
 
-contract UpdateDiamond is IUpdateDiamond {
+contract UpdateDiamond is IUpdateDiamond, RelayReceiver {
     /**
      * @notice Used to swap asset pool diamond facets.
      */
@@ -15,7 +16,7 @@ contract UpdateDiamond is IUpdateDiamond {
         override
         returns (uint256, bytes32)
     {
-        require(LibDiamond.diamondStorage().contractOwner == msg.sender, 'NOT_OWNER');
+        require(LibDiamond.diamondStorage().contractOwner == _msgSender(), 'NOT_OWNER');
         return
             LibDiamond.addReplaceRemoveFacetSelectors(
                 0,

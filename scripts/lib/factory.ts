@@ -9,7 +9,7 @@ export async function deployFactory() {
         Artifacts.MemberAccess,
         Artifacts.Token,
         Artifacts.BasePollProxy,
-        Artifacts.GasStationFacet,
+        Artifacts.RelayHubFacet,
         Artifacts.WithdrawBy,
         Artifacts.WithdrawByPoll,
         Artifacts.WithdrawByPollProxy,

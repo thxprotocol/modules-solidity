@@ -7,7 +7,7 @@ import WithdrawPollProxyArtifact from '../../artifacts/contracts/05-Withdraw/Wit
 import RewardArtifact from '../../artifacts/contracts/06-Reward/Reward.sol/Reward.json';
 import RewardPollArtifact from '../../artifacts/contracts/06-Reward/RewardPoll.sol/RewardPoll.json';
 import RewardPollProxyArtifact from '../../artifacts/contracts/06-Reward/RewardPollProxy.sol/RewardPollProxy.json';
-import GasStation from '../../artifacts/contracts/07-GasStation/GasStation.sol/GasStationFacet.json';
+import RelayHub from '../../artifacts/contracts/07-RelayHub/RelayHub.sol/RelayHubFacet.json';
 import BasePoll from '../../artifacts/contracts/08-BasePoll/BasePollProxy.sol/BasePollProxy.json';
 import WithdrawByArtifact from '../../artifacts/contracts/09-WithdrawBypass/WithdrawBy.sol/WithdrawBy.json';
 import WithdrawByPollArtifact from '../../artifacts/contracts/09-WithdrawBypass/WithdrawByPoll.sol/WithdrawByPoll.json';
@@ -37,7 +37,7 @@ export const Artifacts = {
     AccessControl: AccessControl,
     MemberAccess: MemberID,
     Token: Token,
-    GasStationFacet: GasStation,
+    RelayHubFacet: RelayHub,
     BasePollProxy: BasePoll,
     UpdateDiamond: UpdateDiamond,
     Withdraw: WithdrawArtifact,

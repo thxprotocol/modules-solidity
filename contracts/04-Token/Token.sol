@@ -16,10 +16,11 @@ import '@openzeppelin/contracts/math/SafeMath.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 import '../IPoolRegistry.sol';
+import '../TMP/RelayReceiver.sol';
 import '../TMP/TMP5/IToken.sol';
 import '../TMP/TMP5/LibTokenStorage.sol';
 
-contract Token is IToken {
+contract Token is IToken, RelayReceiver {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -66,10 +67,10 @@ contract Token is IToken {
         uint256 amount = _amount.sub(fee);
 
         if (fee > 0) {
-            s.token.safeTransferFrom(msg.sender, registry.feeCollector(), fee);
+            s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
         }
         s.balance = s.balance.add(amount);
-        s.token.safeTransferFrom(msg.sender, address(this), amount);
+        s.token.safeTransferFrom(_msgSender(), address(this), amount);
     }
 
     /**

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
-import { extendEnvironment, task } from 'hardhat/config';
+import Web3 from 'web3';
+import { extendEnvironment } from 'hardhat/config';
 
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
@@ -7,27 +8,16 @@ import '@nomiclabs/hardhat-web3';
 
 dotenv.config();
 
-// This is a sample Hardhat task. To learn how to create your own go o
-// https://hardhat.org/guides/create-task.html
-const INFURA_API_KEY = process.env.INFURA_API_KEY || '';
-const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY || '';
+const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
+const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
-
 extendEnvironment((hre) => {
-    const Web3 = require('web3');
     hre.Web3 = Web3;
-
-    // hre.network.provider is an EIP1193-compatible provider.
-    hre.web3 = new Web3(hre.network.provider);
+    hre.web3 = new Web3(hre.network.provider as any);
 });
 
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
-module.exports = {
+const config: any = {
     defaultNetwork: 'hardhat',
     solidity: {
         version: '0.7.4',
@@ -59,20 +49,31 @@ module.exports = {
                 },
             ],
         },
-        goerli: {
-            url: `https://goerli.infura.io/v3/${INFURA_API_KEY}`,
-            accounts: [GOERLI_PRIVATE_KEY].filter((item) => item !== ''),
-            timeout: 2483647,
-        },
         fork: {
             url: `http://127.0.0.1:8545/`,
             accounts: ['eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0'],
             timeout: 2483647,
         },
     },
-    etherscan: {
-        // Your API key for Etherscan
-        // Obtain one at https://etherscan.io/
-        apiKey: ETHERSCAN_API,
-    },
 };
+
+if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
+    config.networks.maticmum = {
+        url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
+        accounts: [POLYGON_PRIVATE_KEY],
+        timeout: 2483647,
+    };
+    config.networks.matic = {
+        url: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
+        accounts: [POLYGON_PRIVATE_KEY],
+        timeout: 2483647,
+    };
+}
+
+if (ETHERSCAN_API) {
+    config.etherscan = {
+        apiKey: ETHERSCAN_API,
+    };
+}
+
+module.exports = config;

@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { diamond, assetPool, helpSign } = require('./utils.js');
+const { diamond, assetPool, helpSign, hex2a } = require('./utils.js');
 
-describe('07 GasStation', function () {
+describe('07 RelayHub', function () {
     let solution;
 
     let owner;
@@ -19,7 +19,7 @@ describe('07 GasStation', function () {
         const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
         const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
         const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-        const GasStationFacet = await ethers.getContractFactory('GasStationFacet');
+        const RelayHubFacet = await ethers.getContractFactory('RelayHubFacet');
 
         const factory = await diamond([
             MemberAccess,
@@ -30,31 +30,16 @@ describe('07 GasStation', function () {
             DiamondCutFacet,
             DiamondLoupeFacet,
             OwnershipFacet,
-            GasStationFacet,
+            RelayHubFacet,
         ]);
         solution = await assetPool(factory.deployAssetPool());
-        await solution.initializeGasStation(await owner.getAddress());
-        await solution.setSigning(true);
     });
-    describe('Signing enabled/disabled', async function () {
-        it('Signing disabled', async function () {
-            await solution.setSigning(false);
-            await expect(helpSign(solution, 'setRewardPollDuration', [180], owner, 1)).to.be.revertedWith(
-                'SIGNING_DISABLED',
-            );
-        });
-        it('Signing enabled', async function () {
-            await solution.setSigning(true);
-            expect(await solution.getRewardPollDuration()).to.eq(0);
-            await helpSign(solution, 'setRewardPollDuration', [180], owner);
-            expect(await solution.getRewardPollDuration()).to.eq(180);
-        });
+    describe('Signing access', async function () {
         it('Not manager', async function () {
-            // needed
             await solution.addMember(await voter.getAddress());
             const tx = await helpSign(solution, 'setRewardPollDuration', [180], voter);
             expect(tx.events[0].args.success).to.eq(false);
-            expect(await solution.getGasStationAdmin()).to.eq(await owner.getAddress());
+            expect(hex2a(tx.events[0].args.data.substr(10))).to.eq('NOT_MANAGER');
         });
         it('Wrong nonce', async function () {
             const call = solution.interface.encodeFunctionData('setRewardPollDuration', [180]);
@@ -62,6 +47,18 @@ describe('07 GasStation', function () {
             const sig = await owner.signMessage(ethers.utils.arrayify(hash));
 
             await expect(solution.call(call, 5, sig)).to.be.revertedWith('INVALID_NONCE');
+        });
+        it('Relayception', async function () {
+            await solution.addManager(await voter.getAddress());
+
+            const call = solution.interface.encodeFunctionData('setRewardPollDuration', [360]);
+            const nonce = Number(await solution.getLatestNonce(await voter.getAddress())) + 1;
+            const hash = web3.utils.soliditySha3(call, nonce);
+            const sig = await voter.signMessage(ethers.utils.arrayify(hash));
+            const tx = await helpSign(solution, 'call', [call, nonce, sig], owner);
+
+            expect(tx.events[0].args.success).to.eq(true);
+            expect(await solution.getRewardPollDuration()).to.eq(360);
         });
     });
     describe('Signing voting flow', async function () {
@@ -76,7 +73,7 @@ describe('07 GasStation', function () {
             const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
             const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
             const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-            const GasStationFacet = await ethers.getContractFactory('GasStationFacet');
+            const RelayHubFacet = await ethers.getContractFactory('RelayHubFacet');
 
             const factory = await diamond([
                 MemberAccess,
@@ -87,19 +84,16 @@ describe('07 GasStation', function () {
                 DiamondCutFacet,
                 DiamondLoupeFacet,
                 OwnershipFacet,
-                GasStationFacet,
+                RelayHubFacet,
             ]);
             solution = await assetPool(factory.deployAssetPool());
-            await solution.initializeGasStation(await owner.getAddress());
-            await solution.setSigning(true);
             await solution.addMember(await voter.getAddress());
-            await solution.setSigning(true);
-
             await solution.setRewardPollDuration(180);
         });
         it('Add reward, no access', async function () {
             const tx = await helpSign(solution, 'addReward', [parseEther('5'), 180], voter);
             expect(tx.events[0].args.success).to.eq(false);
+            expect(hex2a(tx.events[0].args.data.substr(10))).to.eq('NOT_OWNER');
         });
         it('Add reward', async function () {
             await helpSign(solution, 'addReward', [parseEther('5'), 180], owner);

@@ -13,6 +13,6 @@ RUN apk add --virtual .build g++ make py3-pip && \
 
 COPY . .
 
-RUN npm run prepare
+RUN npm run build
 
 CMD "./scripts/init-docker.sh" 
