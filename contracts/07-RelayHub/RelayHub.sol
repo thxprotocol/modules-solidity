@@ -36,7 +36,7 @@ contract RelayHubFacet is IRelayHub, RelayReceiver {
         require(s.signerNonce[_signer] + 1 == _nonce, 'INVALID_NONCE');
         s.signerNonce[_signer] = _nonce;
     }
- 
+
     // Multinonce? https://github.com/PISAresearch/metamask-comp#multinonce
     /**
      * @param _call Encoded function + arguments data
