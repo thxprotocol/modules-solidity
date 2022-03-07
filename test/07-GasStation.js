@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { diamond, assetPool, helpSign, hex2a } = require('./utils.js');
+const { diamond, assetPool, helpSign, hex2a, getDiamondCuts } = require('./utils.js');
 
 describe('07 RelayHub', function () {
     let solution;
@@ -10,29 +10,20 @@ describe('07 RelayHub', function () {
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-        const Reward = await ethers.getContractFactory('Reward');
-        const RewardPoll = await ethers.getContractFactory('RewardPoll');
-        const RewardPollProxy = await ethers.getContractFactory('RewardPollProxy');
-
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-        const RelayHubFacet = await ethers.getContractFactory('RelayHubFacet');
-
-        const factory = await diamond([
-            MemberAccess,
-            BasePollProxy,
-            Reward,
-            RewardPoll,
-            RewardPollProxy,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
-            RelayHubFacet,
+        const factory = await diamond();
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'BasePollProxy',
+            'Reward',
+            'RewardPoll',
+            'RewardPollProxy',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
+            'RelayHubFacet',
         ]);
-        solution = await assetPool(factory.deployAssetPool());
+
+        solution = await assetPool(factory.deployAssetPool(diamondCuts));
     });
     describe('Signing access', async function () {
         it('Not manager', async function () {
@@ -64,29 +55,20 @@ describe('07 RelayHub', function () {
     describe('Signing voting flow', async function () {
         before(async function () {
             [owner, voter] = await ethers.getSigners();
-            const MemberAccess = await ethers.getContractFactory('MemberAccess');
-            const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-            const Reward = await ethers.getContractFactory('Reward');
-            const RewardPoll = await ethers.getContractFactory('RewardPoll');
-            const RewardPollProxy = await ethers.getContractFactory('RewardPollProxy');
-
-            const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-            const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-            const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-            const RelayHubFacet = await ethers.getContractFactory('RelayHubFacet');
-
-            const factory = await diamond([
-                MemberAccess,
-                BasePollProxy,
-                Reward,
-                RewardPoll,
-                RewardPollProxy,
-                DiamondCutFacet,
-                DiamondLoupeFacet,
-                OwnershipFacet,
-                RelayHubFacet,
+            const factory = await diamond();
+            const diamondCuts = await getDiamondCuts([
+                'MemberAccess',
+                'BasePollProxy',
+                'Reward',
+                'RewardPoll',
+                'RewardPollProxy',
+                'DiamondCutFacet',
+                'DiamondLoupeFacet',
+                'OwnershipFacet',
+                'RelayHubFacet',
             ]);
-            solution = await assetPool(factory.deployAssetPool());
+
+            solution = await assetPool(factory.deployAssetPool(diamondCuts));
             await solution.addMember(await voter.getAddress());
             await solution.setRewardPollDuration(180);
         });

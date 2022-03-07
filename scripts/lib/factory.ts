@@ -4,39 +4,12 @@ import { Artifacts } from './artifacts';
 import { Facets } from './facets';
 
 export async function deployFactory() {
-    let defaultDiamond: any[] = [
-        Artifacts.AccessControl,
-        Artifacts.MemberAccess,
-        Artifacts.Token,
-        Artifacts.BasePollProxy,
-        Artifacts.RelayHubFacet,
-        Artifacts.WithdrawBy,
-        Artifacts.WithdrawByPoll,
-        Artifacts.WithdrawByPollProxy,
-        Artifacts.RewardBy,
-        Artifacts.RewardByPoll,
-        Artifacts.RewardByPollProxy,
-        Artifacts.DiamondCutFacet,
-        Artifacts.DiamondLoupeFacet,
-        Artifacts.OwnershipFacet,
-    ];
     let factoryDiamond: any[] = [
         Artifacts.DiamondCutFacet,
         Artifacts.DiamondLoupeFacet,
         Artifacts.OwnershipFacet,
         Artifacts.AssetPoolFactoryFacet,
     ];
-
-    defaultDiamond = defaultDiamond.map((artifact) => {
-        const facetAddress = Facets[artifact.contractName];
-        const facet = new web3.eth.Contract(artifact.abi, facetAddress);
-
-        return {
-            action: FacetCutAction.Add,
-            facetAddress,
-            functionSelectors: getSelectors(facet),
-        };
-    });
 
     factoryDiamond = factoryDiamond.map((artifact) => {
         const facetAddress = Facets[artifact.contractName];
