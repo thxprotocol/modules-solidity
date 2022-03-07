@@ -6,6 +6,5 @@ import 'diamond-2/contracts/interfaces/IERC173.sol';
 import 'diamond-2/contracts/interfaces/IDiamondLoupe.sol';
 import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
 import './IAssetPoolFactory.sol';
-import './IAssetPoolFactoryUpdate.sol';
 
-interface IDefaultFactory is IERC173, IDiamondLoupe, IDiamondCut, IAssetPoolFactory, IAssetPoolFactoryUpdate {}
+interface IDefaultFactory is IERC173, IDiamondLoupe, IDiamondCut, IAssetPoolFactory {}

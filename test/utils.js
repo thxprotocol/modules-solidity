@@ -80,7 +80,6 @@ module.exports = {
 
         factoryFacets = [
             await ethers.getContractFactory('AssetPoolFactoryFacet'),
-            await ethers.getContractFactory('AssetPoolFactoryUpdateFacet'),
             await ethers.getContractFactory('OwnershipFacet'),
         ];
         diamondCutFactory = [];
