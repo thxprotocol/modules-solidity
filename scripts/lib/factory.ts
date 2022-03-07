@@ -28,7 +28,7 @@ export async function deployFactory() {
     const abi: any = Artifacts.IAssetPoolFactory.abi;
     const factory = new web3.eth.Contract(abi, diamond.options.address);
 
-    await sendTransaction(factory.options.address, factory.methods.initialize(defaultDiamond));
+    await sendTransaction(factory.options.address, factory.methods.initialize());
 
     return factory.options.address;
 }
