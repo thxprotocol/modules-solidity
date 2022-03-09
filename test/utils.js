@@ -98,7 +98,6 @@ const diamond = async () => {
 };
 const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';
 const MANAGER_ROLE = '0x241ecf16d79d0f8dbfb92cbc07fe17840425976cf0667f022fe9877caa831b08';
-const DEFAULT_REGISTRY = constants.AddressZero;
 const ADMIN_ROLE = constants.HashZero;
 const ENABLE_REWARD = ethers.BigNumber.from('2').pow(250);
 const DISABLE_REWARD = ethers.BigNumber.from('2').pow(251);
@@ -118,5 +117,4 @@ module.exports = {
     ADMIN_ROLE,
     ENABLE_REWARD,
     DISABLE_REWARD,
-    DEFAULT_REGISTRY,
 };
