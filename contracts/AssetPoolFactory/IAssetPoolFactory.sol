@@ -11,5 +11,5 @@ interface IAssetPoolFactory {
 
     function setDefaultController(address _controller) external;
 
-    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets) external;
+    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external;
 }

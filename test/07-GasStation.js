@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { constants } = require('ethers');
 const { parseEther } = require('ethers/lib/utils');
 const { diamond, assetPool, helpSign, hex2a, getDiamondCuts } = require('./utils.js');
 
@@ -23,7 +24,7 @@ describe('07 RelayHub', function () {
             'RelayHubFacet',
         ]);
 
-        solution = await assetPool(factory.deployAssetPool(diamondCuts));
+        solution = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
     });
     describe('Signing access', async function () {
         it('Not manager', async function () {
@@ -68,7 +69,7 @@ describe('07 RelayHub', function () {
                 'RelayHubFacet',
             ]);
 
-            solution = await assetPool(factory.deployAssetPool(diamondCuts));
+            solution = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
             await solution.addMember(await voter.getAddress());
             await solution.setRewardPollDuration(180);
         });

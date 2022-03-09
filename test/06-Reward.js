@@ -23,7 +23,7 @@ describe('06 reward', function () {
             'OwnershipFacet',
         ]);
 
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts));
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
         await withdraw.setRewardPollDuration(100);
     });
     it('Initial state', async function () {
@@ -69,7 +69,7 @@ describe('06 reward - claim', function () {
             'OwnershipFacet',
         ]);
 
-        solution = await assetPool(factory.deployAssetPool(diamondCuts));
+        solution = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
         await solution.setRewardPollDuration(100);
         await solution.addReward(parseEther('5'), 250);
 

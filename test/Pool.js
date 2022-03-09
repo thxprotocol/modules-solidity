@@ -1,3 +1,4 @@
+const { constants } = require('ethers');
 const { diamond, assetPool, getDiamondCuts } = require('./utils.js');
 
 describe('Pool', function () {
@@ -16,7 +17,7 @@ describe('Pool', function () {
                 'OwnershipFacet',
             ]);
 
-            memberAccess = await assetPool(factory.deployAssetPool(diamondCuts));
+            memberAccess = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
         });
     });
 });

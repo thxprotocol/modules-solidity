@@ -31,13 +31,17 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
      * @notice Deploys and stores the reference to an asset pool based on the current defaultCut.
      * @dev Transfers ownership to the controller and initializes access control.
      * @param _facets Asset Pool facets for the factory diamond to deploy.
+     * @param _registry Registry address to point the pool to.
      */
-    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets) external override {
+    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external override {
         LibDiamond.enforceIsContractOwner();
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
         //direct is required for the initialize functions below
         RelayDiamond d = new RelayDiamond(_facets, address(this));
         IDefaultDiamond assetPool = IDefaultDiamond(address(d));
+        if (_registry != address(0)){
+            assetPool.setPoolRegistry(_registry);
+        }
         assetPool.transferOwnership(s.defaultController);
         assetPool.initializeRoles(s.defaultController);
         s.assetPools.push(address(d));

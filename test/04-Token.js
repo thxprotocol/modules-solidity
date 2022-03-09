@@ -21,8 +21,10 @@ describe('04 token', function () {
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), onePercent);
 
-        token = await assetPool(factory.deployAssetPool(diamondCuts));
+        token = await assetPool(factory.deployAssetPool(diamondCuts, poolRegistry.address));
         const ExampleToken = await ethers.getContractFactory('ExampleToken');
         erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
     });
@@ -32,11 +34,6 @@ describe('04 token', function () {
         expect(await token.getToken()).to.eq(erc20.address);
     });
     it('Test registry', async function () {
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        let poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), onePercent);
-
-        expect(await token.getPoolRegistry()).to.eq(constants.AddressZero);
-        expect(await token.setPoolRegistry(poolRegistry.address));
         expect(await token.getPoolRegistry()).to.eq(poolRegistry.address);
     });
     it('Test deposit', async function () {

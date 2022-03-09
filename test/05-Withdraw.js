@@ -21,7 +21,7 @@ describe('05 withdraw', function () {
             'OwnershipFacet',
         ]);
 
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts));
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
         await withdraw.setProposeWithdrawPollDuration(100);
     });
     it('Initial state', async function () {
@@ -73,12 +73,12 @@ describe('05 - proposeWithdraw', function () {
             'OwnershipFacet',
         ]);
 
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts));
-        await withdraw.addToken(token.address);
-
         const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
         let poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), 0);
-        expect(await withdraw.setPoolRegistry(poolRegistry.address));
+
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, poolRegistry.address));
+        await withdraw.addToken(token.address);
+
         await token.approve(withdraw.address, parseEther('1100'));
         await withdraw.deposit(parseEther('1100'));
 
@@ -175,13 +175,10 @@ describe('05 - tokenUnlimitedAccount', function () {
             'OwnershipFacet',
         ]);
 
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts));
+        const registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         token = await TokenUnlimitedAccount.deploy('Test Token', 'TST', withdraw.address);
         await withdraw.addToken(token.address);
-
-        const registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
-
-        await withdraw.setPoolRegistry(registry.address);
         await withdraw.setProposeWithdrawPollDuration(100);
         await withdraw.addMember(await poolMember.getAddress());
         await withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress());

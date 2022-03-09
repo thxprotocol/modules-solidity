@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { constants } = require('ethers');
 const { diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE, getDiamondCuts } = require('./utils.js');
 
 describe('01 Access Control', function () {
@@ -18,7 +19,7 @@ describe('01 Access Control', function () {
             'OwnershipFacet',
         ]);
 
-        accessControl = await assetPool(factory.deployAssetPool(diamondCuts));
+        accessControl = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero), 0x0000);
         await accessControl.setupMockAccess(
             [MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE],
             [await owner.getAddress(), await owner.getAddress(), await owner.getAddress()],
