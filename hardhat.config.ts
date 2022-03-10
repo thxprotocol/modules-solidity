@@ -6,6 +6,8 @@ import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
 
+import 'hardhat-deploy';
+
 dotenv.config();
 
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
@@ -54,6 +56,9 @@ const config: any = {
             accounts: ['eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0'],
             timeout: 2483647,
         },
+    },
+    paths: {
+        sources: 'contracts',
     },
 };
 

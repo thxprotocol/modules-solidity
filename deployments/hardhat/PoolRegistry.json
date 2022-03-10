@@ -1,0 +1,240 @@
+{
+  "address": "0x278Ff6d33826D906070eE938CDc9788003749e93",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_feeCollector",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_feePercentage",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "feeCollector",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "feePercentage",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_feeCollector",
+          "type": "address"
+        }
+      ],
+      "name": "setFeeCollector",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_feePercentage",
+          "type": "uint256"
+        }
+      ],
+      "name": "setFeePercentage",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xeda8603c12342111e6bac44543fcfacf9cbc947921fa78168244c0f946ce1fc0",
+  "receipt": {
+    "to": null,
+    "from": "0x08302CF8648A961c607e3e7Bd7B7Ec3230c2A6c5",
+    "contractAddress": "0x278Ff6d33826D906070eE938CDc9788003749e93",
+    "transactionIndex": 0,
+    "gasUsed": "352409",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000001020000000000000000000800000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000008000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000800000000200",
+    "blockHash": "0x33a341bd07037543cc722c0e6fc434e0bf9dfd921b559aca3ad389b71dd2aba9",
+    "transactionHash": "0xeda8603c12342111e6bac44543fcfacf9cbc947921fa78168244c0f946ce1fc0",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 1,
+        "transactionHash": "0xeda8603c12342111e6bac44543fcfacf9cbc947921fa78168244c0f946ce1fc0",
+        "address": "0x278Ff6d33826D906070eE938CDc9788003749e93",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x00000000000000000000000008302cf8648a961c607e3e7bd7b7ec3230c2a6c5"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0x33a341bd07037543cc722c0e6fc434e0bf9dfd921b559aca3ad389b71dd2aba9"
+      }
+    ],
+    "blockNumber": 1,
+    "cumulativeGasUsed": "352409",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x960911a62FdDf7BA84D0d3aD016EF7D15966F7Dc",
+    0
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "1c7afd07ed325aa42a0d0ad39a74dde2",
+  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeCollector\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"feeCollector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeCollector\",\"type\":\"address\"}],\"name\":\"setFeeCollector\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"constructor\":{\"params\":{\"_feeCollector\":\"Integer representing the deposit fee percentage.\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"setFeeCollector(address)\":{\"params\":{\"_feeCollector\":\"Address of the FeeCollector contract.\"}},\"setFeePercentage(uint256)\":{\"params\":{\"_feePercentage\":\"0 - 100 value used for substracting fees from deposits into an asset pool.\"}},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/PoolRegistry.sol\":\"PoolRegistry\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/GSN/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity >=0.6.0 <0.8.0;\\n\\n/*\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with GSN meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address payable) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes memory) {\\n        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0x8d3cb350f04ff49cfb10aef08d87f19dcbaecc8027b0bed12f3275cd12f38cf0\",\"license\":\"MIT\"},\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity >=0.6.0 <0.8.0;\\n\\nimport \\\"../GSN/Context.sol\\\";\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    constructor () internal {\\n        address msgSender = _msgSender();\\n        _owner = msgSender;\\n        emit OwnershipTransferred(address(0), msgSender);\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        require(_owner == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions anymore. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby removing any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        emit OwnershipTransferred(_owner, address(0));\\n        _owner = address(0);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        emit OwnershipTransferred(_owner, newOwner);\\n        _owner = newOwner;\\n    }\\n}\\n\",\"keccak256\":\"0xf7c39c7e6d06ed3bda90cfefbcbf2ddc32c599c3d6721746546ad64946efccaa\",\"license\":\"MIT\"},\"contracts/IPoolRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.7.1;\\n\\ninterface IPoolRegistry {\\n    function feeCollector() external returns (address);\\n\\n    function feePercentage() external returns (uint256);\\n}\\n\",\"keccak256\":\"0xb78a45ffdcec04c8a144ab49ab8c4ed8628e89ef84b7b8ab67c962ed3e1c304f\",\"license\":\"Apache-2.0\"},\"contracts/PoolRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.7.1;\\npragma experimental ABIEncoderV2;\\n\\nimport './RelayDiamond.sol';\\nimport './IPoolRegistry.sol';\\nimport '@openzeppelin/contracts/access/Ownable.sol';\\nimport 'diamond-2/contracts/interfaces/IDiamondCut.sol';\\n\\ncontract PoolRegistry is IPoolRegistry, Ownable {\\n    address public override feeCollector;\\n    uint256 public override feePercentage;\\n\\n    /**\\n     * @param _feeCollector Address of the FeeCollector contract.\\n     * @param _feeCollector Integer representing the deposit fee percentage.\\n     */\\n    constructor(address _feeCollector, uint256 _feePercentage) {\\n        feeCollector = _feeCollector;\\n        feePercentage = _feePercentage;\\n    }\\n\\n    /**\\n     * @param _feeCollector Address of the FeeCollector contract.\\n     */\\n    function setFeeCollector(address _feeCollector) external onlyOwner {\\n        feeCollector = _feeCollector;\\n    }\\n\\n    /**\\n     * @param _feePercentage 0 - 100 value used for substracting fees from deposits into an asset pool.\\n     */\\n    function setFeePercentage(uint256 _feePercentage) external onlyOwner {\\n        feePercentage = _feePercentage;\\n    }\\n}\\n\",\"keccak256\":\"0x6fb53f5dec6ebf7290cf987a98a90dbf448a0944f3701ebc03f1095aabac5f8a\",\"license\":\"Apache-2.0\"},\"contracts/RelayDiamond.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.1;\\npragma experimental ABIEncoderV2;\\n\\n/******************************************************************************\\\\\\n* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)\\n* EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535\\n*\\n* Implementation of a diamond.\\n/******************************************************************************/\\n\\nimport 'diamond-2/contracts/libraries/LibDiamond.sol';\\nimport 'diamond-2/contracts/interfaces/IDiamondLoupe.sol';\\nimport 'diamond-2/contracts/interfaces/IDiamondCut.sol';\\nimport 'diamond-2/contracts/interfaces/IERC173.sol';\\nimport 'diamond-2/contracts/interfaces/IERC165.sol';\\n\\ncontract RelayDiamond {\\n    constructor(IDiamondCut.FacetCut[] memory _diamondCut, address _owner) payable {\\n        LibDiamond.diamondCut(_diamondCut, address(0), new bytes(0));\\n        LibDiamond.setContractOwner(_owner);\\n\\n        LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();\\n\\n        // adding ERC165 data\\n        ds.supportedInterfaces[type(IERC165).interfaceId] = true;\\n        ds.supportedInterfaces[type(IDiamondCut).interfaceId] = true;\\n        ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;\\n        ds.supportedInterfaces[type(IERC173).interfaceId] = true;\\n    }\\n\\n    // Find facet for function that is called and execute the\\n    // function if a facet is found and return any value.\\n    fallback() external payable {\\n        LibDiamond.DiamondStorage storage ds;\\n        bytes32 position = LibDiamond.DIAMOND_STORAGE_POSITION;\\n        assembly {\\n            ds.slot := position\\n        }\\n        address facet = address(bytes20(ds.facets[msg.sig]));\\n\\n        require(facet != address(0), 'Diamond: Function does not exist');\\n        assembly {\\n            calldatacopy(0, 0, calldatasize())\\n            if eq(caller(), address()) {\\n                let result := delegatecall(gas(), facet, 0, calldatasize(), 0, 0)\\n                returndatacopy(0, 0, returndatasize())\\n                switch result\\n                    case 0 {\\n                        revert(0, returndatasize())\\n                    }\\n                    default {\\n                        return(0, returndatasize())\\n                    }\\n            }\\n            {\\n                mstore(calldatasize(), caller())\\n                let result := delegatecall(gas(), facet, 0, add(calldatasize(), 0x20), 0, 0)\\n                returndatacopy(0, 0, returndatasize())\\n                switch result\\n                    case 0 {\\n                        revert(0, returndatasize())\\n                    }\\n                    default {\\n                        return(0, returndatasize())\\n                    }\\n            }\\n        }\\n    }\\n\\n    receive() external payable {}\\n}\\n\",\"keccak256\":\"0xa9b8bf03443553ae655f41e6ff8338abb889fa59f115700699ad8520b501e6d1\",\"license\":\"MIT\"},\"diamond-2/contracts/interfaces/IDiamondCut.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.1;\\npragma experimental ABIEncoderV2;\\n\\n/******************************************************************************\\\\\\n* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)\\n* EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535\\n/******************************************************************************/\\n\\ninterface IDiamondCut {\\n    enum FacetCutAction {Add, Replace, Remove}\\n    // Add=0, Replace=1, Remove=2\\n\\n    struct FacetCut {\\n        address facetAddress;\\n        FacetCutAction action;\\n        bytes4[] functionSelectors;\\n    }\\n\\n    /// @notice Add/replace/remove any number of functions and optionally execute\\n    ///         a function with delegatecall\\n    /// @param _diamondCut Contains the facet addresses and function selectors\\n    /// @param _init The address of the contract or facet to execute _calldata\\n    /// @param _calldata A function call, including function selector and arguments\\n    ///                  _calldata is executed with delegatecall on _init\\n    function diamondCut(\\n        FacetCut[] calldata _diamondCut,\\n        address _init,\\n        bytes calldata _calldata\\n    ) external;\\n\\n    event DiamondCut(FacetCut[] _diamondCut, address _init, bytes _calldata);\\n}\\n\",\"keccak256\":\"0x19c92fe16028a8e74a5f1914235b3e7f4e5eafbc5fced9fa345cab5cd4644c0c\",\"license\":\"MIT\"},\"diamond-2/contracts/interfaces/IDiamondLoupe.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.1;\\npragma experimental ABIEncoderV2;\\n\\n/******************************************************************************\\\\\\n* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)\\n* EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535\\n/******************************************************************************/\\n\\n// A loupe is a small magnifying glass used to look at diamonds.\\n// These functions look at diamonds\\ninterface IDiamondLoupe {\\n    /// These functions are expected to be called frequently\\n    /// by tools.\\n\\n    struct Facet {\\n        address facetAddress;\\n        bytes4[] functionSelectors;\\n    }\\n\\n    /// @notice Gets all facet addresses and their four byte function selectors.\\n    /// @return facets_ Facet\\n    function facets() external view returns (Facet[] memory facets_);\\n\\n    /// @notice Gets all the function selectors supported by a specific facet.\\n    /// @param _facet The facet address.\\n    /// @return facetFunctionSelectors_\\n    function facetFunctionSelectors(address _facet) external view returns (bytes4[] memory facetFunctionSelectors_);\\n\\n    /// @notice Get all the facet addresses used by a diamond.\\n    /// @return facetAddresses_\\n    function facetAddresses() external view returns (address[] memory facetAddresses_);\\n\\n    /// @notice Gets the facet that supports the given selector.\\n    /// @dev If facet is not found return address(0).\\n    /// @param _functionSelector The function selector.\\n    /// @return facetAddress_ The facet address.\\n    function facetAddress(bytes4 _functionSelector) external view returns (address facetAddress_);\\n}\\n\",\"keccak256\":\"0x2bf203d5f1fd4f94f7d0de38d664d07126245c9bc434cd15863b2aa6a27cc707\",\"license\":\"MIT\"},\"diamond-2/contracts/interfaces/IERC165.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.1;\\npragma experimental ABIEncoderV2;\\n\\ninterface IERC165 {\\n    /// @notice Query if a contract implements an interface\\n    /// @param interfaceId The interface identifier, as specified in ERC-165\\n    /// @dev Interface identification is specified in ERC-165. This function\\n    ///  uses less than 30,000 gas.\\n    /// @return `true` if the contract implements `interfaceID` and\\n    ///  `interfaceID` is not 0xffffffff, `false` otherwise\\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\\n}\\n\",\"keccak256\":\"0xc19b99fbeaeb943b6d12e6d631b6ae1738aaa498ee49f67caaccc6238fd0d458\",\"license\":\"MIT\"},\"diamond-2/contracts/interfaces/IERC173.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.1;\\n\\n/// @title ERC-173 Contract Ownership Standard\\n///  Note: the ERC-165 identifier for this interface is 0x7f5828d0\\n/* is ERC165 */\\ninterface IERC173 {\\n    /// @dev This emits when ownership of a contract changes.\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /// @notice Get the address of the owner\\n    /// @return owner_ The address of the owner.\\n    function owner() external view returns (address owner_);\\n\\n    /// @notice Set the address of the new owner of the contract\\n    /// @dev Set _newOwner to address(0) to renounce any ownership.\\n    /// @param _newOwner The address of the new owner of the contract\\n    function transferOwnership(address _newOwner) external;\\n}\\n\",\"keccak256\":\"0xbd57ffc856416d3ba942ac7b547eb9626c631d5fe2386ccf134b4c473b3d8705\",\"license\":\"MIT\"},\"diamond-2/contracts/libraries/LibDiamond.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.1;\\npragma experimental ABIEncoderV2;\\n\\n/******************************************************************************\\\\\\n* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)\\n* EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535\\n*\\n* This is gas optimized by reducing storage reads and storage writes.\\n* This code is as complex as it is to reduce gas costs.\\n/******************************************************************************/\\n\\nimport \\\"../interfaces/IDiamondCut.sol\\\";\\n\\nlibrary LibDiamond {\\n    bytes32 constant DIAMOND_STORAGE_POSITION = keccak256(\\\"diamond.standard.diamond.storage\\\");\\n\\n    struct DiamondStorage {\\n        // maps function selectors to the facets that execute the functions.\\n        // and maps the selectors to their position in the selectorSlots array.\\n        // func selector => address facet, selector position\\n        mapping(bytes4 => bytes32) facets;\\n        // array of slots of function selectors.\\n        // each slot holds 8 function selectors.\\n        mapping(uint256 => bytes32) selectorSlots;\\n        // The number of function selectors in selectorSlots\\n        uint16 selectorCount;\\n        // owner of the contract\\n        // Used to query if a contract implements an interface.\\n        // Used to implement ERC-165.\\n        mapping(bytes4 => bool) supportedInterfaces;\\n        // owner of the contract\\n        address contractOwner;\\n    }\\n\\n    function diamondStorage() internal pure returns (DiamondStorage storage ds) {\\n        bytes32 position = DIAMOND_STORAGE_POSITION;\\n        assembly {\\n            ds.slot := position\\n        }\\n    }\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    function setContractOwner(address _newOwner) internal {\\n        DiamondStorage storage ds = diamondStorage();\\n        address previousOwner = ds.contractOwner;\\n        ds.contractOwner = _newOwner;\\n        emit OwnershipTransferred(previousOwner, _newOwner);\\n    }\\n\\n    function contractOwner() internal view returns (address contractOwner_) {\\n        contractOwner_ = diamondStorage().contractOwner;\\n    }\\n\\n    function enforceIsContractOwner() internal view {\\n        require(msg.sender == diamondStorage().contractOwner, \\\"LibDiamond: Must be contract owner\\\");\\n    }\\n\\n    modifier onlyOwner {\\n        require(msg.sender == diamondStorage().contractOwner, \\\"LibDiamond: Must be contract owner\\\");\\n        _;\\n    }\\n\\n    event DiamondCut(IDiamondCut.FacetCut[] _diamondCut, address _init, bytes _calldata);\\n\\n    bytes32 constant CLEAR_ADDRESS_MASK = bytes32(uint256(0xffffffffffffffffffffffff));\\n    bytes32 constant CLEAR_SELECTOR_MASK = bytes32(uint256(0xffffffff << 224));\\n\\n    // Internal function version of diamondCut\\n    // This code is almost the same as the external diamondCut,\\n    // except it is using 'Facet[] memory _diamondCut' instead of\\n    // 'Facet[] calldata _diamondCut'.\\n    // The code is duplicated to prevent copying calldata to memory which\\n    // causes an error for a two dimensional array.\\n    function diamondCut(\\n        IDiamondCut.FacetCut[] memory _diamondCut,\\n        address _init,\\n        bytes memory _calldata\\n    ) internal {\\n        DiamondStorage storage ds = diamondStorage();\\n        uint256 originalSelectorCount = ds.selectorCount;\\n        uint256 selectorCount = originalSelectorCount;\\n        bytes32 selectorSlot;\\n        // Check if last selector slot is not full\\n        if (selectorCount % 8 > 0) {\\n            // get last selectorSlot\\n            selectorSlot = ds.selectorSlots[selectorCount / 8];\\n        }\\n        // loop through diamond cut\\n        for (uint256 facetIndex; facetIndex < _diamondCut.length; facetIndex++) {\\n            (selectorCount, selectorSlot) = addReplaceRemoveFacetSelectors(\\n                selectorCount,\\n                selectorSlot,\\n                _diamondCut[facetIndex].facetAddress,\\n                _diamondCut[facetIndex].action,\\n                _diamondCut[facetIndex].functionSelectors\\n            );\\n        }\\n        if (selectorCount != originalSelectorCount) {\\n            ds.selectorCount = uint16(selectorCount);\\n        }\\n        // If last selector slot is not full\\n        if (selectorCount % 8 > 0) {\\n            ds.selectorSlots[selectorCount / 8] = selectorSlot;\\n        }\\n        emit DiamondCut(_diamondCut, _init, _calldata);\\n        initializeDiamondCut(_init, _calldata);\\n    }\\n\\n    function addReplaceRemoveFacetSelectors(\\n        uint256 _selectorCount,\\n        bytes32 _selectorSlot,\\n        address _newFacetAddress,\\n        IDiamondCut.FacetCutAction _action,\\n        bytes4[] memory _selectors\\n    ) internal returns (uint256, bytes32) {\\n        DiamondStorage storage ds = diamondStorage();\\n        require(_selectors.length > 0, \\\"LibDiamondCut: No selectors in facet to cut\\\");\\n        if (_action == IDiamondCut.FacetCutAction.Add) {\\n            require(_newFacetAddress != address(0), \\\"LibDiamondCut: Add facet can't be address(0)\\\");\\n            enforceHasContractCode(_newFacetAddress, \\\"LibDiamondCut: Add facet has no code\\\");\\n            for (uint256 selectorIndex; selectorIndex < _selectors.length; selectorIndex++) {\\n                bytes4 selector = _selectors[selectorIndex];\\n                bytes32 oldFacet = ds.facets[selector];\\n                require(address(bytes20(oldFacet)) == address(0), \\\"LibDiamondCut: Can't add function that already exists\\\");\\n                // add facet for selector\\n                ds.facets[selector] = bytes20(_newFacetAddress) | bytes32(_selectorCount);\\n                uint256 selectorInSlotPosition = (_selectorCount % 8) * 32;\\n                // clear selector position in slot and add selector\\n                _selectorSlot = (_selectorSlot & ~(CLEAR_SELECTOR_MASK >> selectorInSlotPosition)) | (bytes32(selector) >> selectorInSlotPosition);\\n                // if slot is full then write it to storage\\n                if (selectorInSlotPosition == 224) {\\n                    ds.selectorSlots[_selectorCount / 8] = _selectorSlot;\\n                    _selectorSlot = 0;\\n                }\\n                _selectorCount++;\\n            }\\n        } else if (_action == IDiamondCut.FacetCutAction.Replace) {\\n            require(_newFacetAddress != address(0), \\\"LibDiamondCut: Replace facet can't be address(0)\\\");\\n            enforceHasContractCode(_newFacetAddress, \\\"LibDiamondCut: Replace facet has no code\\\");\\n            for (uint256 selectorIndex; selectorIndex < _selectors.length; selectorIndex++) {\\n                bytes4 selector = _selectors[selectorIndex];\\n                bytes32 oldFacet = ds.facets[selector];\\n                address oldFacetAddress = address(bytes20(oldFacet));\\n                // only useful if immutable functions exist\\n                require(oldFacetAddress != address(this), \\\"LibDiamondCut: Can't replace immutable function\\\");\\n                require(oldFacetAddress != _newFacetAddress, \\\"LibDiamondCut: Can't replace function with same function\\\");\\n                require(oldFacetAddress != address(0), \\\"LibDiamondCut: Can't replace function that doesn't exist\\\");\\n                // replace old facet address\\n                ds.facets[selector] = (oldFacet & CLEAR_ADDRESS_MASK) | bytes20(_newFacetAddress);\\n            }\\n        } else if (_action == IDiamondCut.FacetCutAction.Remove) {\\n            require(_newFacetAddress == address(0), \\\"LibDiamondCut: Remove facet address must be address(0)\\\");\\n            uint256 selectorSlotCount = _selectorCount / 8;\\n            uint256 selectorInSlotIndex = (_selectorCount % 8) - 1;\\n            for (uint256 selectorIndex; selectorIndex < _selectors.length; selectorIndex++) {\\n                if (_selectorSlot == 0) {\\n                    // get last selectorSlot\\n                    selectorSlotCount--;\\n                    _selectorSlot = ds.selectorSlots[selectorSlotCount];\\n                    selectorInSlotIndex = 7;\\n                }\\n                bytes4 lastSelector;\\n                uint256 oldSelectorsSlotCount;\\n                uint256 oldSelectorInSlotPosition;\\n                // adding a block here prevents stack too deep error\\n                {\\n                    bytes4 selector = _selectors[selectorIndex];\\n                    bytes32 oldFacet = ds.facets[selector];\\n                    require(address(bytes20(oldFacet)) != address(0), \\\"LibDiamondCut: Can't remove function that doesn't exist\\\");\\n                    // only useful if immutable functions exist\\n                    require(address(bytes20(oldFacet)) != address(this), \\\"LibDiamondCut: Can't remove immutable function\\\");\\n                    // replace selector with last selector in ds.facets\\n                    // gets the last selector\\n                    lastSelector = bytes4(_selectorSlot << (selectorInSlotIndex * 32));\\n                    if (lastSelector != selector) {\\n                        // update last selector slot position info\\n                        ds.facets[lastSelector] = (oldFacet & CLEAR_ADDRESS_MASK) | bytes20(ds.facets[lastSelector]);\\n                    }\\n                    delete ds.facets[selector];\\n                    uint256 oldSelectorCount = uint16(uint256(oldFacet));\\n                    oldSelectorsSlotCount = oldSelectorCount / 8;\\n                    oldSelectorInSlotPosition = (oldSelectorCount % 8) * 32;\\n                }\\n                if (oldSelectorsSlotCount != selectorSlotCount) {\\n                    bytes32 oldSelectorSlot = ds.selectorSlots[oldSelectorsSlotCount];\\n                    // clears the selector we are deleting and puts the last selector in its place.\\n                    oldSelectorSlot =\\n                        (oldSelectorSlot & ~(CLEAR_SELECTOR_MASK >> oldSelectorInSlotPosition)) |\\n                        (bytes32(lastSelector) >> oldSelectorInSlotPosition);\\n                    // update storage with the modified slot\\n                    ds.selectorSlots[oldSelectorsSlotCount] = oldSelectorSlot;\\n                } else {\\n                    // clears the selector we are deleting and puts the last selector in its place.\\n                    _selectorSlot =\\n                        (_selectorSlot & ~(CLEAR_SELECTOR_MASK >> oldSelectorInSlotPosition)) |\\n                        (bytes32(lastSelector) >> oldSelectorInSlotPosition);\\n                }\\n                if (selectorInSlotIndex == 0) {\\n                    delete ds.selectorSlots[selectorSlotCount];\\n                    _selectorSlot = 0;\\n                }\\n                selectorInSlotIndex--;\\n            }\\n            _selectorCount = selectorSlotCount * 8 + selectorInSlotIndex + 1;\\n        } else {\\n            revert(\\\"LibDiamondCut: Incorrect FacetCutAction\\\");\\n        }\\n        return (_selectorCount, _selectorSlot);\\n    }\\n\\n    function initializeDiamondCut(address _init, bytes memory _calldata) internal {\\n        if (_init == address(0)) {\\n            require(_calldata.length == 0, \\\"LibDiamondCut: _init is address(0) but_calldata is not empty\\\");\\n        } else {\\n            require(_calldata.length > 0, \\\"LibDiamondCut: _calldata is empty but _init is not address(0)\\\");\\n            if (_init != address(this)) {\\n                enforceHasContractCode(_init, \\\"LibDiamondCut: _init address has no code\\\");\\n            }\\n            (bool success, bytes memory error) = _init.delegatecall(_calldata);\\n            if (!success) {\\n                if (error.length > 0) {\\n                    // bubble up the error\\n                    revert(string(error));\\n                } else {\\n                    revert(\\\"LibDiamondCut: _init function reverted\\\");\\n                }\\n            }\\n        }\\n    }\\n\\n    function enforceHasContractCode(address _contract, string memory _errorMessage) internal view {\\n        uint256 contractSize;\\n        assembly {\\n            contractSize := extcodesize(_contract)\\n        }\\n        require(contractSize > 0, _errorMessage);\\n    }\\n}\\n\",\"keccak256\":\"0x8f7751980297b63c26a4cf8d7830ba82befde6a07b6a179115985c8d04d6b3cd\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161056f38038061056f83398101604081905261002f916100b0565b60006100396100ac565b600080546001600160a01b0319166001600160a01b0383169081178255604051929350917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a350600180546001600160a01b0319166001600160a01b0393909316929092179091556002556100e8565b3390565b600080604083850312156100c2578182fd5b82516001600160a01b03811681146100d8578283fd5b6020939093015192949293505050565b610478806100f76000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c8063a42dce801161005b578063a42dce80146100bf578063ae06c1b7146100d2578063c415b95c146100e5578063f2fde38b146100ed5761007d565b8063715018a6146100825780638da5cb5b1461008c578063a001ecdd146100aa575b600080fd5b61008a610100565b005b6100946101a2565b6040516100a191906103df565b60405180910390f35b6100b26101b1565b6040516100a191906103f3565b61008a6100cd366004610399565b6101b7565b61008a6100e03660046103c7565b610231565b61009461028e565b61008a6100fb366004610399565b61029d565b610108610395565b6000546001600160a01b03908116911614610158576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b60025481565b6101bf610395565b6000546001600160a01b0390811691161461020f576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b600180546001600160a01b0319166001600160a01b0392909216919091179055565b610239610395565b6000546001600160a01b03908116911614610289576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b600255565b6001546001600160a01b031681565b6102a5610395565b6000546001600160a01b039081169116146102f5576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b6001600160a01b03811661033a5760405162461bcd60e51b81526004018080602001828103825260268152602001806103fd6026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b3390565b6000602082840312156103aa578081fd5b81356001600160a01b03811681146103c0578182fd5b9392505050565b6000602082840312156103d8578081fd5b5035919050565b6001600160a01b0391909116815260200190565b9081526020019056fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573734f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572a2646970667358221220b0928dfa342b75ab7b83d774108117fb1c3a957abb604e817bb5d59675afb2ab64736f6c63430007040033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061007d5760003560e01c8063a42dce801161005b578063a42dce80146100bf578063ae06c1b7146100d2578063c415b95c146100e5578063f2fde38b146100ed5761007d565b8063715018a6146100825780638da5cb5b1461008c578063a001ecdd146100aa575b600080fd5b61008a610100565b005b6100946101a2565b6040516100a191906103df565b60405180910390f35b6100b26101b1565b6040516100a191906103f3565b61008a6100cd366004610399565b6101b7565b61008a6100e03660046103c7565b610231565b61009461028e565b61008a6100fb366004610399565b61029d565b610108610395565b6000546001600160a01b03908116911614610158576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b60025481565b6101bf610395565b6000546001600160a01b0390811691161461020f576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b600180546001600160a01b0319166001600160a01b0392909216919091179055565b610239610395565b6000546001600160a01b03908116911614610289576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b600255565b6001546001600160a01b031681565b6102a5610395565b6000546001600160a01b039081169116146102f5576040805162461bcd60e51b81526020600482018190526024820152600080516020610423833981519152604482015290519081900360640190fd5b6001600160a01b03811661033a5760405162461bcd60e51b81526004018080602001828103825260268152602001806103fd6026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b3390565b6000602082840312156103aa578081fd5b81356001600160a01b03811681146103c0578182fd5b9392505050565b6000602082840312156103d8578081fd5b5035919050565b6001600160a01b0391909116815260200190565b9081526020019056fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573734f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572a2646970667358221220b0928dfa342b75ab7b83d774108117fb1c3a957abb604e817bb5d59675afb2ab64736f6c63430007040033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "constructor": {
+        "params": {
+          "_feeCollector": "Integer representing the deposit fee percentage."
+        }
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "setFeeCollector(address)": {
+        "params": {
+          "_feeCollector": "Address of the FeeCollector contract."
+        }
+      },
+      "setFeePercentage(uint256)": {
+        "params": {
+          "_feePercentage": "0 - 100 value used for substracting fees from deposits into an asset pool."
+        }
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 30,
+        "contract": "contracts/PoolRegistry.sol:PoolRegistry",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 6022,
+        "contract": "contracts/PoolRegistry.sol:PoolRegistry",
+        "label": "feeCollector",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      },
+      {
+        "astId": 6025,
+        "contract": "contracts/PoolRegistry.sol:PoolRegistry",
+        "label": "feePercentage",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
