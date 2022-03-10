@@ -1,7 +1,10 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { constants } = require('ethers');
-const { events, diamond, timestamp, assetPool, helpSign, hex2a } = require('./utils.js');
+const { constants, BigNumber } = require('ethers');
+const { events, diamond, timestamp, assetPool } = require('./utils.js');
+
+const multiplier = BigNumber.from('10').pow(15);
+const twoHalfPercent = BigNumber.from('25').mul(multiplier);
 
 describe('05 withdraw', function () {
     let owner;
@@ -96,25 +99,19 @@ describe('05 - proposeWithdraw', function () {
         await withdraw.addToken(token.address);
 
         const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        let poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        console.log(String(twoHalfPercent));
+        let poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), twoHalfPercent);
         expect(await withdraw.setPoolRegistry(poolRegistry.address));
-        await token.approve(withdraw.address, parseEther('1100'));
-        await withdraw.deposit(parseEther('1100'));
-
+        await token.approve(withdraw.address, parseEther('1000'));
+        await withdraw.deposit(parseEther('1000'));
+        expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25'));
         await withdraw.setProposeWithdrawPollDuration(100);
     });
-    it('Relayed addMember by owner', async function () {
-        const call = withdraw.interface.encodeFunctionData('addMember', [await poolMember.getAddress()]);
-        const nonce = Number(await solution.getLatestNonce(owner.address)) + 2;
-        const hash = web3.utils.soliditySha3(call, nonce);
-        const sig = await owner.signMessage(ethers.utils.arrayify(hash));
-        const tx = await helpSign(solution, 'call', [call, nonce, sig], owner);
-
-        expect(tx.events[tx.events.length - 1].args.success).to.eq(true);
-    });
     it('Test proposeWithdraw', async function () {
-        const ev = await events(withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress()));
-        const member = ev[0].args.member;
+        const ev = await events(withdraw.proposeWithdraw(parseEther('10'), await poolMember.getAddress()));
+        console.log(ev);
+        const member = ev[1].args.member;
+        console.log('beeb', member);
         expect(member).to.eq(await withdraw.getMemberByAddress(await poolMember.getAddress()));
 
         withdrawTimestamp = (await ev[0].getBlock()).timestamp;
@@ -123,7 +120,7 @@ describe('05 - proposeWithdraw', function () {
         expect(await withdraw.getBeneficiary(1)).to.be.eq(
             await withdraw.getMemberByAddress(await poolMember.getAddress()),
         );
-        expect(await withdraw.getAmount(1)).to.be.eq(parseEther('1'));
+        expect(await withdraw.getAmount(1)).to.be.eq(parseEther('10'));
     });
     it('basepoll storage', async function () {
         expect(await withdraw.getStartTime(1)).to.be.eq(withdrawTimestamp);
@@ -137,13 +134,8 @@ describe('05 - proposeWithdraw', function () {
     });
     it('propose reward as non member', async function () {
         await expect(
-            withdraw.connect(voter).proposeWithdraw(parseEther('1'), await owner.getAddress()),
+            withdraw.connect(voter).proposeWithdraw(parseEther('20'), await owner.getAddress()),
         ).to.be.revertedWith('NOT_OWNER');
-    });
-    it('propose rewardFor for non member', async function () {
-        await expect(withdraw.proposeWithdraw(parseEther('1'), await voter.getAddress())).to.be.revertedWith(
-            'NOT_MEMBER',
-        );
     });
     it('vote', async function () {
         voteTxTimestamp = await timestamp(withdraw.withdrawPollVote(1, true));
@@ -158,15 +150,15 @@ describe('05 - proposeWithdraw', function () {
     });
     it('finalize', async function () {
         expect(await token.balanceOf(await poolMember.getAddress())).to.eq(0);
-        expect(await withdraw.getBalance()).to.eq(parseEther('1100'));
-        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('1100'));
+        expect(await withdraw.getBalance()).to.eq(parseEther('975'));
+        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('975'));
 
         await ethers.provider.send('evm_increaseTime', [180]);
         await withdraw.withdrawPollFinalize(1);
-        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('1'));
-
-        expect(await withdraw.getBalance()).to.eq(parseEther('1099'));
-        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('1099'));
+        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('10'));
+        expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25.25'));
+        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('964.75'));
+        expect(await withdraw.getBalance()).to.eq(parseEther('964.75'));
     });
 });
 

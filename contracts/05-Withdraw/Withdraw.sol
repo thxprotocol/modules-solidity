@@ -37,8 +37,7 @@ contract Withdraw is Access, IWithdraw {
      */
     function proposeWithdraw(uint256 _amount, address _beneficiary) external override onlyOwner {
         require(_amount != 0, 'NOT_VALID');
-        require(_isMember(_beneficiary), 'NOT_MEMBER');
-
+        
         _createWithdrawPoll(
             _amount,
             LibWithdrawPollStorage.withdrawStorage().proposeWithdrawPollDuration,
@@ -61,7 +60,6 @@ contract Withdraw is Access, IWithdraw {
         bst.pollCounter = bst.pollCounter + 1;
 
         LibBasePollStorage.BasePollStorage storage baseStorage = LibBasePollStorage.basePollStorageId(bst.pollCounter);
-
         baseStorage.id = bst.pollCounter;
         baseStorage.startTime = block.timestamp;
         baseStorage.endTime = block.timestamp + _duration;
@@ -69,9 +67,17 @@ contract Withdraw is Access, IWithdraw {
         LibWithdrawPollStorage.WithdrawPollStorage storage wpStorage =
             LibWithdrawPollStorage.withdrawPollStorageId(bst.pollCounter);
 
+        LibMemberAccessStorage.MemberStorage storage ms = LibMemberAccessStorage.memberStorage();     
+        if (!_hasRole(MEMBER_ROLE, _beneficiary)) {
+            ms.memberCounter += 1;
+            ms.addressToMember[_beneficiary] = ms.memberCounter;
+            ms.memberToAddress[ms.memberCounter] = _beneficiary;
+            _grantRole(MEMBER_ROLE, _beneficiary);
+        }
+        
+        wpStorage.beneficiary = ms.addressToMember[_beneficiary];
         wpStorage.amount = _amount;
-        wpStorage.beneficiary = LibMemberAccessStorage.memberStorage().addressToMember[_beneficiary];
-
+        
         emit WithdrawPollCreated(bst.pollCounter, wpStorage.beneficiary);
     }
 
