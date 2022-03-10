@@ -99,7 +99,6 @@ describe('05 - proposeWithdraw', function () {
         await withdraw.addToken(token.address);
 
         const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        console.log(String(twoHalfPercent));
         let poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), twoHalfPercent);
         expect(await withdraw.setPoolRegistry(poolRegistry.address));
         await token.approve(withdraw.address, parseEther('1000'));
@@ -109,10 +108,7 @@ describe('05 - proposeWithdraw', function () {
     });
     it('Test proposeWithdraw', async function () {
         const ev = await events(withdraw.proposeWithdraw(parseEther('10'), await poolMember.getAddress()));
-        console.log(ev);
-        const member = ev[1].args.member;
-        console.log('beeb', member);
-        expect(member).to.eq(await withdraw.getMemberByAddress(await poolMember.getAddress()));
+        expect(ev[1].args.member).to.eq(await withdraw.getMemberByAddress(await poolMember.getAddress()));
 
         withdrawTimestamp = (await ev[0].getBlock()).timestamp;
     });
