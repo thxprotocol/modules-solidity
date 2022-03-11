@@ -1,36 +1,30 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { events, diamond, assetPool } = require('./utils.js');
+const { events, diamond, assetPool, getDiamondCuts } = require('./utils.js');
 
 describe('06 reward', function () {
     let owner;
     let voter;
-    let withdraw;
+    let withdraw, factory, registry;
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-        const Reward = await ethers.getContractFactory('Reward');
-        const RewardPoll = await ethers.getContractFactory('RewardPoll');
-        const RewardPollProxy = await ethers.getContractFactory('RewardPollProxy');
-
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-
-        const factory = await diamond([
-            MemberAccess,
-            BasePollProxy,
-            Reward,
-            RewardPoll,
-            RewardPollProxy,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        factory = await diamond();
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'BasePollProxy',
+            'Token',
+            'Reward',
+            'RewardPoll',
+            'RewardPollProxy',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
         ]);
-        withdraw = await assetPool(factory.deployAssetPool());
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await withdraw.setRewardPollDuration(100);
     });
     it('Initial state', async function () {
@@ -63,27 +57,20 @@ describe('06 reward - claim', function () {
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-        const Reward = await ethers.getContractFactory('Reward');
-        const RewardPoll = await ethers.getContractFactory('RewardPoll');
-        const RewardPollProxy = await ethers.getContractFactory('RewardPollProxy');
 
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-
-        const factory = await diamond([
-            MemberAccess,
-            BasePollProxy,
-            Reward,
-            RewardPoll,
-            RewardPollProxy,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'Token',
+            'BasePollProxy',
+            'Reward',
+            'RewardPoll',
+            'RewardPollProxy',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
         ]);
-        solution = await assetPool(factory.deployAssetPool());
+
+        solution = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await solution.setRewardPollDuration(100);
         await solution.addReward(parseEther('5'), 250);
 
