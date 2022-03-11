@@ -34,16 +34,17 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
      * @param _registry Registry address to point the pool to.
      */
     function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external override {
+        require(_registry != address(0), 'NO_REGISTRY');
         LibDiamond.enforceIsContractOwner();
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
         //direct is required for the initialize functions below
         RelayDiamond d = new RelayDiamond(_facets, address(this));
         IDefaultDiamond assetPool = IDefaultDiamond(address(d));
-        if (_registry != address(0)){
-            assetPool.setPoolRegistry(_registry);
-        }
+        
+        assetPool.setPoolRegistry(_registry);
         assetPool.transferOwnership(s.defaultController);
         assetPool.initializeRoles(s.defaultController);
+        
         s.assetPools.push(address(d));
         s.isAssetPool[address(d)] = true;
         emit AssetPoolDeployed(address(d));

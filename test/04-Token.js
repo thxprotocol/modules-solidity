@@ -7,24 +7,22 @@ const onePercent = ethers.BigNumber.from('10').pow(16);
 
 describe('04 token', function () {
     let owner;
-    let voter;
-    let token;
+    let token, factory, registry, diamondCuts;
 
     before(async function () {
-        [owner, voter, collector] = await ethers.getSigners();
-
-        const factory = await diamond();
-        const diamondCuts = await getDiamondCuts([
+        [owner, collector] = await ethers.getSigners();
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        registry = await PoolRegistry.deploy(await collector.getAddress(), onePercent);
+        factory = await diamond();
+        diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'Token',
             'DiamondCutFacet',
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), onePercent);
 
-        token = await assetPool(factory.deployAssetPool(diamondCuts, poolRegistry.address));
+        token = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         const ExampleToken = await ethers.getContractFactory('ExampleToken');
         erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
     });
@@ -34,7 +32,7 @@ describe('04 token', function () {
         expect(await token.getToken()).to.eq(erc20.address);
     });
     it('Test registry', async function () {
-        expect(await token.getPoolRegistry()).to.eq(poolRegistry.address);
+        expect(await token.getPoolRegistry()).to.eq(registry.address);
     });
     it('Test deposit', async function () {
         expect(await token.getBalance()).to.eq(0);

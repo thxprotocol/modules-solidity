@@ -6,15 +6,17 @@ const { events, diamond, assetPool, getDiamondCuts } = require('./utils.js');
 describe('06 reward', function () {
     let owner;
     let voter;
-    let withdraw;
+    let withdraw, factory, registry;
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-
-        const factory = await diamond();
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'BasePollProxy',
+            'Token',
             'Reward',
             'RewardPoll',
             'RewardPollProxy',
@@ -22,8 +24,7 @@ describe('06 reward', function () {
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
-
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await withdraw.setRewardPollDuration(100);
     });
     it('Initial state', async function () {
@@ -57,9 +58,9 @@ describe('06 reward - claim', function () {
     before(async function () {
         [owner, voter] = await ethers.getSigners();
 
-        const factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
+            'Token',
             'BasePollProxy',
             'Reward',
             'RewardPoll',
@@ -69,7 +70,7 @@ describe('06 reward - claim', function () {
             'OwnershipFacet',
         ]);
 
-        solution = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
+        solution = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await solution.setRewardPollDuration(100);
         await solution.addReward(parseEther('5'), 250);
 

@@ -5,16 +5,17 @@ const { diamond, assetPool, helpSign, hex2a, getDiamondCuts } = require('./utils
 
 describe('07 RelayHub', function () {
     let solution;
-
+    let registry, factory;
     let owner;
     let voter;
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const factory = await diamond();
+        factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'BasePollProxy',
+            'Token',
             'Reward',
             'RewardPoll',
             'RewardPollProxy',
@@ -23,8 +24,9 @@ describe('07 RelayHub', function () {
             'OwnershipFacet',
             'RelayHubFacet',
         ]);
-
-        solution = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        solution = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
     });
     describe('Signing access', async function () {
         it('Not manager', async function () {
@@ -56,9 +58,9 @@ describe('07 RelayHub', function () {
     describe('Signing voting flow', async function () {
         before(async function () {
             [owner, voter] = await ethers.getSigners();
-            const factory = await diamond();
             const diamondCuts = await getDiamondCuts([
                 'MemberAccess',
+                'Token',
                 'BasePollProxy',
                 'Reward',
                 'RewardPoll',
@@ -68,8 +70,7 @@ describe('07 RelayHub', function () {
                 'OwnershipFacet',
                 'RelayHubFacet',
             ]);
-
-            solution = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero));
+            solution = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
             await solution.addMember(await voter.getAddress());
             await solution.setRewardPollDuration(180);
         });

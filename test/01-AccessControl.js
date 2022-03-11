@@ -8,18 +8,19 @@ describe('01 Access Control', function () {
     let accessControl;
 
     before(async function () {
-        [owner, voter] = await ethers.getSigners();
-
+        [owner, voter, collector] = await ethers.getSigners();
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        const registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
         const factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'MockSetup',
+            'Token',
             'DiamondCutFacet',
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
-
-        accessControl = await assetPool(factory.deployAssetPool(diamondCuts, constants.AddressZero), 0x0000);
+        accessControl = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await accessControl.setupMockAccess(
             [MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE],
             [await owner.getAddress(), await owner.getAddress(), await owner.getAddress()],
