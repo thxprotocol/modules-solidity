@@ -28,6 +28,23 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
     }
 
     /**
+     * @notice Registers a pool address in the internal register. Only accessible for diamond owner.
+     * @param _pool Address of pool that should be registered.
+     */
+    function registerAssetPool(address _pool) external override {
+        LibDiamond.enforceIsContractOwner();
+        LibFactoryStorage.Data storage s = LibFactoryStorage.s();
+        s.assetPools.push(_pool);
+        s.isAssetPool[_pool] = true;
+        emit AssetPoolRegistered(_pool);
+    } 
+
+    function isAssetPool(address _pool) external view override returns(bool) {
+        LibFactoryStorage.Data storage s = LibFactoryStorage.s();
+        return s.isAssetPool[_pool];
+    }
+
+    /**
      * @notice Deploys and stores the reference to an asset pool based on the current defaultCut.
      * @dev Transfers ownership to the controller and initializes access control.
      * @param _facets Asset Pool facets for the factory diamond to deploy.

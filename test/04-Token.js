@@ -34,14 +34,20 @@ describe('04 token', function () {
     it('Test registry', async function () {
         expect(await token.getPoolRegistry()).to.eq(registry.address);
     });
+    it('Test asset pool registration', async function () {
+        // For ease of testing and lack of interface validation in solidity we misuse registry address here
+        // Should only register actual pool addresses
+        expect(await factory.isAssetPool(registry.address)).to.eq(false);
+        expect(await factory.registerAssetPool(registry.address)).to.emit(factory, 'AssetPoolRegistered');
+        expect(await factory.isAssetPool(registry.address)).to.eq(true);
+    });
     it('Test deposit', async function () {
         expect(await token.getBalance()).to.eq(0);
         expect(await erc20.balanceOf(await collector.getAddress())).to.eq(0);
         expect(await erc20.balanceOf(token.address)).to.eq(0);
 
         await erc20.approve(token.address, constants.MaxUint256);
-        await token.deposit(parseEther('100'));
-
+        await expect(token.deposit(parseEther('100'))).to.emit(token, 'DepositFeeCollected');
         expect(await token.getBalance()).to.eq(parseEther('99'));
         expect(await erc20.balanceOf(await collector.getAddress())).to.eq(parseEther('1'));
         expect(await erc20.balanceOf(token.address)).to.eq(parseEther('99'));

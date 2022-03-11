@@ -132,7 +132,7 @@ describe('05 - proposeWithdraw', function () {
         expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('975'));
 
         await ethers.provider.send('evm_increaseTime', [180]);
-        await withdraw.withdrawPollFinalize(1);
+        await expect(withdraw.withdrawPollFinalize(1)).to.emit(withdraw, 'WithdrawFeeCollected');
         expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('10'));
         expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25.25'));
         expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('964.75'));

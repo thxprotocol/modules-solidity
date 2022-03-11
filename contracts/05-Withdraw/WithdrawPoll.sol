@@ -74,6 +74,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
                 if (s.balance != 0 && s.balance >= fee) {
                     s.balance = s.balance.sub(fee);
                 }
+                emit WithdrawFeeCollected(fee);
             }
 
             address benef = LibMemberAccessStorage.memberStorage().memberToAddress[wpPollData.beneficiary];

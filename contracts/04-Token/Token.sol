@@ -67,7 +67,7 @@ contract Token is IToken, RelayReceiver {
 
         if (fee > 0) {
             s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
-            emit FeeCollected(_msgSender(), amount);
+            emit DepositFeeCollected(fee);
         }
         s.balance = s.balance.add(amount);
         s.token.safeTransferFrom(_msgSender(), address(this), amount);
