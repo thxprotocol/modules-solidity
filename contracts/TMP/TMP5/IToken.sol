@@ -4,7 +4,7 @@ pragma solidity ^0.7.4;
 interface IToken {
     event TokenUpdated(address old, address current);
     event RegistryUpdated(address old, address current);
-    event FeeCollected(address sender, uint256 amount);
+    event DepositFeeCollected(uint256 fee);
     event Depositted(address sender, uint256 amount);
     
     function getBalance() external view returns (uint256);
