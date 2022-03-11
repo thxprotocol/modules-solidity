@@ -62,7 +62,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
 
         if (approved) {
             LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
-            
+
             IPoolRegistry registry = IPoolRegistry(s.registry);
             uint256 fee = wpPollData.amount.mul(registry.feePercentage()).div(10**18);
             if (fee > 0) {
@@ -81,10 +81,10 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
             if (wpPollData.amount > 0) {
                 s.token.safeTransfer(benef, wpPollData.amount);
                 if (s.balance != 0 && s.balance >= wpPollData.amount) {
-                    s.balance = s.balance.sub(wpPollData.amount);    
+                    s.balance = s.balance.sub(wpPollData.amount);
                 }
                 emit Withdrawn(_id, benef, wpPollData.amount);
-            }            
+            }
         }
 
         emit WithdrawPollFinalized(_id, approved);

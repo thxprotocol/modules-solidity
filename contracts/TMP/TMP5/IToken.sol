@@ -6,7 +6,7 @@ interface IToken {
     event RegistryUpdated(address old, address current);
     event DepositFeeCollected(uint256 fee);
     event Depositted(address sender, uint256 amount);
-    
+
     function getBalance() external view returns (uint256);
 
     function deposit(uint256 _amount) external;

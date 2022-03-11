@@ -37,9 +37,9 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         s.assetPools.push(_pool);
         s.isAssetPool[_pool] = true;
         emit AssetPoolRegistered(_pool);
-    } 
+    }
 
-    function isAssetPool(address _pool) external view override returns(bool) {
+    function isAssetPool(address _pool) external view override returns (bool) {
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
         return s.isAssetPool[_pool];
     }
@@ -57,11 +57,11 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         //direct is required for the initialize functions below
         RelayDiamond d = new RelayDiamond(_facets, address(this));
         IDefaultDiamond assetPool = IDefaultDiamond(address(d));
-        
+
         assetPool.setPoolRegistry(_registry);
         assetPool.transferOwnership(s.defaultController);
         assetPool.initializeRoles(s.defaultController);
-        
+
         s.assetPools.push(address(d));
         s.isAssetPool[address(d)] = true;
         emit AssetPoolDeployed(address(d));
