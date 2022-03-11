@@ -1,5 +1,6 @@
 const { expect } = require('chai');
-const { diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE } = require('./utils.js');
+const { constants } = require('ethers');
+const { diamond, assetPool, MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE, getDiamondCuts } = require('./utils.js');
 
 describe('01 Access Control', function () {
     let owner;
@@ -7,21 +8,19 @@ describe('01 Access Control', function () {
     let accessControl;
 
     before(async function () {
-        [owner, voter] = await ethers.getSigners();
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const AccessControl = await ethers.getContractFactory('MockSetup');
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-
-        const factory = await diamond([
-            MemberAccess,
-            AccessControl,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
+        [owner, voter, collector] = await ethers.getSigners();
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        const registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        const factory = await diamond();
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'MockSetup',
+            'Token',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
         ]);
-        accessControl = await assetPool(factory.deployAssetPool());
+        accessControl = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await accessControl.setupMockAccess(
             [MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE],
             [await owner.getAddress(), await owner.getAddress(), await owner.getAddress()],
