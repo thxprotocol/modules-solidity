@@ -9,17 +9,16 @@ import './ITokenFactory.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 contract TokenFactoryFacet is ITokenFactory {
-
     function deployLimitedSupplyToken(
         string memory _name,
         string memory _symbol,
         address to,
         uint256 amount
-    ) external override { 
+    ) external override {
         LibDiamond.enforceIsContractOwner();
 
         TokenLimitedSupply t = new TokenLimitedSupply(_name, _symbol, to, amount);
-        emit TokenDeployed(address(t));
+        emit TokenDeployed(address(t), 'LIMITED');
     }
 
     function deployUnlimitedSupplyToken(
@@ -30,6 +29,6 @@ contract TokenFactoryFacet is ITokenFactory {
         LibDiamond.enforceIsContractOwner();
 
         TokenUnlimitedSupply t = new TokenUnlimitedSupply(_name, _symbol, to);
-        emit TokenDeployed(address(t));
+        emit TokenDeployed(address(t), 'UNLIMITED');
     }
 }
