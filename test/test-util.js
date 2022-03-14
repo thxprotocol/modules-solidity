@@ -6,8 +6,8 @@ describe('Unlimited Token', function () {
 
     before(async function () {
         [owner, receiver] = await ethers.getSigners();
-        const TokenUnlimitedAccount = await ethers.getContractFactory('TokenUnlimitedAccount');
-        token = await TokenUnlimitedAccount.deploy('Test Token', 'TST', await owner.getAddress());
+        const TokenUnlimitedSupply = await ethers.getContractFactory('TokenUnlimitedSupply');
+        token = await TokenUnlimitedSupply.deploy('Test Token', 'TST', await owner.getAddress());
     });
     it('Initial state', async function () {
         expect(await token.balanceOf(await owner.getAddress())).to.eq(0);
