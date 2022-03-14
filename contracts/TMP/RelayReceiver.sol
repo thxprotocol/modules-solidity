@@ -4,7 +4,7 @@ pragma solidity ^0.7.4;
 // Copied from https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/GSN/GSNRecipient.sol
 // But kept minimalist.
 contract RelayReceiver {
-    function _msgSender() internal pure returns (address payable result) {
+    function _msgSender() internal view virtual returns (address payable result) {
         // If not call from RelayHub, return original sender
         // We need to read 20 bytes (an address) located at array index msg.data.length - 20. In memory, the array
         // is prefixed with a 32-byte length value, so we first add 32 to get the memory read index. However, doing
@@ -19,11 +19,15 @@ contract RelayReceiver {
         bytes memory array = msg.data;
         uint256 index = msg.data.length;
 
-        // solhint-disable-next-line no-inline-assembly
-        assembly {
-            // Load the 32 bytes word from memory with the address on the lower 20 bytes, and mask those.
-            result := and(mload(add(array, index)), 0xffffffffffffffffffffffffffffffffffffffff)
+        // Check min data length and only trust itself to be the msg.sender
+        if (msg.data.length >= 20 && msg.sender == address(this)) {
+            // solhint-disable-next-line no-inline-assembly
+            assembly {
+                // Load the 32 bytes word from memory with the address on the lower 20 bytes, and mask those.
+                result := and(mload(add(array, index)), 0xffffffffffffffffffffffffffffffffffffffff)
+            }
+        } else {
+            result = msg.sender;
         }
-        return result;
     }
 }

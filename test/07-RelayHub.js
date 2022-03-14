@@ -1,8 +1,9 @@
+const { web3 } = require('hardhat');
 const { expect } = require('chai');
 const { constants } = require('ethers');
-const { parseEther } = require('ethers/lib/utils');
+const { parseEther, parseUnits } = require('ethers/lib/utils');
 const { diamond, assetPool, helpSign, hex2a, getDiamondCuts } = require('./utils.js');
-
+const { Artifacts } = require('../scripts/lib/artifacts');
 describe('07 RelayHub', function () {
     let solution;
     let registry, factory;
@@ -10,12 +11,13 @@ describe('07 RelayHub', function () {
     let voter;
 
     before(async function () {
-        [owner, voter] = await ethers.getSigners();
+        [owner, voter, hacker] = await ethers.getSigners();
         factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'BasePollProxy',
             'Token',
+            'Withdraw',
             'Reward',
             'RewardPoll',
             'RewardPollProxy',
