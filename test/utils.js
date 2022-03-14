@@ -97,7 +97,7 @@ const diamond = async () => {
     return factory;
 };
 
-const tokenFactory = async () => {
+const createTokenFactory = async () => {
     factoryFacets = [await ethers.getContractFactory('TokenFactoryFacet')];
     diamondCutFactory = [];
     for (let i = 0; i < factoryFacets.length; i++) {
@@ -115,13 +115,13 @@ const tokenFactory = async () => {
     return await ethers.getContractAt('IDefaultTokenFactory', diamond.address);
 };
 
-const limitedSupplyToken = async (deploy) => {
+const limitedSupplyTokenContract = async (deploy) => {
     tx = await (await deploy).wait();
     const address = tx.events[tx.events.length - 1].args.token;
     return ethers.getContractAt('TokenLimitedSupply', address);
 };
 
-const unlimitedSupplyToken = async (deploy) => {
+const unlimitedSupplyTokenContract = async (deploy) => {
     tx = await (await deploy).wait();
     const address = tx.events[tx.events.length - 1].args.token;
     return ethers.getContractAt('TokenUnlimitedSupply', address);
@@ -143,9 +143,9 @@ module.exports = {
     timestamp,
     getSelectors,
     diamond,
-    tokenFactory,
-    limitedSupplyToken,
-    unlimitedSupplyToken,
+    createTokenFactory,
+    limitedSupplyTokenContract,
+    unlimitedSupplyTokenContract,
     MEMBER_ROLE,
     MANAGER_ROLE,
     ADMIN_ROLE,

@@ -1,16 +1,16 @@
 const { expect } = require('chai');
-const { tokenFactory, limitedSupplyToken, unlimitedSupplyToken } = require('./utils');
+const { createTokenFactory, limitedSupplyTokenContract, unlimitedSupplyTokenContract } = require('./utils');
 
 describe('Unlimited Token factory', function () {
     let factory, owner, receiver;
 
     before(async function () {
         [owner, receiver] = await ethers.getSigners();
-        factory = await tokenFactory();
+        factory = await createTokenFactory();
     });
 
     it('Limited Supply', async function () {
-        const tokenContract = await limitedSupplyToken(
+        const tokenContract = await limitedSupplyTokenContract(
             factory.deployLimitedSupplyToken('Test Token', 'TST', await owner.getAddress(), 1000),
         );
 
@@ -22,7 +22,7 @@ describe('Unlimited Token factory', function () {
     });
 
     it('unlimited Supply', async function () {
-        const tokenContract = await unlimitedSupplyToken(
+        const tokenContract = await unlimitedSupplyTokenContract(
             factory.deployUnlimitedSupplyToken('Test Token', 'TST', await owner.getAddress()),
         );
 
