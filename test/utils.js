@@ -96,6 +96,37 @@ const diamond = async () => {
 
     return factory;
 };
+
+const tokenFactory = async () => {
+    factoryFacets = [await ethers.getContractFactory('TokenFactoryFacet')];
+    diamondCutFactory = [];
+    for (let i = 0; i < factoryFacets.length; i++) {
+        const f = await factoryFacets[i].deploy();
+        diamondCutFactory.push({
+            action: FacetCutAction.Add,
+            facetAddress: f.address,
+            functionSelectors: getSelectors(f),
+        });
+    }
+
+    [owner] = await ethers.getSigners();
+    const Diamond = await ethers.getContractFactory('Diamond');
+    const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
+    return await ethers.getContractAt('IDefaultTokenFactory', diamond.address);
+};
+
+const limitedSupplyToken = async (deploy) => {
+    tx = await (await deploy).wait();
+    const address = tx.events[tx.events.length - 1].args.token;
+    return ethers.getContractAt('TokenLimitedSupply', address);
+};
+
+const unlimitedSupplyToken = async (deploy) => {
+    tx = await (await deploy).wait();
+    const address = tx.events[tx.events.length - 1].args.token;
+    return ethers.getContractAt('TokenUnlimitedAccount', address);
+};
+
 const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';
 const MANAGER_ROLE = '0x241ecf16d79d0f8dbfb92cbc07fe17840425976cf0667f022fe9877caa831b08';
 const ADMIN_ROLE = constants.HashZero;
@@ -112,6 +143,9 @@ module.exports = {
     timestamp,
     getSelectors,
     diamond,
+    tokenFactory,
+    limitedSupplyToken,
+    unlimitedSupplyToken,
     MEMBER_ROLE,
     MANAGER_ROLE,
     ADMIN_ROLE,
