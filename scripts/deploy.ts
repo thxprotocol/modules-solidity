@@ -1,10 +1,13 @@
 import { deployFacets } from './lib/facets';
-import { deployFactory } from './lib/factory';
+import { deployAssetPoolFactory } from './lib/assetPoolFactory';
 import { deployRegistry } from './lib/registry';
+import { deployTokenFactory } from './lib/tokenfactory';
 
 export async function exec() {
-    console.log('Facets:', await deployFacets());
-    console.log('Factory:', await deployFactory());
+    const facets = await deployFacets();
+    console.log('Facets:', facets);
+    console.log('AssetPoolFactory:', await deployAssetPoolFactory(facets));
+    console.log('TokenFactory:', await deployTokenFactory(facets));
     console.log('Registry:', await deployRegistry());
 }
 
