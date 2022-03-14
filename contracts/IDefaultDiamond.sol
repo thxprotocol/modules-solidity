@@ -18,7 +18,6 @@ import './TMP/TMP8/IReward.sol';
 import './TMP/TMP8/IRewardPoll.sol';
 import './TMP/TMP8/IRewardPollProxy.sol';
 import './TMP/TMP9/IRelayHub.sol';
-import './TMP/TMP10/IUpdateDiamond.sol';
 
 interface IDefaultDiamond is
     IERC173,
@@ -36,8 +35,7 @@ interface IDefaultDiamond is
     IReward,
     IRewardPoll,
     IRewardPollProxy,
-    IRelayHub,
-    IUpdateDiamond
+    IRelayHub
 {
     function setupMockAccess(bytes32[] memory roles, address[] memory addr) external;
 }

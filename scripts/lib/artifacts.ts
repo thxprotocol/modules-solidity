@@ -15,7 +15,6 @@ import WithdrawByPollProxyArtifact from '../../artifacts/contracts/09-WithdrawBy
 import RewardByArtifact from '../../artifacts/contracts/10-RewardBypass/RewardBy.sol/RewardBy.json';
 import RewardByPollArtifact from '../../artifacts/contracts/10-RewardBypass/RewardByPoll.sol/RewardByPoll.json';
 import RewardByPollProxyArtifact from '../../artifacts/contracts/10-RewardBypass/RewardByPollProxy.sol/RewardByPollProxy.json';
-import UpdateDiamond from '../../artifacts/contracts/11-UpdateDiamond/UpdateDiamond.sol/UpdateDiamond.json';
 
 import DiamondCutFacetArtifact from '../../artifacts/diamond-2/contracts/facets/DiamondCutFacet.sol/DiamondCutFacet.json';
 import DiamondLoupeFacetArtifact from '../../artifacts/diamond-2/contracts/facets/DiamondLoupeFacet.sol/DiamondLoupeFacet.json';
@@ -39,7 +38,6 @@ export const Artifacts = {
     Token: Token,
     RelayHubFacet: RelayHub,
     BasePollProxy: BasePoll,
-    UpdateDiamond: UpdateDiamond,
     Withdraw: WithdrawArtifact,
     WithdrawPoll: WithdrawPollArtifact,
     WithdrawPollProxy: WithdrawPollProxyArtifact,
