@@ -11,6 +11,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         from: deployer,
         log: true,
         facets: ['AssetPoolFactoryFacet'],
+        execute: {
+            methodName: 'setDefaultController',
+            args: [deployer],
+        },
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
     });
 
