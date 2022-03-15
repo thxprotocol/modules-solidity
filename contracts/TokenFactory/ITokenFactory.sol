@@ -3,7 +3,8 @@ pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
 interface ITokenFactory {
-    event TokenDeployed(address token, string tokenType);
+    enum TokenType { Limited, Unlimited }
+    event TokenDeployed(address token, TokenType tokenType);
 
     function deployLimitedSupplyToken(
         string memory _name,

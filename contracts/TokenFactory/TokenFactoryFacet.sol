@@ -18,7 +18,7 @@ contract TokenFactoryFacet is ITokenFactory {
         LibDiamond.enforceIsContractOwner();
 
         TokenLimitedSupply t = new TokenLimitedSupply(_name, _symbol, to, amount);
-        emit TokenDeployed(address(t), 'LIMITED');
+        emit TokenDeployed(address(t), TokenType.Limited);
     }
 
     function deployUnlimitedSupplyToken(
@@ -29,6 +29,6 @@ contract TokenFactoryFacet is ITokenFactory {
         LibDiamond.enforceIsContractOwner();
 
         TokenUnlimitedSupply t = new TokenUnlimitedSupply(_name, _symbol, to);
-        emit TokenDeployed(address(t), 'UNLIMITED');
+        emit TokenDeployed(address(t), TokenType.Unlimited);
     }
 }
