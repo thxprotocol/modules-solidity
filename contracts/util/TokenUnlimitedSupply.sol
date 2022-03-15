@@ -11,7 +11,7 @@ pragma solidity ^0.7.4;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
-contract TokenUnlimitedAccount is ERC20 {
+contract TokenUnlimitedSupply is ERC20 {
     address public immutable unlimited;
 
     constructor(
