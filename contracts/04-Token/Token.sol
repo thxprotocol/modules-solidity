@@ -30,7 +30,6 @@ contract Token is IToken, RelayReceiver {
      * @dev Registry contains general pool settings and will be governable at some point.
      */
     function setPoolRegistry(address _registry) external override {
-        require(LibTokenStorage.tokenStorage().registry == address(0), 'INIT');
         require(_registry != address(0), 'ZERO');
 
         LibDiamond.enforceIsContractOwner();
@@ -68,9 +67,11 @@ contract Token is IToken, RelayReceiver {
 
         if (fee > 0) {
             s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
+            emit DepositFeeCollected(fee);
         }
         s.balance = s.balance.add(amount);
         s.token.safeTransferFrom(_msgSender(), address(this), amount);
+        emit Depositted(_msgSender(), amount);
     }
 
     /**

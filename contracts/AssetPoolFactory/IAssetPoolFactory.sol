@@ -6,10 +6,15 @@ import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
 
 interface IAssetPoolFactory {
     event AssetPoolDeployed(address assetPool);
+    event AssetPoolRegistered(address assetPool);
 
-    function initialize(IDiamondCut.FacetCut[] memory _facets) external;
+    function initialize() external;
 
     function setDefaultController(address _controller) external;
 
-    function deployAssetPool() external;
+    function registerAssetPool(address _pool) external;
+
+    function isAssetPool(address _pool) external view returns (bool);
+
+    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external;
 }

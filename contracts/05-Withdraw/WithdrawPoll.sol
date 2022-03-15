@@ -22,6 +22,7 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
+import '../IPoolRegistry.sol';
 
 // Implements
 import '../util/BasePoll.sol'; // TMP1, TMP 6
@@ -45,7 +46,6 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
 
         LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData =
             LibWithdrawPollStorage.withdrawPollStorageId(bData.id);
-
         require(wpPollData.beneficiary != 0, 'NOT_WITHDRAW_POLL');
         _;
     }
@@ -63,20 +63,28 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
         if (approved) {
             LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
-            // Checks for pool balance to exceed withdraw amount
-            // Skip this check for pools with 0 balance, since these
-            // might have connected an TokenUnlimitedAccount.
-            // When balance is insufficient, safeTransfer will fail
-            // according to its design.
-            if (s.balance != 0 && s.balance >= wpPollData.amount) {
-                s.balance = s.balance.sub(wpPollData.amount);
+            IPoolRegistry registry = IPoolRegistry(s.registry);
+            uint256 fee = wpPollData.amount.mul(registry.feePercentage()).div(10**18);
+            if (fee > 0) {
+                // When balance is insufficient, safeTransfer will fail
+                // according to its design.
+                s.token.safeTransfer(registry.feeCollector(), fee);
+                // Skip this check for pools with 0 balance, since these
+                // might have connected an TokenUnlimitedAccount.
+                if (s.balance != 0 && s.balance >= fee) {
+                    s.balance = s.balance.sub(fee);
+                }
+                emit WithdrawFeeCollected(fee);
             }
 
             address benef = LibMemberAccessStorage.memberStorage().memberToAddress[wpPollData.beneficiary];
             if (wpPollData.amount > 0) {
                 s.token.safeTransfer(benef, wpPollData.amount);
+                if (s.balance != 0 && s.balance >= wpPollData.amount) {
+                    s.balance = s.balance.sub(wpPollData.amount);
+                }
+                emit Withdrawn(_id, benef, wpPollData.amount);
             }
-            emit Withdrawn(_id, benef, wpPollData.amount);
         }
 
         emit WithdrawPollFinalized(_id, approved);

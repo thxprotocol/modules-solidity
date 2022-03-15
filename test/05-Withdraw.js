@@ -1,35 +1,33 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { constants } = require('ethers');
-const { events, diamond, timestamp, assetPool, helpSign, hex2a } = require('./utils.js');
+const { constants, BigNumber } = require('ethers');
+const { events, diamond, timestamp, assetPool, helpSign, getDiamondCuts } = require('./utils.js');
+
+const multiplier = BigNumber.from('10').pow(15);
+const twoHalfPercent = BigNumber.from('25').mul(multiplier);
 
 describe('05 withdraw', function () {
     let owner;
-    let withdraw;
+    let withdraw, registry, factory;
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-        const Withdraw = await ethers.getContractFactory('Withdraw');
-        const WithdrawPoll = await ethers.getContractFactory('WithdrawPoll');
-        const WithdrawPollProxy = await ethers.getContractFactory('WithdrawPollProxy');
-
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-
-        const factory = await diamond([
-            MemberAccess,
-            BasePollProxy,
-            Withdraw,
-            WithdrawPoll,
-            WithdrawPollProxy,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        factory = await diamond();
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'Token',
+            'BasePollProxy',
+            'Withdraw',
+            'WithdrawPoll',
+            'WithdrawPollProxy',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
         ]);
-        withdraw = await assetPool(factory.deployAssetPool());
+
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await withdraw.setProposeWithdrawPollDuration(100);
     });
     it('Initial state', async function () {
@@ -59,63 +57,40 @@ describe('05 - proposeWithdraw', function () {
     let owner;
     let voter;
     let poolMember;
-    let token;
+    let token, registry;
 
     let withdrawTimestamp;
 
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
         const ExampleToken = await ethers.getContractFactory('ExampleToken');
         token = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
+        registry = await PoolRegistry.deploy(await collector.getAddress(), twoHalfPercent);
 
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const Token = await ethers.getContractFactory('Token');
-        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-        const Withdraw = await ethers.getContractFactory('Withdraw');
-        const WithdrawPoll = await ethers.getContractFactory('WithdrawPoll');
-        const WithdrawPollProxy = await ethers.getContractFactory('WithdrawPollProxy');
-        const RelayHubFacet = await ethers.getContractFactory('RelayHubFacet');
-
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-
-        const factory = await diamond([
-            MemberAccess,
-            Token,
-            BasePollProxy,
-            Withdraw,
-            WithdrawPoll,
-            WithdrawPollProxy,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
-            RelayHubFacet,
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'Token',
+            'BasePollProxy',
+            'Withdraw',
+            'WithdrawPoll',
+            'WithdrawPollProxy',
+            'RelayHubFacet',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
         ]);
-        withdraw = await assetPool(factory.deployAssetPool());
+
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         await withdraw.addToken(token.address);
-
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        let poolRegistry = await PoolRegistry.deploy(await collector.getAddress(), 0);
-        expect(await withdraw.setPoolRegistry(poolRegistry.address));
-        await token.approve(withdraw.address, parseEther('1100'));
-        await withdraw.deposit(parseEther('1100'));
-
+        await token.approve(withdraw.address, parseEther('1000'));
+        await withdraw.deposit(parseEther('1000'));
+        expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25'));
         await withdraw.setProposeWithdrawPollDuration(100);
     });
-    it('Relayed addMember by owner', async function () {
-        const call = withdraw.interface.encodeFunctionData('addMember', [await poolMember.getAddress()]);
-        const nonce = Number(await solution.getLatestNonce(owner.address)) + 2;
-        const hash = web3.utils.soliditySha3(call, nonce);
-        const sig = await owner.signMessage(ethers.utils.arrayify(hash));
-        const tx = await helpSign(solution, 'call', [call, nonce, sig], owner);
-
-        expect(tx.events[tx.events.length - 1].args.success).to.eq(true);
-    });
     it('Test proposeWithdraw', async function () {
-        const ev = await events(withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress()));
-        const member = ev[0].args.member;
-        expect(member).to.eq(await withdraw.getMemberByAddress(await poolMember.getAddress()));
+        const ev = await events(withdraw.proposeWithdraw(parseEther('10'), await poolMember.getAddress()));
+        expect(ev[1].args.member).to.eq(await withdraw.getMemberByAddress(await poolMember.getAddress()));
 
         withdrawTimestamp = (await ev[0].getBlock()).timestamp;
     });
@@ -123,7 +98,7 @@ describe('05 - proposeWithdraw', function () {
         expect(await withdraw.getBeneficiary(1)).to.be.eq(
             await withdraw.getMemberByAddress(await poolMember.getAddress()),
         );
-        expect(await withdraw.getAmount(1)).to.be.eq(parseEther('1'));
+        expect(await withdraw.getAmount(1)).to.be.eq(parseEther('10'));
     });
     it('basepoll storage', async function () {
         expect(await withdraw.getStartTime(1)).to.be.eq(withdrawTimestamp);
@@ -137,13 +112,8 @@ describe('05 - proposeWithdraw', function () {
     });
     it('propose reward as non member', async function () {
         await expect(
-            withdraw.connect(voter).proposeWithdraw(parseEther('1'), await owner.getAddress()),
+            withdraw.connect(voter).proposeWithdraw(parseEther('20'), await owner.getAddress()),
         ).to.be.revertedWith('NOT_OWNER');
-    });
-    it('propose rewardFor for non member', async function () {
-        await expect(withdraw.proposeWithdraw(parseEther('1'), await voter.getAddress())).to.be.revertedWith(
-            'NOT_MEMBER',
-        );
     });
     it('vote', async function () {
         voteTxTimestamp = await timestamp(withdraw.withdrawPollVote(1, true));
@@ -158,15 +128,15 @@ describe('05 - proposeWithdraw', function () {
     });
     it('finalize', async function () {
         expect(await token.balanceOf(await poolMember.getAddress())).to.eq(0);
-        expect(await withdraw.getBalance()).to.eq(parseEther('1100'));
-        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('1100'));
+        expect(await withdraw.getBalance()).to.eq(parseEther('975'));
+        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('975'));
 
         await ethers.provider.send('evm_increaseTime', [180]);
-        await withdraw.withdrawPollFinalize(1);
-        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('1'));
-
-        expect(await withdraw.getBalance()).to.eq(parseEther('1099'));
-        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('1099'));
+        await expect(withdraw.withdrawPollFinalize(1)).to.emit(withdraw, 'WithdrawFeeCollected');
+        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('10'));
+        expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25.25'));
+        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('964.75'));
+        expect(await withdraw.getBalance()).to.eq(parseEther('964.75'));
     });
 });
 
@@ -177,40 +147,25 @@ describe('05 - tokenUnlimitedAccount', function () {
 
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
-
-        const MemberAccess = await ethers.getContractFactory('MemberAccess');
-        const Token = await ethers.getContractFactory('Token');
-        const BasePollProxy = await ethers.getContractFactory('BasePollProxy');
-        const Withdraw = await ethers.getContractFactory('Withdraw');
-        const WithdrawPoll = await ethers.getContractFactory('WithdrawPoll');
-        const WithdrawPollProxy = await ethers.getContractFactory('WithdrawPollProxy');
-
-        const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet');
-        const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet');
-        const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet');
-
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-
         const TokenUnlimitedAccount = await ethers.getContractFactory('TokenUnlimitedAccount');
-
-        const factory = await diamond([
-            MemberAccess,
-            Token,
-            BasePollProxy,
-            Withdraw,
-            WithdrawPoll,
-            WithdrawPollProxy,
-            DiamondCutFacet,
-            DiamondLoupeFacet,
-            OwnershipFacet,
+        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
+        const diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'Token',
+            'BasePollProxy',
+            'Withdraw',
+            'WithdrawPoll',
+            'WithdrawPollProxy',
+            'RelayHubFacet',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
         ]);
-        withdraw = await assetPool(factory.deployAssetPool());
+
+        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         token = await TokenUnlimitedAccount.deploy('Test Token', 'TST', withdraw.address);
         await withdraw.addToken(token.address);
-
-        const registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
-
-        await withdraw.setPoolRegistry(registry.address);
         await withdraw.setProposeWithdrawPollDuration(100);
         await withdraw.addMember(await poolMember.getAddress());
         await withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress());
