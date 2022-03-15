@@ -2,14 +2,13 @@ import dotenv from 'dotenv';
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
-
+import 'hardhat-gas-reporter';
 import 'hardhat-deploy';
 
 dotenv.config();
 
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
-const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
 const config: any = {
     defaultNetwork: 'hardhat',
@@ -60,10 +59,18 @@ const config: any = {
     paths: {
         sources: 'contracts',
     },
+    gasReporter: {
+        token: 'MATIC',
+        currency: 'USD',
+        gasPriceApi: 'https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice',
+        enabled: process.env.REPORT_GAS ? true : false,
+        coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+        maxMethodDiff: 10,
+    },
 };
 
 if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
-    config.networks.maticmum = {
+    config.networks.mumbai = {
         url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY],
         timeout: 2483647,
@@ -75,9 +82,9 @@ if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
     };
 }
 
-if (ETHERSCAN_API) {
+if (process.env.ETHERSCAN_API) {
     config.etherscan = {
-        apiKey: ETHERSCAN_API,
+        apiKey: process.env.ETHERSCAN_API,
     };
 }
 
