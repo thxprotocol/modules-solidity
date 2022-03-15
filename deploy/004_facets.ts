@@ -17,6 +17,7 @@ const facets = [
     'DiamondLoupeFacet',
     'OwnershipFacet',
     'AssetPoolFactoryFacet',
+    'TokenFactoryFacet',
 ];
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts } = hre;
