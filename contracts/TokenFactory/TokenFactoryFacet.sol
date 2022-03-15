@@ -9,6 +9,12 @@ import './ITokenFactory.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 contract TokenFactoryFacet is ITokenFactory {
+    /**
+     * @param _name string Token name.
+     * @param _symbol string Token symbol.
+     * @param to address Address the total supply will be minted to.
+     * @param amount uint256 Total supply of this token.
+     */
     function deployLimitedSupplyToken(
         string memory _name,
         string memory _symbol,
@@ -21,14 +27,19 @@ contract TokenFactoryFacet is ITokenFactory {
         emit TokenDeployed(address(t), TokenType.Limited);
     }
 
+    /**
+     * @param _name string Token name.
+     * @param _symbol string Token symbol.
+     * @param _unlimited address Addres which is allowed to transfer tokens which are minted on the fly.
+     */
     function deployUnlimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address to
+        address _unlimited
     ) external override {
         LibDiamond.enforceIsContractOwner();
 
-        TokenUnlimitedSupply t = new TokenUnlimitedSupply(_name, _symbol, to);
+        TokenUnlimitedSupply t = new TokenUnlimitedSupply(_name, _symbol, _unlimited);
         emit TokenDeployed(address(t), TokenType.Unlimited);
     }
 }
