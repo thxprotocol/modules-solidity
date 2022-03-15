@@ -1,7 +1,4 @@
 import dotenv from 'dotenv';
-import Web3 from 'web3';
-import { extendEnvironment } from 'hardhat/config';
-
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
