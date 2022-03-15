@@ -92,7 +92,7 @@ const diamond = async () => {
     const Diamond = await ethers.getContractFactory('Diamond');
     const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
     factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
-    await factory.initialize();
+    await factory.setDefaultController(await owner.getAddress());
 
     return factory;
 };
