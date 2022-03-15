@@ -19,10 +19,10 @@ const facets = [
     'AssetPoolFactoryFacet',
 ];
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    const { deployments } = hre;
+    const { deployments, getNamedAccounts } = hre;
     const { deploy } = deployments;
 
-    const deployer = (await hre.getUnnamedAccounts())[0];
+    const { deployer } = await getNamedAccounts();
 
     for (const facet of facets) {
         await deploy(facet, {

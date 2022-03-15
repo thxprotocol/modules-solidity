@@ -3,19 +3,19 @@ import { DeployFunction } from 'hardhat-deploy/types';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts } = hre;
-    const { deploy } = deployments;
+    const { diamond } = deployments;
 
-    const { deployer, collector } = await getNamedAccounts();
+    const { deployer } = await getNamedAccounts();
 
-    await deploy('PoolRegistry', {
+    await diamond.deploy('IAssetPoolFactory', {
         from: deployer,
-        args: [collector, 0],
         log: true,
+        facets: ['AssetPoolFactoryFacet'],
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
     });
 
     return hre.network.live; // Makes sure we don't redeploy on live networks
 };
 export default func;
-func.id = '001_registry';
-func.tags = ['PoolRegistry'];
+func.id = '002_asset_pool_factory';
+func.tags = ['IAssetPoolFactory'];

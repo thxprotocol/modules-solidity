@@ -14,11 +14,6 @@ const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const ETHERSCAN_API = process.env.ETHERSCAN_API || '';
 
-extendEnvironment((hre) => {
-    hre.Web3 = Web3;
-    hre.web3 = new Web3(hre.network.provider as any);
-});
-
 const config: any = {
     defaultNetwork: 'hardhat',
     solidity: {
@@ -28,6 +23,14 @@ const config: any = {
                 enabled: true,
                 runs: 200,
             },
+        },
+    },
+    namedAccounts: {
+        deployer: {
+            default: 0,
+        },
+        collector: {
+            default: '0x960911a62FdDf7BA84D0d3aD016EF7D15966F7Dc',
         },
     },
     networks: {
@@ -50,12 +53,6 @@ const config: any = {
                     privateKey: 'eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0',
                 },
             ],
-        },
-        localtest: {
-            url: `http://127.0.0.1:8545/`,
-        },
-        localtest2: {
-            url: `http://127.0.0.1:8545/`,
         },
         fork: {
             url: `http://127.0.0.1:8545/`,
