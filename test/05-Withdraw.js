@@ -140,14 +140,14 @@ describe('05 - proposeWithdraw', function () {
     });
 });
 
-describe('05 - tokenUnlimitedAccount', function () {
+describe('05 - tokenUnlimitedSupply', function () {
     let withdraw;
     let poolMember;
     let token;
 
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
-        const TokenUnlimitedAccount = await ethers.getContractFactory('TokenUnlimitedAccount');
+        const TokenUnlimitedSupply = await ethers.getContractFactory('TokenUnlimitedSupply');
         const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
@@ -164,7 +164,7 @@ describe('05 - tokenUnlimitedAccount', function () {
 
         registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
         withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
-        token = await TokenUnlimitedAccount.deploy('Test Token', 'TST', withdraw.address);
+        token = await TokenUnlimitedSupply.deploy('Test Token', 'TST', withdraw.address);
         await withdraw.addToken(token.address);
         await withdraw.setProposeWithdrawPollDuration(100);
         await withdraw.addMember(await poolMember.getAddress());

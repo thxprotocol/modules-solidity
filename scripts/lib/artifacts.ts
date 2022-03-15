@@ -21,15 +21,17 @@ import DiamondLoupeFacetArtifact from '../../artifacts/diamond-2/contracts/facet
 import OwnershipFacetArtifact from '../../artifacts/diamond-2/contracts/facets/OwnershipFacet.sol/OwnershipFacet.json';
 import DiamondArtifact from '../../artifacts/diamond-2/contracts/Diamond.sol/Diamond.json';
 import AssetPoolFactoryFacetArtifact from '../../artifacts/contracts/AssetPoolFactory/AssetPoolFactoryFacet.sol/AssetPoolFactoryFacet.json';
+import TokenFactoryFacetArtifact from '../../artifacts/contracts/TokenFactory/TokenFactoryFacet.sol/TokenFactoryFacet.json';
 import PoolRegistryArtifact from '../../artifacts/contracts/PoolRegistry.sol/PoolRegistry.json';
 
 import ERC20Artifact from '../../artifacts/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json';
 import ERC20LimitedSupplyArtifact from '../../artifacts/contracts/util/TokenLimitedSupply.sol/TokenLimitedSupply.json';
-import ERC20UnlimitedSupplyArtifact from '../../artifacts/contracts/util/TokenUnlimitedAccount.sol/TokenUnlimitedAccount.json';
+import ERC20UnlimitedSupplyArtifact from '../../artifacts/contracts/util/TokenUnlimitedSupply.sol/TokenUnlimitedSupply.json';
 import ExampleTokenArtifact from '../../artifacts/contracts/util/ExampleToken.sol/ExampleToken.json';
 
 // Interfaces
 import IAssetPoolFactoryArtifact from '../../artifacts/contracts/AssetPoolFactory/IAssetPoolFactory.sol/IAssetPoolFactory.json';
+import ITokenFactoryArtifact from '../../artifacts/contracts/TokenFactory/ITokenFactory.sol/ITokenFactory.json';
 import IDefaultDiamondArtifact from '../../artifacts/contracts/IDefaultDiamond.sol/IDefaultDiamond.json';
 
 export const Artifacts = {
@@ -56,12 +58,14 @@ export const Artifacts = {
     OwnershipFacet: OwnershipFacetArtifact,
 
     AssetPoolFactoryFacet: AssetPoolFactoryFacetArtifact,
+    TokenFactoryFacet: TokenFactoryFacetArtifact,
     PoolRegistry: PoolRegistryArtifact,
 
     Diamond: DiamondArtifact,
 
     IAssetPoolFactory: IAssetPoolFactoryArtifact,
     IDefaultDiamond: IDefaultDiamondArtifact,
+    Itoken: ITokenFactoryArtifact,
 
     ERC20: ERC20Artifact,
     ERC20LimitedSupply: ERC20LimitedSupplyArtifact,

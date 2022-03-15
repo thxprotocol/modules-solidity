@@ -1,6 +1,6 @@
 name: Smart Contract CI
 
-on: [push, pull_request]
+on: push
 
 jobs:
     test:

@@ -1,9 +1,8 @@
 import { web3 } from 'hardhat';
 import { admin, FacetCutAction, deployContract, getSelectors, sendTransaction } from './network';
 import { Artifacts } from './artifacts';
-import { Facets } from './facets';
 
-export async function deployFactory() {
+export async function deployAssetPoolFactory(facetAddresses: any) {
     let factoryDiamond: any[] = [
         Artifacts.DiamondCutFacet,
         Artifacts.DiamondLoupeFacet,
@@ -12,7 +11,7 @@ export async function deployFactory() {
     ];
 
     factoryDiamond = factoryDiamond.map((artifact) => {
-        const facetAddress = Facets[artifact.contractName];
+        const facetAddress = facetAddresses[artifact.contractName];
         const facet = new web3.eth.Contract(artifact.abi, facetAddress);
 
         return {
