@@ -13,6 +13,6 @@ RUN apk add --virtual .build g++ make py3-pip && \
 
 COPY . .
 
-RUN npm run build
+RUN npm run compile
 
 CMD ["npx", "hardhat", "node"]

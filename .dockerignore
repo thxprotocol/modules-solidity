@@ -1,5 +1,6 @@
 artifacts
 cache
+dist
 .github
 node_modules
 .gitignore
