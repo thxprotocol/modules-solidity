@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { diamond, assetPool, getDiamondCuts } = require('./utils.js');
+const { diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
@@ -11,8 +11,7 @@ describe('04 token', function () {
 
     before(async function () {
         [owner, collector] = await ethers.getSigners();
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        registry = await PoolRegistry.deploy(await collector.getAddress(), onePercent);
+        registry = await createPoolRegistry(await collector.getAddress(), onePercent);
         factory = await diamond();
         diamondCuts = await getDiamondCuts([
             'MemberAccess',

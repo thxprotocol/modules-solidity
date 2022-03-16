@@ -1,7 +1,6 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { constants } = require('ethers');
-const { events, diamond, assetPool, getDiamondCuts } = require('./utils.js');
+const { events, diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
 
 describe('06 reward', function () {
     let owner;
@@ -10,8 +9,7 @@ describe('06 reward', function () {
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        registry = await createPoolRegistry(await collector.getAddress(), 0);
         factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',

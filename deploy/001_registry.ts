@@ -3,14 +3,18 @@ import { DeployFunction } from 'hardhat-deploy/types';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts } = hre;
-    const { deploy } = deployments;
+    const { diamond } = deployments;
 
     const { deployer, collector } = await getNamedAccounts();
 
-    await deploy('PoolRegistry', {
+    await diamond.deploy('PoolRegistry', {
         from: deployer,
-        args: [collector, 0],
         log: true,
+        facets: ['PoolRegistryFacet'],
+        execute: {
+            methodName: 'initialize',
+            args: [collector, 0],
+        },
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
     });
 

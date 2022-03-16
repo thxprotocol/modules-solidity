@@ -18,6 +18,7 @@ const facets = [
     'OwnershipFacet',
     'AssetPoolFactoryFacet',
     'TokenFactoryFacet',
+    'PoolRegistryFacet',
 ];
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts } = hre;
