@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts();
 
-    await diamond.deploy('ITokenFactory', {
+    await diamond.deploy('TokenFactory', {
         from: deployer,
         log: true,
         facets: ['TokenFactoryFacet'],
@@ -18,4 +18,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.id = '003_token_factory';
-func.tags = ['ITokenFactory'];
+func.tags = ['TokenFactory'];
