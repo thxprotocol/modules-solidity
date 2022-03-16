@@ -30,8 +30,9 @@ const getArtifacts = (network: TNetworkName, version: string) => {
             throw new Error(`No contracts for version ${version} available for network ${network}`);
         }
 
+        const v = network === 'hardhat' ? 'latest' : version;
         cache[network].contracts[version] = JSON.parse(
-            fs.readFileSync(path.resolve(__dirname, './', network, `${version}.json`)).toString(),
+            fs.readFileSync(path.resolve(__dirname, './', network, `${v}.json`)).toString(),
         );
     }
 
@@ -39,8 +40,7 @@ const getArtifacts = (network: TNetworkName, version: string) => {
 };
 
 export const contractConfig = (network: TNetworkName, contractName: string, version?: string | undefined) => {
-    const v = network === 'hardhat' ? 'latest' : version || currentVersion;
-    const artifacts = getArtifacts(network, v);
+    const artifacts = getArtifacts(network, version || currentVersion);
 
     return artifacts.contracts[contractName];
 };
