@@ -4,6 +4,9 @@ set -e
 
 VERSION=`echo $(node -e "console.log(require('./package.json').version);")`
 
+# Remove compiled artifacts so they are built fresh.
+rm -rf `dirname $BASH_SOURCE`/../artifacts
+
 # Store latest version for hardhat network.
 npx hardhat deploy --export exports/hardhat/latest.json
 

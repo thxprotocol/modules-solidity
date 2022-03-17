@@ -3,12 +3,12 @@
 set -e
 
 BUMP=${1:-patch} 
-if [$BUMP != "none"]
+if [ "$BUMP" != "none" ]
 then
     npm version --no-git-tag --silent $BUMP
 fi
 
-./deploy-export.sh
+`dirname $BASH_SOURCE`/deploy-export.sh
 
 git add . 
 git commit --allow-empty -m"Publish: Deployed and exported version $VERSION"
