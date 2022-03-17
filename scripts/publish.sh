@@ -13,6 +13,8 @@ then
     npm version --no-git-tag --silent $BUMP
 fi
 
+VERSION=`echo $(node -e "console.log(require('$BASE_DIR/package.json').version);")`
+
 $BASE_DIR/scripts/deploy-export.sh
 
 git add . 
@@ -20,6 +22,7 @@ git commit --allow-empty -m"Publish: Deployed and exported version $VERSION"
 
 TAG=v$VERSION
 git tag $TAG
-git push $TAG
+git push 
+git push origin $TAG
 
 npm publish
