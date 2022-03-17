@@ -40,7 +40,7 @@ export interface ExportJsonFile {
 }
 
 export type DiamondVariant = 'defaultPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
-const diamondVariants: { [key in DiamondVariant]: ContractName[] } = {
+const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     defaultPool: [
         'AccessControl',
         'MemberAccess',
@@ -55,6 +55,8 @@ const diamondVariants: { [key in DiamondVariant]: ContractName[] } = {
     tokenFactory: ['TokenFactoryFacet'],
     assetPoolRegistry: ['AssetPoolRegistry'],
 };
+
+export const diamondVariants = Object.keys(diamondVariantsConfig) as DiamondVariant[];
 
 const cache: { [key in TNetworkName]: { versions: string[]; contracts: { [version: string]: ExportJsonFile } } } = {
     hardhat: { versions: [], contracts: {} },
@@ -80,7 +82,7 @@ const getArtifacts = (network: TNetworkName, version: string) => {
 };
 
 export const diamondFacetNames = (variant: DiamondVariant): ContractName[] => {
-    return [...diamondVariants[variant], 'DiamondCutFacet', 'DiamondLoupeFacet', 'OwnershipFacet'];
+    return [...diamondVariantsConfig[variant], 'DiamondCutFacet', 'DiamondLoupeFacet', 'OwnershipFacet'];
 };
 
 export const diamondFacetConfigs = (network: TNetworkName, variant: DiamondVariant, version?: string) => {
@@ -92,7 +94,7 @@ export const diamondFacetConfigs = (network: TNetworkName, variant: DiamondVaria
     return result;
 };
 
-export const diamondAbi = (network: TNetworkName, variant: keyof typeof diamondVariants, version?: string) => {
+export const diamondAbi = (network: TNetworkName, variant: DiamondVariant, version?: string) => {
     const result: AbiItem[] = [];
 
     for (const contractName of diamondFacetNames(variant)) {
