@@ -17,10 +17,10 @@ npx hardhat node
 
 ## Deployment
 
-Deploy facets, factory and registry on localhost network. Deploying requires web3 instead of ethers.
+Deploy facets, factory and registry on localhost network.
 
 ```
-npm run deploy
+npx hardhat deploy
 ```
 
 ## Diamonds
