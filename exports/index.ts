@@ -53,7 +53,7 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     ],
     assetPoolFactory: ['AssetPoolFactoryFacet'],
     tokenFactory: ['TokenFactoryFacet'],
-    assetPoolRegistry: ['AssetPoolRegistry'],
+    assetPoolRegistry: ['PoolRegistryFacet'],
 };
 
 export const diamondVariants = Object.keys(diamondVariantsConfig) as DiamondVariant[];
