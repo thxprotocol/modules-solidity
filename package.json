@@ -15,8 +15,7 @@
         "test": "npx hardhat test"
     },
     "files": [
-        "dist/**/*",
-        "artifacts/**/*"
+        "dist/**/*"
     ],
     "types": "dist/exports/index.d.ts",
     "prettier": {
