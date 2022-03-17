@@ -1,22 +1,23 @@
 {
     "name": "@thxnetwork/artifacts",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "scripts": {
         "prettier": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "prettier-diff": "prettier --list-different  contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "forktest": "/bin/sh .env.bash && npx hardhat node --fork https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY} > /dev/null 2>&1 & sleep 3 && npx hardhat --network fork test test/mainnet/test.js; kill $(lsof -t -i :8545)",
-        "prepublishOnly": "npm run build && npm run test",
+        "prepublishOnly": "npm run compile && npm run build && npm run test",
         "preversion": "npm run lint",
         "version": "npm run format",
         "format": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "lint": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
-        "build": "npx hardhat compile",
-        "test": "npx hardhat test",
-        "deploy": "npx hardhat run --network localhost ./scripts/deploy.ts"
+        "build": "npx tsc",
+        "compile": "npx hardhat compile",
+        "test": "npx hardhat test"
     },
     "files": [
-        "artifacts/**/*"
+        "dist/**/*"
     ],
+    "types": "dist/exports/index.d.ts",
     "prettier": {
         "tabWidth": 4,
         "singleQuote": true,
@@ -34,16 +35,16 @@
         "chai": "^4.2.0",
         "diamond-2": "^1.4.0",
         "dotenv": "^8.2.0",
-        "ethereum-waffle": "^3.2.2",
         "ethers": "^5.0.26",
-        "hardhat": "^2.8.1",
+        "hardhat": "^2.9.1",
+        "hardhat-deploy": "^0.10.5",
+        "hardhat-gas-reporter": "^1.0.8",
         "prettier-plugin-solidity": "^1.0.0-beta.11",
         "ts-node": "^10.5.0",
-        "typescript": "^4.5.5",
-        "web3": "^1.7.0"
+        "typescript": "^4.5.5"
     },
     "description": "Maintainer: [Peter Polman](mailto:peter@thx.network) - [THX Discord](https://discord.gg/6n6QK8Qk) - [THX Slack](https://thx.page.link/slack)",
-    "main": "hardhat.config.ts",
+    "main": "dist/exports/index.js",
     "directories": {
         "test": "test"
     },

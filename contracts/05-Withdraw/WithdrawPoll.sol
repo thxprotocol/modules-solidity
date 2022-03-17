@@ -22,7 +22,7 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
-import '../IPoolRegistry.sol';
+import '../PoolRegistry/IPoolRegistry.sol';
 
 // Implements
 import '../util/BasePoll.sol'; // TMP1, TMP 6

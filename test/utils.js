@@ -92,7 +92,7 @@ const diamond = async () => {
     const Diamond = await ethers.getContractFactory('Diamond');
     const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
     factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
-    await factory.initialize();
+    await factory.setDefaultController(await owner.getAddress());
 
     return factory;
 };
@@ -112,7 +112,27 @@ const createTokenFactory = async () => {
     [owner] = await ethers.getSigners();
     const Diamond = await ethers.getContractFactory('Diamond');
     const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
-    return await ethers.getContractAt('IDefaultTokenFactory', diamond.address);
+    return ethers.getContractAt('IDefaultTokenFactory', diamond.address);
+};
+
+const createPoolRegistry = async (feeCollector, feePercentage) => {
+    factoryFacets = [await ethers.getContractFactory('PoolRegistryFacet')];
+    diamondCuts = [];
+    for (let i = 0; i < factoryFacets.length; i++) {
+        const f = await factoryFacets[i].deploy();
+        diamondCuts.push({
+            action: FacetCutAction.Add,
+            facetAddress: f.address,
+            functionSelectors: getSelectors(f),
+        });
+    }
+
+    [owner] = await ethers.getSigners();
+    const Diamond = await ethers.getContractFactory('Diamond');
+    const diamond = await Diamond.deploy(diamondCuts, [await owner.getAddress()]);
+    const registry = await ethers.getContractAt('IDefaultPoolRegistry', diamond.address);
+    await registry.initialize(feeCollector, feePercentage);
+    return registry;
 };
 
 const limitedSupplyTokenContract = async (deploy) => {
@@ -144,6 +164,7 @@ module.exports = {
     getSelectors,
     diamond,
     createTokenFactory,
+    createPoolRegistry,
     limitedSupplyTokenContract,
     unlimitedSupplyTokenContract,
     MEMBER_ROLE,

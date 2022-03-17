@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants, BigNumber } = require('ethers');
-const { events, diamond, timestamp, assetPool, helpSign, getDiamondCuts } = require('./utils.js');
+const { events, diamond, timestamp, assetPool, helpSign, getDiamondCuts, createPoolRegistry } = require('./utils.js');
 
 const multiplier = BigNumber.from('10').pow(15);
 const twoHalfPercent = BigNumber.from('25').mul(multiplier);
@@ -12,8 +12,7 @@ describe('05 withdraw', function () {
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        registry = await createPoolRegistry(await collector.getAddress(), 0);
         factory = await diamond();
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
@@ -63,10 +62,10 @@ describe('05 - proposeWithdraw', function () {
 
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
         const ExampleToken = await ethers.getContractFactory('ExampleToken');
         token = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
-        registry = await PoolRegistry.deploy(await collector.getAddress(), twoHalfPercent);
+
+        registry = await createPoolRegistry(await collector.getAddress(), twoHalfPercent);
 
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
@@ -148,7 +147,6 @@ describe('05 - tokenUnlimitedSupply', function () {
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
         const TokenUnlimitedSupply = await ethers.getContractFactory('TokenUnlimitedSupply');
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'Token',
@@ -162,7 +160,7 @@ describe('05 - tokenUnlimitedSupply', function () {
             'OwnershipFacet',
         ]);
 
-        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        registry = await createPoolRegistry(await collector.getAddress(), 0);
         withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         token = await TokenUnlimitedSupply.deploy('Test Token', 'TST', withdraw.address);
         await withdraw.addToken(token.address);

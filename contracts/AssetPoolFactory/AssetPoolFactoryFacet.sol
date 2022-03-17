@@ -11,14 +11,6 @@ import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
 contract AssetPoolFactoryFacet is IAssetPoolFactory {
     /**
-     * @notice Initializes the factory with the sender as defaultController.
-     */
-    function initialize() external override {
-        LibDiamond.enforceIsContractOwner();
-        LibFactoryStorage.s().defaultController = msg.sender;
-    }
-
-    /**
      * @notice Sets the controller for the factory diamond.
      * @param _controller Address of the diamond controller.
      */

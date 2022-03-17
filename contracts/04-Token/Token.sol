@@ -15,7 +15,7 @@ import '@openzeppelin/contracts/math/SafeMath.sol';
 
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 
-import '../IPoolRegistry.sol';
+import '../PoolRegistry/IPoolRegistry.sol';
 import '../TMP/RelayReceiver.sol';
 import '../TMP/TMP5/IToken.sol';
 import '../TMP/TMP5/LibTokenStorage.sol';

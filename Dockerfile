@@ -8,11 +8,11 @@ RUN apk add bash && npm install -g npm@8.5.1
 COPY package*.json ./
 
 RUN apk add --virtual .build g++ make py3-pip && \
-    npm ci --ignore-scripts && \
+    npm ci && \
     apk del .build
 
 COPY . .
 
-RUN npm run build
+RUN npm run compile
 
-CMD "./scripts/init-docker.sh" 
+CMD ["npx", "hardhat", "node"]
