@@ -5,6 +5,29 @@ import { AbiItem } from 'web3-utils';
 
 export type TNetworkName = 'mumbai' | 'matic' | 'mumbaidev' | 'maticdev' | 'hardhat';
 
+export type ContractName =
+    | 'AssetPoolRegistry'
+    | 'AssetPoolFactory'
+    | 'TokenFactory'
+    | 'TokenLimitedSupply'
+    | 'AccessControl'
+    | 'MemberAccess'
+    | 'Token'
+    | 'BasePollProxy'
+    | 'RelayHubFacet'
+    | 'Withdraw'
+    | 'WithdrawPoll'
+    | 'WithdrawPollProxy'
+    | 'WithdrawBy'
+    | 'WithdrawByPoll'
+    | 'WithdrawByPollProxy'
+    | 'DiamondCutFacet'
+    | 'DiamondLoupeFacet'
+    | 'OwnershipFacet'
+    | 'AssetPoolFactoryFacet'
+    | 'TokenFactoryFacet'
+    | 'PoolRegistryFacet';
+
 export interface ContractConfig {
     address: string;
     abi: AbiItem[];
@@ -15,6 +38,23 @@ export interface ExportJsonFile {
     chainId: string;
     contracts: { [key: string]: ContractConfig };
 }
+
+export type DiamondVariant = 'defaultPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
+const diamondVariants: { [key in DiamondVariant]: ContractName[] } = {
+    defaultPool: [
+        'AccessControl',
+        'MemberAccess',
+        'Token',
+        'BasePollProxy',
+        'RelayHubFacet',
+        'WithdrawBy',
+        'WithdrawByPoll',
+        'WithdrawByPollProxy',
+    ],
+    assetPoolFactory: ['AssetPoolFactoryFacet'],
+    tokenFactory: ['TokenFactoryFacet'],
+    assetPoolRegistry: ['AssetPoolRegistry'],
+};
 
 const cache: { [key in TNetworkName]: { versions: string[]; contracts: { [version: string]: ExportJsonFile } } } = {
     hardhat: { versions: [], contracts: {} },
@@ -39,7 +79,37 @@ const getArtifacts = (network: TNetworkName, version: string) => {
     return cache[network].contracts[version];
 };
 
-export const contractConfig = (network: TNetworkName, contractName: string, version?: string | undefined) => {
+export const diamondFacetNames = (variant: DiamondVariant): ContractName[] => {
+    return [...diamondVariants[variant], 'DiamondCutFacet', 'DiamondLoupeFacet', 'OwnershipFacet'];
+};
+
+export const diamondFacetConfigs = (network: TNetworkName, variant: DiamondVariant, version?: string) => {
+    const result: { [name in ContractName]?: ContractConfig } = {};
+
+    const facetNames = diamondFacetNames(variant);
+    facetNames.forEach((name) => (result[name] = contractConfig(network, name, version)));
+
+    return result;
+};
+
+export const diamondAbi = (network: TNetworkName, variant: keyof typeof diamondVariants, version?: string) => {
+    const result: AbiItem[] = [];
+
+    for (const contractName of diamondFacetNames(variant)) {
+        const abi = contractConfig(network, contractName, version).abi;
+        for (const abiItem of abi) {
+            if (!result.find((item) => item.type == abiItem.type && item.name == abiItem.name)) result.push(abiItem);
+        }
+    }
+
+    return result;
+};
+
+export const contractConfig = (
+    network: TNetworkName,
+    contractName: ContractName,
+    version?: string | undefined,
+): ContractConfig => {
     const artifacts = getArtifacts(network, version || currentVersion);
 
     return artifacts.contracts[contractName];
