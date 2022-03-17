@@ -21,7 +21,7 @@ const facets = [
     'PoolRegistryFacet',
 ];
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    const { deployments, getNamedAccounts } = hre;
+    const { deployments, getNamedAccounts, network } = hre;
     const { deploy } = deployments;
 
     const { deployer } = await getNamedAccounts();
@@ -32,6 +32,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
             args: [],
             log: true,
             autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+            waitConfirmations: network.live ? 3 : 0,
         });
     }
 };
