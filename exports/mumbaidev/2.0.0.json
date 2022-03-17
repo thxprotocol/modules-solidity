@@ -3636,7 +3636,7 @@
       ]
     },
     "TokenFactoryFacet": {
-      "address": "0x4fdE74e7B61f82BF9fd578aC27207eCb8e024B11",
+      "address": "0x76d86cBe9B8d21b02425E64Fe0c654683ca00333",
       "abi": [
         {
           "anonymous": false,
