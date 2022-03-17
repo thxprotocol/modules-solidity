@@ -23,6 +23,6 @@ git commit --allow-empty -m"Publish: Deployed and exported version $VERSION"
 TAG=v$VERSION
 git tag $TAG
 git push 
-git push $TAG
+git push origin $TAG
 
 npm publish
