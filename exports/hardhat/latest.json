@@ -151,7 +151,7 @@
         }
       ]
     },
-    "PoolRegistry_DiamondProxy": {
+    "AssetPoolRegistry_DiamondProxy": {
       "address": "0xc14D994fe7C5858c93936cc3bD42bb9467d6fB2C",
       "abi": [
         {
@@ -426,7 +426,7 @@
         }
       ]
     },
-    "PoolRegistry": {
+    "AssetPoolRegistry": {
       "address": "0xc14D994fe7C5858c93936cc3bD42bb9467d6fB2C",
       "abi": [
         {
