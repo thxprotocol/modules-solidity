@@ -21,3 +21,4 @@ do
     npx hardhat deploy --network $NETWORK --export $BASE_DIR/exports/$NETWORK/$VERSION.json
 done
 
+npx ts-node $BASE_DIR/scripts/write-versions.ts

@@ -1,32 +1,33 @@
 import { version as currentVersion } from '../package.json';
-import * as fs from 'fs';
-import * as path from 'path';
 import { AbiItem } from 'web3-utils';
 
-export type TNetworkName = 'mumbai' | 'matic' | 'mumbaidev' | 'maticdev' | 'hardhat';
+export const networkNames = ['mumbai', 'matic', 'mumbaidev', 'maticdev', 'hardhat'] as const;
+export type TNetworkName = typeof networkNames[number];
 
-export type ContractName =
-    | 'AssetPoolRegistry'
-    | 'AssetPoolFactory'
-    | 'TokenFactory'
-    | 'TokenLimitedSupply'
-    | 'AccessControl'
-    | 'MemberAccess'
-    | 'Token'
-    | 'BasePollProxy'
-    | 'RelayHubFacet'
-    | 'Withdraw'
-    | 'WithdrawPoll'
-    | 'WithdrawPollProxy'
-    | 'WithdrawBy'
-    | 'WithdrawByPoll'
-    | 'WithdrawByPollProxy'
-    | 'DiamondCutFacet'
-    | 'DiamondLoupeFacet'
-    | 'OwnershipFacet'
-    | 'AssetPoolFactoryFacet'
-    | 'TokenFactoryFacet'
-    | 'PoolRegistryFacet';
+export const contractNames = [
+    'AssetPoolRegistry',
+    'AssetPoolFactory',
+    'TokenFactory',
+    'TokenLimitedSupply',
+    'AccessControl',
+    'MemberAccess',
+    'Token',
+    'BasePollProxy',
+    'RelayHubFacet',
+    'Withdraw',
+    'WithdrawPoll',
+    'WithdrawPollProxy',
+    'WithdrawBy',
+    'WithdrawByPoll',
+    'WithdrawByPollProxy',
+    'DiamondCutFacet',
+    'DiamondLoupeFacet',
+    'OwnershipFacet',
+    'AssetPoolFactoryFacet',
+    'TokenFactoryFacet',
+    'PoolRegistryFacet',
+] as const;
+export type ContractName = typeof contractNames[number];
 
 export interface ContractConfig {
     address: string;
@@ -73,9 +74,7 @@ const getArtifacts = (network: TNetworkName, version: string) => {
         }
 
         const v = network === 'hardhat' ? 'latest' : version;
-        cache[network].contracts[version] = JSON.parse(
-            fs.readFileSync(path.resolve(__dirname, './', network, `${v}.json`)).toString(),
-        );
+        cache[network].contracts[version] = require(`./${network}/${v}.json`);
     }
 
     return cache[network].contracts[version];
@@ -118,11 +117,8 @@ export const contractConfig = (
 };
 
 export const availableVersions = (network: TNetworkName): string[] => {
-    if (network === 'hardhat') return [currentVersion];
-
     if (cache[network].versions.length === 0) {
-        const list = fs.readdirSync(path.resolve(__dirname, './', network));
-        cache[network].versions = list.map((filename) => filename.substring(0, filename.length - 5));
+        cache[network].versions = require(`./${network}/versions.json`);
     }
 
     return cache[network].versions;
