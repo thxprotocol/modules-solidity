@@ -38,7 +38,7 @@ describe('Unlimited Token factory', function () {
         expect(await tokenContract.name()).to.eq('Test Token');
     });
 
-    describe.only('NFT', function () {
+    describe('NFT', function () {
         const baseURI = 'https://metadata.thx.network';
         let tokenContract;
 
@@ -56,7 +56,7 @@ describe('Unlimited Token factory', function () {
         it('mint', async function () {
             const path = '/tokenuri/0.json';
 
-            expect(tokenContract.connect(receiver).mint(await receiver.getAddress(), tokenUri)).to.revertedWith(
+            expect(tokenContract.connect(receiver).mint(await receiver.getAddress(), path)).to.revertedWith(
                 'ONLY_OWNER',
             );
             expect(tokenContract.mint(await receiver.getAddress(), path)).to.emit(tokenContract, 'Transfer');
