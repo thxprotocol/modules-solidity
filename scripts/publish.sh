@@ -7,6 +7,8 @@ VERSION=`echo $(node -e "console.log(require('$BASE_DIR/package.json').version);
 
 cd $BASE_DIR
 
+npm i
+
 BUMP=${1:-patch} 
 if [ "$BUMP" != "none" ]
 then
