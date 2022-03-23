@@ -6,7 +6,7 @@ const {
     unlimitedSupplyTokenContract,
 } = require('./utils');
 
-describe.only('Unlimited Token factory', function () {
+describe('Unlimited Token factory', function () {
     let factory, owner, receiver;
 
     before(async function () {
@@ -38,24 +38,44 @@ describe.only('Unlimited Token factory', function () {
         expect(await tokenContract.name()).to.eq('Test Token');
     });
 
-    it('Non Fungible', async function () {
-        const tokenUri = 'https://metadata.thx.network/tokenuri/0.json';
-        const tokenContract = await nonFungibleTokenContract(
-            factory.deployNonFungibleToken('Test NFT', 'NFT', await owner.getAddress()),
-        );
+    describe.only('NFT', function () {
+        const baseURI = 'https://metadata.thx.network';
+        let tokenContract;
 
-        expect(await tokenContract.name()).to.eq('Test NFT');
-        expect(await tokenContract.symbol()).to.eq('NFT');
-        expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(0);
-        expect(await tokenContract.totalSupply()).to.eq(0);
+        it('deploy', async function () {
+            tokenContract = await nonFungibleTokenContract(
+                factory.deployNonFungibleToken('Test NFT', 'NFT', await owner.getAddress(), baseURI),
+            );
 
-        expect(tokenContract.connect(receiver).mint(await receiver.getAddress(), tokenUri)).to.revertedWith(
-            'ONLY_OWNER',
-        );
-        expect(tokenContract.mint(await receiver.getAddress(), tokenUri)).to.emit(tokenContract, 'Transfer');
+            expect(await tokenContract.name()).to.eq('Test NFT');
+            expect(await tokenContract.symbol()).to.eq('NFT');
+            expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(0);
+            expect(await tokenContract.totalSupply()).to.eq(0);
+            expect(await tokenContract.baseURI()).to.eq(baseURI);
+        });
+        it('mint', async function () {
+            const tokenUri = '/tokenuri/0.json';
 
-        expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(1);
-        expect(await tokenContract.totalSupply()).to.eq(1);
-        expect(await tokenContract.tokenURI(1)).to.eq(tokenUri);
+            expect(tokenContract.connect(receiver).mint(await receiver.getAddress(), tokenUri)).to.revertedWith(
+                'ONLY_OWNER',
+            );
+            expect(tokenContract.mint(await receiver.getAddress(), tokenUri)).to.emit(tokenContract, 'Transfer');
+
+            expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(1);
+            expect(await tokenContract.totalSupply()).to.eq(1);
+            expect(await tokenContract.tokenURI(1)).to.eq(baseURI + tokenUri);
+        });
+        it('transfer', async function () {
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(0);
+            expect(tokenContract.connect(receiver).approve(await owner.getAddress(), 1)).to.emit(
+                tokenContract,
+                'Approval',
+            );
+            expect(
+                tokenContract.connect(receiver).transferFrom(await receiver.getAddress(), await owner.getAddress(), 1),
+            ).to.emit(tokenContract, 'Transfer');
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(1);
+            expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(0);
+        });
     });
 });

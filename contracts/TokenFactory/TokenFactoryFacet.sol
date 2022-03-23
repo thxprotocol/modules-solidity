@@ -13,16 +13,17 @@ contract TokenFactoryFacet is ITokenFactory {
     /**
      * @param _name string Token name.
      * @param _symbol string Token symbol.
-     * @param to address Address the total supply will be minted to.
+     * @param _to address Address the total supply will be minted to.
      */
     function deployNonFungibleToken(
         string memory _name,
         string memory _symbol,
-        address to
+        address _to,
+        string memory _baseURI
     ) external override {
         LibDiamond.enforceIsContractOwner();
 
-        NonFungibleToken t = new NonFungibleToken(_name, _symbol, to);
+        NonFungibleToken t = new NonFungibleToken(_name, _symbol, _to, _baseURI);
         emit TokenDeployed(address(t), TokenType.NonFungible);
     }
 

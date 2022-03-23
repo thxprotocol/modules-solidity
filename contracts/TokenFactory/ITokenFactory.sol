@@ -9,7 +9,8 @@ interface ITokenFactory {
     function deployNonFungibleToken(
         string memory _name,
         string memory _symbol,
-        address to
+        address _to,
+        string memory _baseURI
     ) external;
     
     function deployLimitedSupplyToken(

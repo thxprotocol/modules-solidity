@@ -16,8 +16,9 @@ contract NonFungibleToken is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor(string memory name_, string memory symbol_, address owner_) ERC721(name_, symbol_) {
+    constructor(string memory name_, string memory symbol_, address owner_, string memory baseURI_) ERC721(name_, symbol_) {
         transferOwnership(owner_);
+        _setBaseURI(baseURI_);
     }
 
     function mint(address recipient, string memory tokenURI) external onlyOwner() returns (uint256) 
