@@ -1,7 +1,16 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants, BigNumber } = require('ethers');
-const { events, diamond, timestamp, assetPool, helpSign, getDiamondCuts, createPoolRegistry } = require('./utils.js');
+const {
+    events,
+    diamond,
+    timestamp,
+    assetPool,
+    helpSign,
+    getDiamondCuts,
+    createPoolRegistry,
+    createTokenFactory,
+} = require('./utils.js');
 
 const multiplier = BigNumber.from('10').pow(15);
 const twoHalfPercent = BigNumber.from('25').mul(multiplier);
@@ -183,6 +192,3 @@ describe('05 - UnlimitedSupplyToken', function () {
         expect(await token.balanceOf(withdraw.address)).to.eq(0);
     });
 });
-
-// todo test
-// withdrawPollRevokeVote
