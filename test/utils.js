@@ -138,13 +138,13 @@ const createPoolRegistry = async (feeCollector, feePercentage) => {
 const limitedSupplyTokenContract = async (deploy) => {
     tx = await (await deploy).wait();
     const address = tx.events[tx.events.length - 1].args.token;
-    return ethers.getContractAt('TokenLimitedSupply', address);
+    return ethers.getContractAt('LimitedSupplyToken', address);
 };
 
 const unlimitedSupplyTokenContract = async (deploy) => {
     tx = await (await deploy).wait();
     const address = tx.events[tx.events.length - 1].args.token;
-    return ethers.getContractAt('TokenUnlimitedSupply', address);
+    return ethers.getContractAt('UnlimitedSupplyToken', address);
 };
 
 const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';

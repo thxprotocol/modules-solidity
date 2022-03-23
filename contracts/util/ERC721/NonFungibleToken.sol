@@ -8,18 +8,16 @@ pragma solidity ^0.7.4;
 * @dev Not upgradable contract.
 /******************************************************************************/
 
-import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../Access.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-
-contract THXERC721URIStorage is ERC721URIStorage, Access {
+contract NonFungibleToken is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor(uint256 name_, string memory symbol_, address owner_) ERC721(name_, symbol_, owner_) {
-        setOwner(owner_);
+    constructor(string memory name_, string memory symbol_, address owner_) ERC721(name_, symbol_) {
+        transferOwnership(owner_);
     }
 
     function mint(address recipient, string memory tokenURI) external onlyOwner() returns (uint256) 
