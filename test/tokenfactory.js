@@ -54,16 +54,16 @@ describe('Unlimited Token factory', function () {
             expect(await tokenContract.baseURI()).to.eq(baseURI);
         });
         it('mint', async function () {
-            const tokenUri = '/tokenuri/0.json';
+            const path = '/tokenuri/0.json';
 
             expect(tokenContract.connect(receiver).mint(await receiver.getAddress(), tokenUri)).to.revertedWith(
                 'ONLY_OWNER',
             );
-            expect(tokenContract.mint(await receiver.getAddress(), tokenUri)).to.emit(tokenContract, 'Transfer');
+            expect(tokenContract.mint(await receiver.getAddress(), path)).to.emit(tokenContract, 'Transfer');
 
             expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(1);
             expect(await tokenContract.totalSupply()).to.eq(1);
-            expect(await tokenContract.tokenURI(1)).to.eq(baseURI + tokenUri);
+            expect(await tokenContract.tokenURI(1)).to.eq(baseURI + path);
         });
         it('transfer', async function () {
             expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(0);
