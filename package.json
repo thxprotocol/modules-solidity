@@ -1,6 +1,6 @@
 {
     "name": "@thxnetwork/artifacts",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "scripts": {
         "prettier": "prettier --write contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
         "prettier-diff": "prettier --list-different  contracts/*.sol contracts/**/*.sol contracts/**/**/*.sol",
