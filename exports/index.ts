@@ -1,5 +1,7 @@
 import { version as currentVersion } from '../package.json';
 import { AbiItem } from 'web3-utils';
+import fs from 'fs';
+import path from 'path';
 
 export const networkNames = ['mumbai', 'matic', 'mumbaidev', 'maticdev', 'hardhat'] as const;
 export type TNetworkName = typeof networkNames[number];
@@ -74,7 +76,9 @@ const getArtifacts = (network: TNetworkName, version: string) => {
         }
 
         const v = network === 'hardhat' ? 'latest' : version;
-        cache[network].contracts[version] = require(`./${network}/${v}.json`);
+        cache[network].contracts[version] = JSON.parse(
+            fs.readFileSync(path.resolve(__dirname, './', network, `${v}.json`)).toString(),
+        );
     }
 
     return cache[network].contracts[version];
@@ -117,8 +121,11 @@ export const contractConfig = (
 };
 
 export const availableVersions = (network: TNetworkName): string[] => {
+    if (network === 'hardhat') return [currentVersion];
+
     if (cache[network].versions.length === 0) {
-        cache[network].versions = require(`./${network}/versions.json`);
+        const list = fs.readdirSync(path.resolve(__dirname, './', network));
+        cache[network].versions = list.map((filename) => filename.substring(0, filename.length - 5));
     }
 
     return cache[network].versions;
