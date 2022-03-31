@@ -21,7 +21,7 @@ contract NonFungibleToken is ERC721, Ownable {
         _setBaseURI(baseURI_);
     }
 
-    function mint(address recipient, string memory tokenURI) external onlyOwner() returns (uint256) 
+    function mint(address recipient, string memory tokenURI) external onlyOwner returns (uint256) 
     {
         _tokenIds.increment();
 

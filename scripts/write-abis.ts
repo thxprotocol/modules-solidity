@@ -15,7 +15,7 @@ for (const contractName of contractNames) {
     fs.writeFileSync(path.resolve(dir, `${contractName}.json`), JSON.stringify(config.abi, null, 2));
 }
 
-const config = contractConfig('hardhat', 'TokenLimitedSupply');
+const config = contractConfig('hardhat', 'LimitedSupplyToken');
 fs.writeFileSync(path.resolve(dir, `ERC20.json`), JSON.stringify(config.abi, null, 2));
 
 for (const diamondVariant of diamondVariants) {
