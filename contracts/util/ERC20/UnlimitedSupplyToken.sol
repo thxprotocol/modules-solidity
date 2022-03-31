@@ -10,7 +10,6 @@ pragma solidity ^0.7.4;
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-import 'hardhat/console.sol';
 
 contract UnlimitedSupplyToken is ERC20 {
     address public admin;
@@ -54,8 +53,10 @@ contract UnlimitedSupplyToken is ERC20 {
      * Remove a minter from this contract
      * @param _minter Minter address to add.
      */
-    function delMinter(address _minter) public modifiable mintable {
+    function delMinter(address _minter) public modifiable {
         require(_minter != address(0), 'Invalid Minter Address');
+        require(minterMap[_minter] == true, 'Minter is not in Minter List');
+
         delete minterMap[_minter];
     }
 
