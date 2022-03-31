@@ -32,6 +32,11 @@ describe('04 token', function () {
     });
     it('Test registry', async function () {
         expect(await token.getPoolRegistry()).to.eq(registry.address);
+        expect(await registry.feePercentage()).to.eq(onePercent);
+        expect(await registry.feeCollector()).to.eq(await collector.getAddress());
+    });
+    it('Test set registry', async function () {
+        expect(await token.setPoolRegistry(registry.address)).to.emit(registry, 'RegistryUpdated');
     });
     it('Test asset pool registration', async function () {
         // For ease of testing and lack of interface validation in solidity we misuse registry address here

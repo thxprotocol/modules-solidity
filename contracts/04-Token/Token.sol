@@ -30,8 +30,6 @@ contract Token is IToken, RelayReceiver {
      * @dev Registry contains general pool settings and will be governable at some point.
      */
     function setPoolRegistry(address _registry) external override {
-        require(_registry != address(0), 'ZERO');
-
         LibDiamond.enforceIsContractOwner();
         LibTokenStorage.tokenStorage().registry = _registry;
         emit RegistryUpdated(address(0), _registry);
