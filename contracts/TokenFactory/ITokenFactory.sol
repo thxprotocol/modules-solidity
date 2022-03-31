@@ -5,14 +5,14 @@ pragma experimental ABIEncoderV2;
 interface ITokenFactory {
     enum TokenType { Limited, Unlimited, NonFungible }
     event TokenDeployed(address token, TokenType tokenType);
-    
+
     function deployNonFungibleToken(
         string memory _name,
         string memory _symbol,
         address _to,
         string memory _baseURI
     ) external;
-    
+
     function deployLimitedSupplyToken(
         string memory _name,
         string memory _symbol,
