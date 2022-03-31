@@ -11,8 +11,6 @@ export const contractNames = [
     'AssetPoolFactory',
     'TokenFactory',
     'LimitedSupplyToken',
-    'UnlimitedSupplyToken',
-    'NonFungibleToken',
     'AccessControl',
     'MemberAccess',
     'Token',
