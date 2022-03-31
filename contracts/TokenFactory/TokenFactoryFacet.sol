@@ -48,7 +48,7 @@ contract TokenFactoryFacet is ITokenFactory {
     /**
      * @param _name string Token name.
      * @param _symbol string Token symbol.
-     * @param _minters address[] List of minters.
+     * @param _minters address[] List if address that able to mint new tokens
      * @param _admin address Addres which is allowed to transfer tokens which are minted on the fly.
      */
     function deployUnlimitedSupplyToken(

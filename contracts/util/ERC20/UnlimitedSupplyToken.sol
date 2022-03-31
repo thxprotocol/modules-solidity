@@ -10,6 +10,7 @@ pragma solidity ^0.7.4;
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import 'hardhat/console.sol';
 
 contract UnlimitedSupplyToken is ERC20 {
     address public admin;
@@ -59,10 +60,13 @@ contract UnlimitedSupplyToken is ERC20 {
     }
 
     function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override mintable {
-        _mint(from, amount);
+        address _from,
+        address _to,
+        uint256 _amount
+    ) internal override {
+        console.log(_from, _to, minterMap[_to]);
+        require(_to != address(0), 'Invalid Minter Address');
+        require(minterMap[_to] == true, "You don't have mint right");
+        _mint(_from, _amount);
     }
 }

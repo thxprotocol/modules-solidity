@@ -8,9 +8,16 @@ describe('Unlimited Token', function () {
     before(async function () {
         [owner, receiver] = await ethers.getSigners();
 
+        console.log('Mint', [await receiver.getAddress(), await owner.getAddress()]);
+
         const factory = await createTokenFactory();
         token = await unlimitedSupplyTokenContract(
-            factory.deployUnlimitedSupplyToken('Test Token', 'TST', await owner.getAddress()),
+            factory.deployUnlimitedSupplyToken(
+                'Test Token',
+                'TST',
+                [await receiver.getAddress(), await owner.getAddress()],
+                await owner.getAddress(),
+            ),
         );
     });
     it('Initial state', async function () {
