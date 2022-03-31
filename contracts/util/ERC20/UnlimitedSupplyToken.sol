@@ -23,7 +23,7 @@ contract UnlimitedSupplyToken is ERC20 {
         address _admin
     ) ERC20(_name, _symbol) {
         require(_admin != address(0), 'Invalid Admin Address');
-        _admin = _admin;
+        admin = _admin;
 
         for (uint256 i = 0; i < _minters.length; ++i) {
             require(_minters[i] != address(0), 'Invalid Minter Address');
@@ -64,9 +64,8 @@ contract UnlimitedSupplyToken is ERC20 {
         address _to,
         uint256 _amount
     ) internal override {
-        console.log(_from, _to, minterMap[_to]);
-        require(_to != address(0), 'Invalid Minter Address');
-        require(minterMap[_to] == true, "You don't have mint right");
-        _mint(_from, _amount);
+        if (minterMap[_from] == true) {
+            _mint(_from, _amount);
+        }
     }
 }
