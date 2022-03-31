@@ -1,9 +1,8 @@
 const { web3 } = require('hardhat');
 const { expect } = require('chai');
-const { constants } = require('ethers');
-const { parseEther, parseUnits } = require('ethers/lib/utils');
-const { diamond, assetPool, helpSign, hex2a, getDiamondCuts } = require('./utils.js');
-const { Artifacts } = require('../scripts/lib/artifacts');
+const { parseEther } = require('ethers/lib/utils');
+const { diamond, assetPool, helpSign, hex2a, getDiamondCuts, createPoolRegistry } = require('./utils.js');
+
 describe('07 RelayHub', function () {
     let solution;
     let registry, factory;
@@ -26,8 +25,7 @@ describe('07 RelayHub', function () {
             'OwnershipFacet',
             'RelayHubFacet',
         ]);
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        registry = await PoolRegistry.deploy(await collector.getAddress(), 0);
+        registry = await createPoolRegistry(await collector.getAddress(), 0);
         solution = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
     });
     describe('Signing access', async function () {

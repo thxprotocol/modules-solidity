@@ -1,13 +1,17 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
+const { unlimitedSupplyTokenContract, createTokenFactory } = require('./utils');
 
 describe('Unlimited Token', function () {
     let token;
 
     before(async function () {
         [owner, receiver] = await ethers.getSigners();
-        const TokenUnlimitedAccount = await ethers.getContractFactory('TokenUnlimitedAccount');
-        token = await TokenUnlimitedAccount.deploy('Test Token', 'TST', await owner.getAddress());
+
+        const factory = await createTokenFactory();
+        token = await unlimitedSupplyTokenContract(
+            factory.deployUnlimitedSupplyToken('Test Token', 'TST', await owner.getAddress()),
+        );
     });
     it('Initial state', async function () {
         expect(await token.balanceOf(await owner.getAddress())).to.eq(0);

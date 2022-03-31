@@ -7,6 +7,8 @@ interface IWithdraw {
 
     function proposeWithdraw(uint256 _amount, address _beneficiary) external;
 
+    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries) external;
+
     function setProposeWithdrawPollDuration(uint256 _duration) external;
 
     function getProposeWithdrawPollDuration() external view returns (uint256);

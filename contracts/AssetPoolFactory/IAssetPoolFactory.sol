@@ -8,8 +8,6 @@ interface IAssetPoolFactory {
     event AssetPoolDeployed(address assetPool);
     event AssetPoolRegistered(address assetPool);
 
-    function initialize() external;
-
     function setDefaultController(address _controller) external;
 
     function registerAssetPool(address _pool) external;

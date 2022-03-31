@@ -3,7 +3,7 @@ node_modules
 #Hardhat files
 cache
 artifacts
-
+dist
 
 .env
 .env.bash

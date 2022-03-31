@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { diamond, assetPool, getDiamondCuts } = require('./utils.js');
+const { diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
@@ -11,8 +11,7 @@ describe('04 token', function () {
 
     before(async function () {
         [owner, collector] = await ethers.getSigners();
-        const PoolRegistry = await ethers.getContractFactory('PoolRegistry');
-        registry = await PoolRegistry.deploy(await collector.getAddress(), onePercent);
+        registry = await createPoolRegistry(await collector.getAddress(), onePercent);
         factory = await diamond();
         diamondCuts = await getDiamondCuts([
             'MemberAccess',
@@ -33,6 +32,11 @@ describe('04 token', function () {
     });
     it('Test registry', async function () {
         expect(await token.getPoolRegistry()).to.eq(registry.address);
+        expect(await registry.feePercentage()).to.eq(onePercent);
+        expect(await registry.feeCollector()).to.eq(await collector.getAddress());
+    });
+    it('Test set registry', async function () {
+        expect(await token.setPoolRegistry(registry.address)).to.emit(registry, 'RegistryUpdated');
     });
     it('Test asset pool registration', async function () {
         // For ease of testing and lack of interface validation in solidity we misuse registry address here

@@ -92,10 +92,67 @@ const diamond = async () => {
     const Diamond = await ethers.getContractFactory('Diamond');
     const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
     factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
-    await factory.initialize();
+    await factory.setDefaultController(await owner.getAddress());
 
     return factory;
 };
+
+const createTokenFactory = async () => {
+    factoryFacets = [await ethers.getContractFactory('TokenFactoryFacet')];
+    diamondCutFactory = [];
+    for (let i = 0; i < factoryFacets.length; i++) {
+        const f = await factoryFacets[i].deploy();
+        diamondCutFactory.push({
+            action: FacetCutAction.Add,
+            facetAddress: f.address,
+            functionSelectors: getSelectors(f),
+        });
+    }
+
+    [owner] = await ethers.getSigners();
+    const Diamond = await ethers.getContractFactory('Diamond');
+    const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
+    return ethers.getContractAt('IDefaultTokenFactory', diamond.address);
+};
+
+const createPoolRegistry = async (feeCollector, feePercentage) => {
+    factoryFacets = [await ethers.getContractFactory('PoolRegistryFacet')];
+    diamondCuts = [];
+    for (let i = 0; i < factoryFacets.length; i++) {
+        const f = await factoryFacets[i].deploy();
+        diamondCuts.push({
+            action: FacetCutAction.Add,
+            facetAddress: f.address,
+            functionSelectors: getSelectors(f),
+        });
+    }
+
+    [owner] = await ethers.getSigners();
+    const Diamond = await ethers.getContractFactory('Diamond');
+    const diamond = await Diamond.deploy(diamondCuts, [await owner.getAddress()]);
+    const registry = await ethers.getContractAt('IDefaultPoolRegistry', diamond.address);
+    await registry.initialize(feeCollector, feePercentage);
+    return registry;
+};
+
+const limitedSupplyTokenContract = async (deploy) => {
+    tx = await (await deploy).wait();
+    const address = tx.events[tx.events.length - 1].args.token;
+    return ethers.getContractAt('LimitedSupplyToken', address);
+};
+
+const unlimitedSupplyTokenContract = async (deploy) => {
+    tx = await (await deploy).wait();
+    const address = tx.events[tx.events.length - 1].args.token;
+    return ethers.getContractAt('UnlimitedSupplyToken', address);
+};
+
+const nonFungibleTokenContract = async (deploy) => {
+    tx = await (await deploy).wait();
+    const address = tx.events[tx.events.length - 1].args.token;
+    return ethers.getContractAt('NonFungibleToken', address);
+};
+
 const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';
 const MANAGER_ROLE = '0x241ecf16d79d0f8dbfb92cbc07fe17840425976cf0667f022fe9877caa831b08';
 const ADMIN_ROLE = constants.HashZero;
@@ -112,6 +169,11 @@ module.exports = {
     timestamp,
     getSelectors,
     diamond,
+    createTokenFactory,
+    createPoolRegistry,
+    limitedSupplyTokenContract,
+    unlimitedSupplyTokenContract,
+    nonFungibleTokenContract,
     MEMBER_ROLE,
     MANAGER_ROLE,
     ADMIN_ROLE,
