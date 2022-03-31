@@ -8,7 +8,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts();
 
-    await deploy('TokenLimitedSupply', {
+    await deploy('LimitedSupplyToken', {
         from: deployer,
         args: ['THX Token', 'THX', deployer, parseUnits('1000000', 'ether')],
         log: true,
@@ -20,4 +20,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.id = '004_example_token';
-func.tags = ['TokenLimitedSupply'];
+func.tags = ['LimitedSupplyToken'];

@@ -1,8 +1,17 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { constants, BigNumber, Wallet } = require('ethers');
-const { events, diamond, timestamp, assetPool, helpSign, getDiamondCuts, createPoolRegistry } = require('./utils.js');
 const { ethers } = require('hardhat');
+const { constants, BigNumber, Wallet } = require('ethers');
+const {
+    events,
+    diamond,
+    timestamp,
+    assetPool,
+    helpSign,
+    getDiamondCuts,
+    createPoolRegistry,
+    createTokenFactory,
+} = require('./utils.js');
 
 const multiplier = BigNumber.from('10').pow(15);
 const twoHalfPercent = BigNumber.from('25').mul(multiplier);
@@ -154,14 +163,14 @@ describe('05 - proposeWithdraw', function () {
     });
 });
 
-describe('05 - tokenUnlimitedSupply', function () {
+describe('05 - UnlimitedSupplyToken', function () {
     let withdraw;
     let poolMember;
     let token;
 
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
-        const TokenUnlimitedSupply = await ethers.getContractFactory('TokenUnlimitedSupply');
+        const UnlimitedSupplyToken = await ethers.getContractFactory('UnlimitedSupplyToken');
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',
             'Token',
@@ -177,7 +186,7 @@ describe('05 - tokenUnlimitedSupply', function () {
 
         registry = await createPoolRegistry(await collector.getAddress(), 0);
         withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
-        token = await TokenUnlimitedSupply.deploy('Test Token', 'TST', withdraw.address);
+        token = await UnlimitedSupplyToken.deploy('Test Token', 'TST', withdraw.address);
         await withdraw.addToken(token.address);
         await withdraw.setProposeWithdrawPollDuration(100);
         await withdraw.addMember(await poolMember.getAddress());
@@ -198,6 +207,3 @@ describe('05 - tokenUnlimitedSupply', function () {
         expect(await token.balanceOf(withdraw.address)).to.eq(0);
     });
 });
-
-// todo test
-// withdrawPollRevokeVote
