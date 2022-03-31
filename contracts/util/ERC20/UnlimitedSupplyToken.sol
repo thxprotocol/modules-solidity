@@ -46,7 +46,7 @@ contract UnlimitedSupplyToken is ERC20 {
 
     /**
      * Remove a minter from this contract
-     * @param _minter Minter address to add.
+     * @param _minter Minter address to remove.
      */
     function removeMinter(address _minter) public onlyAdmin {
         require(_minter != address(0), 'Invalid Minter Address');
