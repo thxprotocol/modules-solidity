@@ -44,6 +44,23 @@ contract Withdraw is Access, IWithdraw {
             _beneficiary
         );
     }
+    
+    /**
+     * @notice Proposes a withdraw poll with the default withdrawPollDuration in bulk.
+     * @param _amounts Sizes of the proposed withdrawal.
+     * @param _beneficiaries Beneficiaries of the reward.
+     */
+    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries) external override onlyOwner {
+        require(_amounts.length != 0, 'INVALID_INPUT');
+        require(_beneficiaries.length != 0, 'INVALID_INPUT');
+        require(_amounts.length == _beneficiaries.length, 'INVALID_INPUT');
+
+        for (uint256 i = 0; i < _beneficiaries.length; i++) {
+            require(_amounts[i] != 0, 'NOT_VALID');
+            require(_beneficiaries[i] != address(0), 'NOT_VALID');
+            _createWithdrawPoll(_amounts[i], LibWithdrawPollStorage.withdrawStorage().proposeWithdrawPollDuration, _beneficiaries[i]);
+        }
+    }
 
     /**
      * @notice Starts a withdraw poll.
