@@ -48,16 +48,18 @@ contract TokenFactoryFacet is ITokenFactory {
     /**
      * @param _name string Token name.
      * @param _symbol string Token symbol.
-     * @param _unlimited address Addres which is allowed to transfer tokens which are minted on the fly.
+     * @param _minters address[] List of minters.
+     * @param _admin address Addres which is allowed to transfer tokens which are minted on the fly.
      */
     function deployUnlimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address _unlimited
+        address[] memory _minters,
+        address _admin
     ) external override {
         LibDiamond.enforceIsContractOwner();
 
-        UnlimitedSupplyToken t = new UnlimitedSupplyToken(_name, _symbol, _unlimited);
+        UnlimitedSupplyToken t = new UnlimitedSupplyToken(_name, _symbol, _minters, _admin);
         emit TokenDeployed(address(t), TokenType.Unlimited);
     }
 }
