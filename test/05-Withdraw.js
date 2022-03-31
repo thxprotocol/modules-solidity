@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
-const { constants, BigNumber } = require('ethers');
+const { ethers } = require('hardhat');
+const { constants, BigNumber, Wallet } = require('ethers');
 const {
     events,
     diamond,
@@ -51,6 +52,20 @@ describe('05 withdraw', function () {
         expect(ev[0].args.id).to.eq(1);
         expect(await withdraw.getAmount(1)).to.eq(parseEther('1'));
         expect(await withdraw.getBeneficiary(1)).to.eq(1001);
+    });
+    it('Test proposeBulkWithdraw', async function () {
+        const amounts = [],
+            beneficiaries = [];
+        for (let i = 0; i < 10; i++) {
+            const signer = Wallet.createRandom();
+            amounts.push(parseEther('1'));
+            beneficiaries.push(await signer.getAddress());
+        }
+        const logs = await events(withdraw.proposeBulkWithdraw(amounts, beneficiaries));
+        expect(logs.filter((e) => e.event === 'RoleGranted').length).to.eq(10);
+        expect(logs.filter((e) => e.event === 'WithdrawPollCreated').length).to.eq(10);
+        // expect(await withdraw.getAmount(i)).to.eq(parseEther('1'));
+        // expect(await withdraw.getBeneficiary(i)).to.eq(1000 + i);
     });
     it('Test withdrawPollVote', async function () {
         expect(await withdraw.getYesCounter(1)).to.eq(0);
