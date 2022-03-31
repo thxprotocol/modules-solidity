@@ -30,12 +30,7 @@ contract UnlimitedSupplyToken is ERC20 {
         }
     }
 
-    modifier mintable() {
-        require(minterMap[msg.sender] == true, "You don't have mint right");
-        _;
-    }
-
-    modifier modifiable() {
+    modifier onlyAdmin() {
         require(msg.sender == admin, 'Only admin can run this function');
         _;
     }
@@ -44,7 +39,7 @@ contract UnlimitedSupplyToken is ERC20 {
      * Add a new minter to this contract
      * @param _minter Minter address to add.
      */
-    function setMinter(address _minter) public modifiable {
+    function addMinter(address _minter) public onlyAdmin {
         require(_minter != address(0), 'Invalid Minter Address');
         minterMap[_minter] = true;
     }
@@ -53,7 +48,7 @@ contract UnlimitedSupplyToken is ERC20 {
      * Remove a minter from this contract
      * @param _minter Minter address to add.
      */
-    function delMinter(address _minter) public modifiable {
+    function removeMinter(address _minter) public onlyAdmin {
         require(_minter != address(0), 'Invalid Minter Address');
         require(minterMap[_minter] == true, 'Minter is not in Minter List');
 

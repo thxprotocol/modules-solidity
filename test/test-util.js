@@ -15,26 +15,18 @@ describe('Unlimited Token', function () {
     });
 
     it('Cannot mint when not in minter list', async () => {
-        try {
-            await token.transfer(await receiver.getAddress(), parseEther('1000'));
-        } catch (e) {
-            expect(e.message).to.equal(
-                "VM Exception while processing transaction: reverted with reason string 'ERC20: transfer amount exceeds balance'",
-            );
-        }
+        expect(token.transfer(await receiver.getAddress(), parseEther('1000'))).to.be.revertedWith(
+            'ERC20: transfer amount exceeds balance',
+        );
     });
 
     it('Admin able to add new address to minter list', async () => {
-        const recept = await token.connect(owner).setMinter(await owner.getAddress());
+        const recept = await token.connect(owner).addMinter(await owner.getAddress());
         expect(recept).to.not.be.undefined;
     });
 
     it('Non-admin not able to add new address to minter list', async () => {
-        try {
-            await token.setMinter(await owner.getAddress());
-        } catch (e) {
-            expect(e).to.not.be.undefined;
-        }
+        expect(token.connect(owner).addMinter(await owner.getAddress())).to.not.be.reverted;
     });
 
     it('Initial state', async function () {
@@ -51,9 +43,18 @@ describe('Unlimited Token', function () {
         expect(await token.balanceOf(await owner.getAddress())).to.eq(parseEther('1000'));
         expect(await token.balanceOf(await receiver.getAddress())).to.eq(0);
     });
+
     it('Resend', async function () {
         await token.transfer(await receiver.getAddress(), parseEther('1000'));
         expect(await token.balanceOf(await owner.getAddress())).to.eq(parseEther('1000'));
         expect(await token.balanceOf(await receiver.getAddress())).to.eq(parseEther('1000'));
     });
+
+    it('Admin able to remove an address from minter list', async () => {
+        await token.connect(owner).removeMinter(await owner.getAddress());
+        expect(token.transfer(await receiver.getAddress(), parseEther('1000'))).to.be.revertedWith(
+            'ERC20: transfer amount exceeds balance',
+        );
+    });
+
 });
