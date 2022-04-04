@@ -26,7 +26,7 @@ describe('Unlimited Token', function () {
     });
 
     it('Non-admin not able to add new address to minter list', async () => {
-        expect(token.connect(owner).addMinter(await owner.getAddress())).to.not.be.reverted;
+        expect(token.addMinter(await owner.getAddress())).to.be.reverted;
     });
 
     it('Initial state', async function () {
