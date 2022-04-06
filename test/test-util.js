@@ -6,7 +6,7 @@ describe('Unlimited Token', function () {
     let token;
 
     before(async function () {
-        [owner, receiver] = await ethers.getSigners();
+        [owner, receiver, outsider] = await ethers.getSigners();
 
         const factory = await createTokenFactory();
         token = await unlimitedSupplyTokenContract(
@@ -15,7 +15,7 @@ describe('Unlimited Token', function () {
     });
 
     it('Cannot mint when not in minter list', async () => {
-        expect(token.transfer(await receiver.getAddress(), parseEther('1000'))).to.be.revertedWith(
+        await expect(token.transfer(await receiver.getAddress(), parseEther('1000'))).to.be.revertedWith(
             'ERC20: transfer amount exceeds balance',
         );
     });
@@ -26,7 +26,7 @@ describe('Unlimited Token', function () {
     });
 
     it('Non-admin not able to add new address to minter list', async () => {
-        expect(token.addMinter(await owner.getAddress())).to.be.reverted;
+        await expect(token.connect(outsider).addMinter(await owner.getAddress())).to.be.reverted;
     });
 
     it('Initial state', async function () {
@@ -52,9 +52,8 @@ describe('Unlimited Token', function () {
 
     it('Admin able to remove an address from minter list', async () => {
         await token.connect(owner).removeMinter(await owner.getAddress());
-        expect(token.transfer(await receiver.getAddress(), parseEther('1000'))).to.be.revertedWith(
+        await expect(token.transfer(await receiver.getAddress(), parseEther('10000'))).to.be.revertedWith(
             'ERC20: transfer amount exceeds balance',
         );
     });
-
 });
