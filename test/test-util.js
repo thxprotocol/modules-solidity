@@ -27,6 +27,7 @@ describe('Unlimited Token', function () {
 
     it('Non-admin not able to add new address to minter list', async () => {
         await expect(token.connect(outsider).addMinter(await owner.getAddress())).to.be.reverted;
+        expect(await token.minters(await owner.getAddress())).to.eq(true);
     });
 
     it('Initial state', async function () {
@@ -52,6 +53,7 @@ describe('Unlimited Token', function () {
 
     it('Admin able to remove an address from minter list', async () => {
         await token.connect(owner).removeMinter(await owner.getAddress());
+        expect(await token.minters(await owner.getAddress())).to.eq(false);
         await expect(token.transfer(await receiver.getAddress(), parseEther('10000'))).to.be.revertedWith(
             'ERC20: transfer amount exceeds balance',
         );
