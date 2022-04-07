@@ -28,7 +28,12 @@ describe('Unlimited Token factory', function () {
 
     it('Unlimited Supply', async function () {
         const tokenContract = await unlimitedSupplyTokenContract(
-            factory.deployUnlimitedSupplyToken('Test Token', 'TST', await owner.getAddress()),
+            factory.deployUnlimitedSupplyToken(
+                'Test Token',
+                'TST',
+                [await owner.getAddress()],
+                await owner.getAddress(),
+            ),
         );
 
         expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(0);

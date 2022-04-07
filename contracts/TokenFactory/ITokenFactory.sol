@@ -3,7 +3,11 @@ pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
 interface ITokenFactory {
-    enum TokenType { Limited, Unlimited, NonFungible }
+    enum TokenType {
+        Limited,
+        Unlimited,
+        NonFungible
+    }
     event TokenDeployed(address token, TokenType tokenType);
 
     function deployNonFungibleToken(
@@ -23,6 +27,7 @@ interface ITokenFactory {
     function deployUnlimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address to
+        address[] memory _minters,
+        address _admin
     ) external;
 }
