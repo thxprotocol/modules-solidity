@@ -3,11 +3,7 @@ pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
 interface ITokenFactory {
-    enum TokenType {
-        Limited,
-        Unlimited,
-        NonFungible
-    }
+    enum TokenType { Limited, Unlimited, NonFungible }
     event TokenDeployed(address token, TokenType tokenType);
 
     function deployNonFungibleToken(
