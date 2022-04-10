@@ -13,6 +13,8 @@ interface IWithdrawPoll {
 
     function getAmount(uint256 _id) external view returns (uint256);
 
+    function getUnlockDate(uint256 _id) external view returns (uint256);
+
     function _withdrawPollVote(bool _agree) external;
 
     function _withdrawPollRevokeVote() external;
