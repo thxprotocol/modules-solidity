@@ -17,6 +17,14 @@ for (const contractName of contractNames) {
 
 const config = contractConfig('hardhat', 'LimitedSupplyToken');
 fs.writeFileSync(path.resolve(dir, `ERC20.json`), JSON.stringify(config.abi, null, 2));
+fs.writeFileSync(
+    path.resolve(dir, `UnlimitedSupplyToken.json`),
+    JSON.stringify(contractConfig('hardhat', 'UnlimitedSupplyToken').abi, null, 2),
+);
+fs.writeFileSync(
+    path.resolve(dir, `NonFungibleToken.json`),
+    JSON.stringify(contractConfig('hardhat', 'NonFungibleToken').abi, null, 2),
+);
 
 for (const diamondVariant of diamondVariants) {
     const abi = diamondAbi('hardhat', diamondVariant);
