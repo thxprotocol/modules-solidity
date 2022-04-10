@@ -48,7 +48,7 @@ describe('05 withdraw', function () {
         expect(await withdraw.getBeneficiary(1)).to.eq(constants.AddressZero);
         expect(await withdraw.getUnlockDate(1)).to.eq(0);
 
-        const unlockDate = createUnlockDate();
+        const unlockDate = createUnlockDate(3);
         const ev = await events(withdraw.proposeWithdraw(parseEther('1'), await owner.getAddress(), unlockDate));
 
         expect(ev[0].args.id).to.eq(1);
@@ -57,17 +57,21 @@ describe('05 withdraw', function () {
         expect(await withdraw.getUnlockDate(1)).to.eq(unlockDate);
     });
     it('Test proposeBulkWithdraw', async function () {
+        const unlockDate = createUnlockDate(3)
         const amounts = [],
             beneficiaries = [];
+            unlockDates = [];
+            
         for (let i = 0; i < 10; i++) {
             const signer = Wallet.createRandom();
             amounts.push(parseEther('1'));
             beneficiaries.push(await signer.getAddress());
+            unlockDates.push(unlockDate);
         }
-        const unlockDate = createUnlockDate();
+        
         const ev = await events(withdraw.proposeWithdraw(parseEther('1'), await owner.getAddress(), unlockDate));
 
-        const logs = await events(withdraw.proposeBulkWithdraw(amounts, beneficiaries, unlockDate));
+        const logs = await events(withdraw.proposeBulkWithdraw(amounts, beneficiaries, unlockDates));
         expect(logs.filter((e) => e.event === 'RoleGranted').length).to.eq(10);
         expect(logs.filter((e) => e.event === 'WithdrawPollCreated').length).to.eq(10);
         // expect(await withdraw.getAmount(i)).to.eq(parseEther('1'));
@@ -118,7 +122,7 @@ describe('05 - proposeWithdraw', function () {
         await withdraw.setProposeWithdrawPollDuration(100);
     });
     it('Test proposeWithdraw', async function () {
-        const unlockDate = createUnlockDate();
+        const unlockDate = createUnlockDate(3);
         const ev = await events(withdraw.proposeWithdraw(parseEther('10'), await poolMember.getAddress(), unlockDate));
         expect(ev[1].args.member).to.eq(await withdraw.getMemberByAddress(await poolMember.getAddress()));
 
@@ -142,7 +146,7 @@ describe('05 - proposeWithdraw', function () {
     });
     it('propose reward as non member', async function () {
         await expect(
-            withdraw.connect(voter).proposeWithdraw(parseEther('20'), await owner.getAddress(), createUnlockDate()),
+            withdraw.connect(voter).proposeWithdraw(parseEther('20'), await owner.getAddress(), createUnlockDate(3)),
         ).to.be.revertedWith('NOT_OWNER');
     });
     it('vote', async function () {
@@ -200,7 +204,7 @@ describe('05 - UnlimitedSupplyToken', function () {
         registry = await createPoolRegistry(await collector.getAddress(), 0);
         withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         token = await UnlimitedSupplyToken.deploy('Test Token', 'TST', [withdraw.address], await owner.getAddress());
-        const unlockDate = createUnlockDate();
+        const unlockDate = createUnlockDate(3);
         await withdraw.addToken(token.address);
         await withdraw.setProposeWithdrawPollDuration(100);
         await withdraw.addMember(await poolMember.getAddress());
@@ -222,10 +226,10 @@ describe('05 - UnlimitedSupplyToken', function () {
     });
 });
 
-function createUnlockDate() {
+function createUnlockDate(numMonths) {
     // create unlock date adding 3 months to current time
     const now = new Date()
-    var newDate = new Date(now.setMonth(now.getMonth()+3));
+    var newDate = new Date(now.setMonth(now.getMonth() + numMonths));
     const unlockDate = newDate.getTime() / 1000
     return ~~unlockDate
 }

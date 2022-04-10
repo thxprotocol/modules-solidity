@@ -51,9 +51,9 @@ contract Withdraw is Access, IWithdraw {
      * @notice Proposes a withdraw poll with the default withdrawPollDuration in bulk.
      * @param _amounts Sizes of the proposed withdrawal.
      * @param _beneficiaries Beneficiaries of the reward.
-     * @param _unlockDate Date beyond which it will be possible to withdraw
+     * @param _unlockDates Dates beyond which it will be possible to withdraw
      */
-    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries, uint256 _unlockDate)
+    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries, uint256[] memory _unlockDates)
         external
         override
         onlyOwner
@@ -69,7 +69,7 @@ contract Withdraw is Access, IWithdraw {
                 _amounts[i],
                 LibWithdrawPollStorage.withdrawStorage().proposeWithdrawPollDuration,
                 _beneficiaries[i],
-                _unlockDate
+                _unlockDates[i]
             );
         }
     }
