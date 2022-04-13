@@ -23,7 +23,6 @@ interface ITokenFactory {
     function deployUnlimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address[] memory _minters,
-        address _admin
+        address _owner
     ) external;
 }

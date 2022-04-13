@@ -10,36 +10,26 @@ pragma solidity ^0.7.4;
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract UnlimitedSupplyToken is ERC20 {
-    address public immutable admin;
+contract UnlimitedSupplyToken is ERC20, Ownable {
     mapping(address => bool) public minters;
 
     constructor(
-        string memory _name,
-        string memory _symbol,
-        address[] memory _minters,
-        address _admin
-    ) ERC20(_name, _symbol) {
-        require(_admin != address(0), 'INVALID_ADDRESS');
-        admin = _admin;
-
-        for (uint256 i = 0; i < _minters.length; ++i) {
-            require(_minters[i] != address(0), 'NOT_MINTER');
-            minters[_minters[i]] = true;
-        }
+        string memory name_,
+        string memory symbol_,
+        address owner_
+    ) ERC20(name_, symbol_) {
+        transferOwnership(owner_);
+        minters[owner_] = true;
     }
 
-    modifier onlyAdmin() {
-        require(msg.sender == admin, 'ADMIN_ONLY');
-        _;
-    }
 
     /**
      * Add a new minter to this contract
      * @param _minter Minter address to add.
      */
-    function addMinter(address _minter) public onlyAdmin {
+    function addMinter(address _minter) external onlyOwner {
         require(_minter != address(0), 'INVALID_ADDRESS');
         minters[_minter] = true;
     }
@@ -48,7 +38,7 @@ contract UnlimitedSupplyToken is ERC20 {
      * Remove a minter from this contract
      * @param _minter Minter address to remove.
      */
-    function removeMinter(address _minter) public onlyAdmin {
+    function removeMinter(address _minter) external onlyOwner {
         require(_minter != address(0), 'INVALID_ADDRESS');
         require(minters[_minter] == true, 'NOT_MINTER');
 

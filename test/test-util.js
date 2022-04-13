@@ -10,18 +10,18 @@ describe('Unlimited Token', function () {
 
         const factory = await createTokenFactory();
         token = await unlimitedSupplyTokenContract(
-            factory.deployUnlimitedSupplyToken('Test Token', 'TST', [], await owner.getAddress()),
+            factory.deployUnlimitedSupplyToken('Test Token', 'TST', await owner.getAddress()),
         );
     });
 
     it('Cannot mint when not in minter list', async () => {
-        await expect(token.transfer(await receiver.getAddress(), parseEther('1000'))).to.be.revertedWith(
-            'ERC20: transfer amount exceeds balance',
-        );
+        await expect(
+            token.connect(outsider).transfer(await receiver.getAddress(), parseEther('1000')),
+        ).to.be.revertedWith('ERC20: transfer amount exceeds balance');
     });
 
     it('Admin able to add new address to minter list', async () => {
-        const recept = await token.connect(owner).addMinter(await owner.getAddress());
+        const recept = await token.addMinter(await owner.getAddress());
         expect(recept).to.not.be.undefined;
     });
 

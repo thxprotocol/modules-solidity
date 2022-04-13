@@ -186,7 +186,8 @@ describe('05 - UnlimitedSupplyToken', function () {
 
         registry = await createPoolRegistry(await collector.getAddress(), 0);
         withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
-        token = await UnlimitedSupplyToken.deploy('Test Token', 'TST', [withdraw.address], await owner.getAddress());
+        token = await UnlimitedSupplyToken.deploy('Test Token', 'TST', await owner.getAddress());
+        await token.addMinter(withdraw.address);
         await withdraw.addToken(token.address);
         await withdraw.setProposeWithdrawPollDuration(100);
         await withdraw.addMember(await poolMember.getAddress());
