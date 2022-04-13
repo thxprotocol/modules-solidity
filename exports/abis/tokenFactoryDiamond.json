@@ -87,8 +87,13 @@
         "type": "string"
       },
       {
+        "internalType": "address[]",
+        "name": "_minters",
+        "type": "address[]"
+      },
+      {
         "internalType": "address",
-        "name": "_unlimited",
+        "name": "_admin",
         "type": "address"
       }
     ],

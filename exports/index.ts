@@ -29,7 +29,7 @@ export const contractNames = [
     'TokenFactoryFacet',
     'PoolRegistryFacet',
 ] as const;
-export type ContractName = typeof contractNames[number];
+export type ContractName = typeof contractNames[number] | 'UnlimitedSupplyToken' | 'NonFungibleToken';
 
 export interface ContractConfig {
     address: string;
