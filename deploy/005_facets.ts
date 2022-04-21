@@ -7,6 +7,7 @@ const facets = [
     'Token',
     'BasePollProxy',
     'RelayHubFacet',
+    'ERC721Connect',
     'Withdraw',
     'WithdrawPoll',
     'WithdrawPollProxy',

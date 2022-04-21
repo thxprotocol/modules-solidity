@@ -11,9 +11,12 @@ export const contractNames = [
     'AssetPoolFactory',
     'TokenFactory',
     'LimitedSupplyToken',
+    'UnlimitedSupplyToken',
+    'NonFungibleToken',
     'AccessControl',
     'MemberAccess',
     'Token',
+    'ERC721Connect',
     'BasePollProxy',
     'RelayHubFacet',
     'Withdraw',
@@ -29,7 +32,7 @@ export const contractNames = [
     'TokenFactoryFacet',
     'PoolRegistryFacet',
 ] as const;
-export type ContractName = typeof contractNames[number] | 'UnlimitedSupplyToken' | 'NonFungibleToken';
+export type ContractName = typeof contractNames[number];
 
 export interface ContractConfig {
     address: string;
@@ -42,7 +45,7 @@ export interface ExportJsonFile {
     contracts: { [key: string]: ContractConfig };
 }
 
-export type DiamondVariant = 'defaultPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
+export type DiamondVariant = 'defaultPool' | 'nftPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
 const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     defaultPool: [
         'AccessControl',
@@ -54,6 +57,7 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
         'WithdrawByPoll',
         'WithdrawByPollProxy',
     ],
+    nftPool: ['AccessControl', 'ERC721Connect', 'RelayHubFacet'],
     assetPoolFactory: ['AssetPoolFactoryFacet'],
     tokenFactory: ['TokenFactoryFacet'],
     assetPoolRegistry: ['PoolRegistryFacet'],

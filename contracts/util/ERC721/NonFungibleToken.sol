@@ -12,7 +12,9 @@ import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract NonFungibleToken is ERC721, Ownable {
+import './INonFungibleToken.sol';
+
+contract NonFungibleToken is INonFungibleToken, ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -26,7 +28,7 @@ contract NonFungibleToken is ERC721, Ownable {
         _setBaseURI(baseURI_);
     }
 
-    function mint(address recipient, string memory tokenURI) external onlyOwner returns (uint256) {
+    function mint(address recipient, string memory tokenURI) external override onlyOwner returns (uint256) {
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();

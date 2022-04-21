@@ -58,4 +58,23 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         s.isAssetPool[address(d)] = true;
         emit AssetPoolDeployed(address(d));
     }
+
+    /**
+     * @notice Deploys and stores the reference to an nft pool based.
+     * @dev Transfers ownership to the controller and initializes access control.
+     * @param _facets Asset Pool facets for the factory diamond to deploy.
+     */
+    function deployNFTPool(IDiamondCut.FacetCut[] memory _facets) external override {
+        LibDiamond.enforceIsContractOwner();
+        LibFactoryStorage.Data storage s = LibFactoryStorage.s();
+        //direct is required for the initialize functions below
+        RelayDiamond d = new RelayDiamond(_facets, address(this));
+        IDefaultDiamond assetPool = IDefaultDiamond(address(d));
+
+        assetPool.transferOwnership(s.defaultController);
+        
+        s.assetPools.push(address(d));
+        s.isAssetPool[address(d)] = true;
+        emit AssetPoolDeployed(address(d));
+    }
 }
