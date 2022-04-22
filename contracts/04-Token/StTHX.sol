@@ -1,33 +1,22 @@
-
-// SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.8;
-
-//import ERC20 from openzeppelin
-//******************************
-//Access control, or “who is allowed to do this thing”, 
-//is incredibly important when dealing with smart contracts. 
-//The access control of your contract may govern who can mint tokens, 
-//vote on proposals, freeze transfers, and many other things.
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import '@openzeppelin/contracts/utils/Counters.sol';
 
-contract DevToken is ERC20, Ownable{
-  constructor(
-      string memory _name,
-      string memory _symbol,
-      address _owner
-      ) ERC20("stTHX", "$THX"){
-          transferOwnership(_owner);
-      }
+contract DevToken is ERC20, Ownable {
 
-  function issueToken(address receiver, uint256 amount) external override onlyOwner returns (uint256) public{
-    _tokenIds.increment();
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        address owner_
+    ) ERC20(name_, symbol_) {
+        transferOwnership(owner_);
+        
+    }
 
-    uint256 newItemId = _tokenIds.current();
-    _mint(recipient, newItemId);
-    _mint(receiver, amount);
-  }
-
+    function mint(address receiver, uint256 amount) external onlyOwner returns (uint256) {
+        _mint(receiver, amount);
+        return amount;
+    }
 }
