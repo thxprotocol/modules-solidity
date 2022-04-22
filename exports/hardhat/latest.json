@@ -4481,6 +4481,11 @@
               "internalType": "address[]",
               "name": "_beneficiaries",
               "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "_unlockDates",
+              "type": "uint256[]"
             }
           ],
           "name": "proposeBulkWithdraw",
@@ -4499,6 +4504,11 @@
               "internalType": "address",
               "name": "_beneficiary",
               "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_unlockDate",
+              "type": "uint256"
             }
           ],
           "name": "proposeWithdraw",
@@ -4777,6 +4787,25 @@
           ],
           "stateMutability": "view",
           "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_id",
+              "type": "uint256"
+            }
+          ],
+          "name": "getUnlockDate",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
         }
       ]
     },
@@ -4969,6 +4998,11 @@
               "internalType": "address[]",
               "name": "_beneficiaries",
               "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "_unlockDates",
+              "type": "uint256[]"
             }
           ],
           "name": "proposeBulkWithdraw",
@@ -4987,6 +5021,11 @@
               "internalType": "address",
               "name": "_beneficiary",
               "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_unlockDate",
+              "type": "uint256"
             }
           ],
           "name": "proposeWithdraw",
@@ -5256,6 +5295,25 @@
             }
           ],
           "name": "getBeneficiary",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_id",
+              "type": "uint256"
+            }
+          ],
+          "name": "getUnlockDate",
           "outputs": [
             {
               "internalType": "uint256",

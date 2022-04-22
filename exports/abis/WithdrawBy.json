@@ -117,6 +117,11 @@
         "internalType": "address[]",
         "name": "_beneficiaries",
         "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_unlockDates",
+        "type": "uint256[]"
       }
     ],
     "name": "proposeBulkWithdraw",
@@ -135,6 +140,11 @@
         "internalType": "address",
         "name": "_beneficiary",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_unlockDate",
+        "type": "uint256"
       }
     ],
     "name": "proposeWithdraw",
