@@ -90,6 +90,7 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
         emit WithdrawPollFinalized(_id, approved);
         delete wpPollData.beneficiary;
         delete wpPollData.amount;
+        delete wpPollData.unlockDate;
     }
 
     /**
@@ -116,6 +117,14 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
         return LibWithdrawPollStorage.withdrawPollStorageId(_id).amount;
     }
 
+    /**
+     * @param _id ID of the withdrawPoll to get the reward size for.
+     * @return unlockDate of the withdrawal.
+     */
+    function getUnlockDate(uint256 _id) external view override returns (uint256) {
+        return LibWithdrawPollStorage.withdrawPollStorageId(_id).unlockDate;
+    }
+
     function _withdrawPollVote(bool _agree) external override isWithdraw isSelf {
         vote(_agree);
         emit WithdrawPollVoted(baseData().id, _msgSender(), _agree);
@@ -127,6 +136,10 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
     }
 
     function _withdrawPollFinalize() external override isWithdraw isSelf {
+        LibBasePollStorage.BasePollStorage storage bData = baseData();
+        LibWithdrawPollStorage.WithdrawPollStorage storage wpPollData =
+            LibWithdrawPollStorage.withdrawPollStorageId(bData.id);
+        require(block.timestamp > wpPollData.unlockDate, 'TOO_SOON_TO_FINALIZE_THE_POLL');
         finalize();
     }
 

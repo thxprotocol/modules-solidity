@@ -18,6 +18,7 @@ library LibWithdrawPollStorage {
     struct WithdrawPollStorage {
         uint256 beneficiary;
         uint256 amount;
+        uint256 unlockDate;
     }
 
     function getPosition(uint256 _id) internal pure returns (bytes32) {
