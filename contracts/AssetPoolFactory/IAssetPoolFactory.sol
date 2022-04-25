@@ -15,4 +15,6 @@ interface IAssetPoolFactory {
     function isAssetPool(address _pool) external view returns (bool);
 
     function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external;
+
+    function deployNFTPool(IDiamondCut.FacetCut[] memory _facets) external;
 }

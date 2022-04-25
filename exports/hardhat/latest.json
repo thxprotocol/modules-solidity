@@ -838,6 +838,36 @@
         {
           "inputs": [
             {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "facetAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "enum IDiamondCut.FacetCutAction",
+                  "name": "action",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes4[]",
+                  "name": "functionSelectors",
+                  "type": "bytes4[]"
+                }
+              ],
+              "internalType": "struct IDiamondCut.FacetCut[]",
+              "name": "_facets",
+              "type": "tuple[]"
+            }
+          ],
+          "name": "deployNFTPool",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "_pool",
               "type": "address"
@@ -1487,6 +1517,36 @@
             }
           ],
           "name": "deployAssetPool",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "facetAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "enum IDiamondCut.FacetCutAction",
+                  "name": "action",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes4[]",
+                  "name": "functionSelectors",
+                  "type": "bytes4[]"
+                }
+              ],
+              "internalType": "struct IDiamondCut.FacetCut[]",
+              "name": "_facets",
+              "type": "tuple[]"
+            }
+          ],
+          "name": "deployNFTPool",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -4360,8 +4420,76 @@
         }
       ]
     },
-    "Withdraw": {
+    "ERC721Connect": {
       "address": "0xB1456cF726D8D2A2b10dD4db417674A49dB94998",
+      "abi": [
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "old",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "current",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721Updated",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "getERC721",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_beneficiary",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_tokenUri",
+              "type": "string"
+            }
+          ],
+          "name": "mintFor",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
+            }
+          ],
+          "name": "setERC721",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    },
+    "Withdraw": {
+      "address": "0xc368fA6A4057BcFD9E49221d8354d5fA6B88945a",
       "abi": [
         {
           "anonymous": false,
@@ -4532,7 +4660,7 @@
       ]
     },
     "WithdrawPoll": {
-      "address": "0xc368fA6A4057BcFD9E49221d8354d5fA6B88945a",
+      "address": "0x439F0128d07f005e0703602f366599ACaaBfEA18",
       "abi": [
         {
           "anonymous": false,
@@ -4810,7 +4938,7 @@
       ]
     },
     "WithdrawPollProxy": {
-      "address": "0x439F0128d07f005e0703602f366599ACaaBfEA18",
+      "address": "0x24E91C3a2822bDc4bc73512872ab07fD93c8101b",
       "abi": [
         {
           "inputs": [
@@ -4878,7 +5006,7 @@
       ]
     },
     "WithdrawBy": {
-      "address": "0x24E91C3a2822bDc4bc73512872ab07fD93c8101b",
+      "address": "0x76aBe9ec9b15947ba1Ca910695B8b6CffeD8E6CA",
       "abi": [
         {
           "anonymous": false,
@@ -5049,7 +5177,7 @@
       ]
     },
     "WithdrawByPoll": {
-      "address": "0x76aBe9ec9b15947ba1Ca910695B8b6CffeD8E6CA",
+      "address": "0x7Cb8d1EAd6303C079c501e93F3ba28C227cd7000",
       "abi": [
         {
           "anonymous": false,
@@ -5327,7 +5455,7 @@
       ]
     },
     "WithdrawByPollProxy": {
-      "address": "0x7Cb8d1EAd6303C079c501e93F3ba28C227cd7000",
+      "address": "0xb3B2b0fc5ce12aE58EEb13E19547Eb2Dd61A79D5",
       "abi": [
         {
           "inputs": [
@@ -5395,7 +5523,7 @@
       ]
     },
     "DiamondCutFacet": {
-      "address": "0xb3B2b0fc5ce12aE58EEb13E19547Eb2Dd61A79D5",
+      "address": "0x774442713f32fa98bf27bEc78c96fb7186f7C223",
       "abi": [
         {
           "anonymous": false,
@@ -5482,7 +5610,7 @@
       ]
     },
     "DiamondLoupeFacet": {
-      "address": "0x774442713f32fa98bf27bEc78c96fb7186f7C223",
+      "address": "0xb2Bea6009625407C3c3cF7158185125Ed2C7f101",
       "abi": [
         {
           "inputs": [
@@ -5582,7 +5710,7 @@
       ]
     },
     "OwnershipFacet": {
-      "address": "0xb2Bea6009625407C3c3cF7158185125Ed2C7f101",
+      "address": "0x5E0A87862f9175493Cc1d02199ad18Eff87Eb400",
       "abi": [
         {
           "anonymous": false,
