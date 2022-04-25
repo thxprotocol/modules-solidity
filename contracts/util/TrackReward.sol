@@ -18,7 +18,7 @@ contract TrackReward is Ownable {
     /*
      * @return reward of the owner
      */
-    function getReward() public onlyOwner {
+    function getReward() public onlyOwner returns(uint256) {
         return rewards[msg.sender];
     }
 }
