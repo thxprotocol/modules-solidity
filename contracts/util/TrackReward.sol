@@ -11,7 +11,7 @@ contract TrackReward is Ownable {
      * @param reward to store
      */
     function setReward(uint256 _reward) public {
-        reward = _reward;
+        rewards[msg.sender] = _reward;
     }
 
     /*
