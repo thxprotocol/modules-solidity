@@ -34,14 +34,16 @@ contract Withdraw is Access, IWithdraw {
      * @notice Proposes a withdraw poll with the default withdrawPollDuration.
      * @param _amount Size of the proposed withdrawal.
      * @param _beneficiary Beneficiary of the reward.
+     * @param _unlockDate Date beyond which it will be possible to withdraw
      */
-    function proposeWithdraw(uint256 _amount, address _beneficiary) external override onlyOwner {
+    function proposeWithdraw(uint256 _amount, address _beneficiary, uint256 _unlockDate) external override onlyOwner {
         require(_amount != 0, 'NOT_VALID');
 
         _createWithdrawPoll(
             _amount,
             LibWithdrawPollStorage.withdrawStorage().proposeWithdrawPollDuration,
-            _beneficiary
+            _beneficiary,
+            _unlockDate
         );
     }
 
@@ -49,8 +51,9 @@ contract Withdraw is Access, IWithdraw {
      * @notice Proposes a withdraw poll with the default withdrawPollDuration in bulk.
      * @param _amounts Sizes of the proposed withdrawal.
      * @param _beneficiaries Beneficiaries of the reward.
+     * @param _unlockDates Dates beyond which it will be possible to withdraw
      */
-    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries)
+    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries, uint256[] memory _unlockDates)
         external
         override
         onlyOwner
@@ -65,7 +68,8 @@ contract Withdraw is Access, IWithdraw {
             _createWithdrawPoll(
                 _amounts[i],
                 LibWithdrawPollStorage.withdrawStorage().proposeWithdrawPollDuration,
-                _beneficiaries[i]
+                _beneficiaries[i],
+                _unlockDates[i]
             );
         }
     }
@@ -75,11 +79,13 @@ contract Withdraw is Access, IWithdraw {
      * @param _amount Size of the withdrawal.
      * @param _duration The duration the withdraw poll.
      * @param _beneficiary Beneficiary of the reward.
+     * @param _unlockDate Date beyond which it will be possible to withdraw
      */
     function _createWithdrawPoll(
         uint256 _amount,
         uint256 _duration,
-        address _beneficiary
+        address _beneficiary,
+        uint256 _unlockDate
     ) internal returns (uint256) {
         LibBasePollStorage.BaseStorage storage bst = LibBasePollStorage.baseStorage();
         bst.pollCounter = bst.pollCounter + 1;
@@ -102,6 +108,7 @@ contract Withdraw is Access, IWithdraw {
 
         wpStorage.beneficiary = ms.addressToMember[_beneficiary];
         wpStorage.amount = _amount;
+        wpStorage.unlockDate = _unlockDate;
 
         emit WithdrawPollCreated(bst.pollCounter, wpStorage.beneficiary);
     }
