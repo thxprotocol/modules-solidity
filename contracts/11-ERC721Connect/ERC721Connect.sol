@@ -18,7 +18,7 @@ import '../util/ERC721/INonFungibleToken.sol';
 
 contract ERC721Connect is IERC721Connect, RelayReceiver {
     using SafeMath for uint256;
- 
+
     /**
      * @param _token Address of the ERC721 contract to connect to this pool.
      * @dev Can only be set once.
@@ -29,7 +29,7 @@ contract ERC721Connect is IERC721Connect, RelayReceiver {
 
         LibDiamond.enforceIsContractOwner();
         LibERC721ConnectStorage.store().token = INonFungibleToken(_token);
-        
+
         emit ERC721Updated(address(0), _token);
     }
 
@@ -44,10 +44,10 @@ contract ERC721Connect is IERC721Connect, RelayReceiver {
      */
     function mintFor(address _beneficiary, string memory _tokenUri) external override {
         require(LibERC721ConnectStorage.store().token != INonFungibleToken(0), 'NO_TOKEN');
-        
+
         LibDiamond.enforceIsContractOwner();
         INonFungibleToken nft = INonFungibleToken(LibERC721ConnectStorage.store().token);
-        
+
         nft.mint(_beneficiary, _tokenUri);
     }
 }

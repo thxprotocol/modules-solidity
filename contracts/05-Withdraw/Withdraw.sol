@@ -36,7 +36,11 @@ contract Withdraw is Access, IWithdraw {
      * @param _beneficiary Beneficiary of the reward.
      * @param _unlockDate Date beyond which it will be possible to withdraw
      */
-    function proposeWithdraw(uint256 _amount, address _beneficiary, uint256 _unlockDate) external override onlyOwner {
+    function proposeWithdraw(
+        uint256 _amount,
+        address _beneficiary,
+        uint256 _unlockDate
+    ) external override onlyOwner {
         require(_amount != 0, 'NOT_VALID');
 
         _createWithdrawPoll(
@@ -53,11 +57,11 @@ contract Withdraw is Access, IWithdraw {
      * @param _beneficiaries Beneficiaries of the reward.
      * @param _unlockDates Dates beyond which it will be possible to withdraw
      */
-    function proposeBulkWithdraw(uint256[] memory _amounts, address[] memory _beneficiaries, uint256[] memory _unlockDates)
-        external
-        override
-        onlyOwner
-    {
+    function proposeBulkWithdraw(
+        uint256[] memory _amounts,
+        address[] memory _beneficiaries,
+        uint256[] memory _unlockDates
+    ) external override onlyOwner {
         require(_amounts.length != 0, 'INVALID_INPUT');
         require(_beneficiaries.length != 0, 'INVALID_INPUT');
         require(_amounts.length == _beneficiaries.length, 'INVALID_INPUT');

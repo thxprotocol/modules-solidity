@@ -72,7 +72,7 @@ contract AssetPoolFactoryFacet is IAssetPoolFactory {
         IDefaultDiamond assetPool = IDefaultDiamond(address(d));
 
         assetPool.transferOwnership(s.defaultController);
-        
+
         s.assetPools.push(address(d));
         s.isAssetPool[address(d)] = true;
         emit AssetPoolDeployed(address(d));
