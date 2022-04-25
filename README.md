@@ -7,7 +7,7 @@ Support:
 [THX Discord](https://discord.com/invite/TzbbSmkE7Y)
 [THX Slack](https://thx.page.link/slack)
 
-Default Asset Pools are connected to an ERC20 contract. The pool is controlled by a permissioned (OAuth2.0) REST API which is responsible for paying the gas costs used to manage the pool. Access to the pool is managed with a flexible role-based access mechanism. Pools can hold various reward configurations for the connected ERC20 tokent contract and will manage the distribution of those token rewards with a withdrawal system. The poll system used to govern the reward configuration and withdrawals is optional.
+Default Asset Pools are connected to an ERC20 contract. The pool is controlled by a permissioned (OAuth2.0) REST API which is responsible for paying the gas costs used to manage the pool. Access to the pool is managed with a flexible role-based access mechanism. Pools can hold various reward configurations for the connected ERC20 token contract and will manage the distribution of those token rewards with a withdrawal system. The poll system used to govern the reward configuration and withdrawals is optional.
 
 ## Running network localhost
 
@@ -35,11 +35,11 @@ Reasons for diamonds implementation:
 
 ## Module System
 
-Asset Pool Module implementations follow standards defined in a [TMP (THX Module Proposal)](https://github.com/thxprotocol/modules). This system is used to validate implementations and keep track of the dependencies of modules. Modules contain contractual agreements in terms of interface, storage and events that the implementation should obide to.
+Asset Pool Module implementations follow standards defined in a [TMP (THX Module Proposal)](https://github.com/thxprotocol/modules). This system is used to validate implementations and keep track of the dependencies of modules. Modules contain contractual agreements in terms of interface, storage and events that the implementation should abide to.
 
 ## Factory
 
-The asset pool factory is used to deploy asset pools from a single source and keep track of them. IDefaultDiamond.sol contains the full interface the initally deployed asset pool.
+The asset pool factory is used to deploy asset pools from a single source and keep track of them. IDefaultDiamond.sol contains the full interface the initially deployed asset pool.
 
 ## [WIP] Registry
 
@@ -51,4 +51,4 @@ The Fee Collector address is set in the registry and will receive the deposit fe
 
 ## Tests
 
-All the meaningfull logic in the contracts is covered with tests. Run the tests with `npx hardhat test`. Read the test scripts to get more insight into the asset pool features.
+All the meaningful logic in the contracts is covered with tests. Run the tests with `npx hardhat test`. Read the test scripts to get more insight into the asset pool features.
