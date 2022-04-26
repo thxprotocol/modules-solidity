@@ -6,17 +6,17 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
 contract FeeCollector is Ownable {
-    struct RawReward {
+    struct Reward {
         IERC20 token;
         uint256 amount;
     }
 
     struct RawParticipant {
         address recipient;
-        RawReward[] tokens;
+        Reward[] tokens;
     }
 
-    mapping(address => mapping(IERC20 => uint256)) public rewards;
+    mapping(address => Reward[]) public rewards;
 
     event WithdrawalReward(address from, address to, uint amount);
 
@@ -24,24 +24,28 @@ contract FeeCollector is Ownable {
         // Converting input rewards array into rewards mapping
         for (uint i=0; i < _raw.length; i++) {
             RawParticipant memory rawParticipant = _raw[i];
-
-            for (uint j=0; j < rawParticipant.tokens.length; j++) {
-                RawReward memory rawReward = rawParticipant.tokens[j];
-                rewards[rawParticipant.recipient][rawReward.token] = rawReward.amount; 
-            }
+            rewards[rawParticipant.recipient] = rawParticipant.tokens;
         }
     }
 
-    function withdrawal(IERC20 _token) external {
-        require(rewards[msg.sender][_token] != 0, 'No rewards for this token have been assigned to address');
+    function withdrawal() external {
+        require(rewards[msg.sender].length > 0, 'No rewards for this token have been assigned to address');
 
-        uint256 allocatedReward = rewards[msg.sender][_token];
-        uint256 contractBalance = _token.balanceOf(address(this));
+        for (uint i=0; i < rewards[msg.sender].length; i++) {
+            Reward memory reward = rewards[msg.sender][i];
 
-        require(contractBalance < allocatedReward, 'Contract balance too low');
+            uint256 contractBalance = reward.token.balanceOf(address(this));
+            require(contractBalance < reward.amount, 'Contract balance too low');
 
-        _token.transfer(msg.sender, allocatedReward);
+            reward.token.transfer(msg.sender, reward.amount);
 
-        emit WithdrawalReward(address(this), msg.sender, allocatedReward);
+            emit WithdrawalReward(address(this), msg.sender, reward.amount);
+
+            delete rewards[msg.sender][i];
+        }
+    }
+
+    function getRewards() public view returns (Reward[] memory) {
+        return rewards[msg.sender];
     }
 }
