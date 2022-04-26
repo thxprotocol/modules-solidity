@@ -135,4 +135,8 @@ export const availableVersions = (network: TNetworkName): string[] => {
     return cache[network].versions;
 };
 
+export const networkChainId = (network: TNetworkName): string => {
+    return getArtifacts(network, currentVersion).chainId;
+};
+
 export { currentVersion };
