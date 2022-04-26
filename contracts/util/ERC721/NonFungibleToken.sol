@@ -5,13 +5,12 @@ pragma solidity ^0.7.4;
 * @title ERC721 URI Storage
 * @author Peter Polman <peter@thx.network>
 * @notice Used for point systems with a limited supply. Mints the full supply to the to argument given in the contructor. 
-* @dev Not upgradable contract.
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
-import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '../MinterAccess/MinterAccess.sol';
+import './LibNonFungibleTokenStorage';
 
 contract NonFungibleToken is ERC721, Ownable, MinterAccess {
     using Counters for Counters.Counter;
@@ -28,9 +27,10 @@ contract NonFungibleToken is ERC721, Ownable, MinterAccess {
     }
 
     function mint(address recipient, string memory tokenURI) external onlyMinter returns (uint256) {
-        _tokenIds.increment();
+        LibNonFungibleTokenStorage.NonFungibleTokenStorage storage ns = LibNonFungibleTokenStorage.nonFungibleTokenStorage();
+        ns.tokenIds.increment();
 
-        uint256 newItemId = _tokenIds.current();
+        uint256 newItemId = ns.tokenIds.current();
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
 

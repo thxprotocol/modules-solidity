@@ -7,7 +7,7 @@ library LibMinterAccessStorage {
     struct MemberStorage {
         uint256 minterCounter;
         mapping(address => uint256) addressToMinter;
-        mapping(uint256 => address) MinterToAddress;
+        mapping(uint256 => address) minterToAddress;
     }
 
     function minterStorage() internal pure returns (MemberStorage storage rs) {
