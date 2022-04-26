@@ -107,6 +107,7 @@ contract Access is RelayReceiver, IAccessControlEvents {
     bytes32 internal constant DEFAULT_ADMIN_ROLE = 0x00;
     bytes32 internal constant MEMBER_ROLE = keccak256('MEMBER_ROLE');
     bytes32 internal constant MANAGER_ROLE = keccak256('MANAGER_ROLE');
+    bytes32 internal constant MINTER_ROLE = keccak256('MINTER_ROLE');
 
     function _isManager(address _account) internal view returns (bool) {
         return _hasRole(MANAGER_ROLE, _account);
@@ -114,6 +115,10 @@ contract Access is RelayReceiver, IAccessControlEvents {
 
     function _isMember(address _account) internal view returns (bool) {
         return _hasRole(MEMBER_ROLE, _account) || _hasRole(MANAGER_ROLE, _account);
+    }
+
+    function _isMinter(address _account) internal view returns (bool) {
+        return _hasRole(MINTER_ROLE, _account) || _hasRole(MINTER_ROLE, _account);
     }
 
     function _getOwner() internal view returns (address) {

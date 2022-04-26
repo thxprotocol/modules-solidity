@@ -19,6 +19,7 @@ const facets = [
     'AssetPoolFactoryFacet',
     'TokenFactoryFacet',
     'PoolRegistryFacet',
+    'MinterAccess'
 ];
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;

@@ -10,8 +10,10 @@ pragma solidity ^0.7.4;
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '../MinterAccess/MinterAccess.sol';
 
-contract UnlimitedSupplyToken is ERC20 {
+contract UnlimitedSupplyToken is ERC20, Ownable, MinterAccess {
     address public immutable admin;
     mapping(address => bool) public minters;
 
@@ -28,31 +30,6 @@ contract UnlimitedSupplyToken is ERC20 {
             require(_minters[i] != address(0), 'NOT_MINTER');
             minters[_minters[i]] = true;
         }
-    }
-
-    modifier onlyAdmin() {
-        require(msg.sender == admin, 'ADMIN_ONLY');
-        _;
-    }
-
-    /**
-     * Add a new minter to this contract
-     * @param _minter Minter address to add.
-     */
-    function addMinter(address _minter) public onlyAdmin {
-        require(_minter != address(0), 'INVALID_ADDRESS');
-        minters[_minter] = true;
-    }
-
-    /**
-     * Remove a minter from this contract
-     * @param _minter Minter address to remove.
-     */
-    function removeMinter(address _minter) public onlyAdmin {
-        require(_minter != address(0), 'INVALID_ADDRESS');
-        require(minters[_minter] == true, 'NOT_MINTER');
-
-        delete minters[_minter];
     }
 
     function _beforeTokenTransfer(
