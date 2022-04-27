@@ -8,7 +8,7 @@ library LibUnlimitedSupplyTokenStorage {
 
     struct UnlimitedSupplyTokenStorage {
         mapping(address => bool) minters;
-        address public immutable admin;
+        address admin;
     }
 
     function unlimitedSupplyTokenStorage() internal pure returns (UnlimitedSupplyTokenStorage storage bs) {

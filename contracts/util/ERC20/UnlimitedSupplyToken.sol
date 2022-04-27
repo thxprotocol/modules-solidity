@@ -6,14 +6,15 @@ pragma solidity ^0.7.4;
 * @title ERC20 Unlimited Supply
 * @author Evert Kors <evert@thx.network>
 * @notice Used for point systems with an unlimited supply. Mints the required tokens whenever they are needed.
+* @dev Upgradable contract.
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/access/Ownable.sol'; 
-import '../MinterAccess/MinterAccess.sol';
+import '../../MinterAccess/MinterAccess.sol';
 import './LibUnlimitedSupplyTokenStorage.sol';
 
-contract UnlimitedSupplyToken is ERC20, Ownable {
+contract UnlimitedSupplyToken is ERC20 {
 
     constructor(
         string memory _name,

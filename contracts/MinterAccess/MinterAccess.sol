@@ -5,7 +5,7 @@ pragma solidity ^0.7.4;
 /******************************************************************************\
 * @title Minter Access Control
 * @author Evert Kors <evert@thx.network>
-* @notice Manage access control for MEMBER, MANAGER and OWNER roles.
+* @notice Manage access control for MINTER and OWNER roles.
 * 
 * Dependencies:
 * TMP-1 Access Control: https://github.com/thxprotocol/modules/issues/1
@@ -18,23 +18,23 @@ pragma solidity ^0.7.4;
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
-import '../01-AccessControl/AccessControl.sol';
 
 // depends on
 import '../TMP/TMP1/IAccessControlEvents.sol';
 import '../TMP/TMP1/LibAccessStorage.sol';
 
 // implements
-import '../TMP/TMP2/IMinterID.sol';
-import './LibMinterAccessrAccessStorage.sol';
+import './LibMinterAccessStorage.sol';
 import './IMinterAccess.sol';
 
 import '../TMP/RelayReceiver.sol';
 
-contract MinterAccess is IMinterAccess, RelayReceiver {
+contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
+    event MinterAddressChanged(uint256 indexed minterID, address indexed previousAddress, address indexed newAddress);
+
     /**
      * @param _owner Address of the account that should own the contract.
-     * @dev Should be called right after deploying the contract. _owner will become minter, manager and role admin.
+     * @dev Should be called right after deploying the contract. _owner will become minter, and role admin.
      */
     function initializeRoles(address _owner) external override {
         require(LibMinterAccessStorage.minterStorage().minterCounter == 0, 'INIT');
@@ -62,7 +62,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver {
      * @param _account Address of the account to give the minter role to.
      */
     function addMinter(address _account) external override {
-        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
         setupMinter(_account);
         _grantRole(MINTER_ROLE, _account);
     }
@@ -71,7 +71,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver {
      * @param _account Address of the account to revoke the minter role for.
      */
     function removeMinter(address _account) external override {
-        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
         _revokeRole(MINTER_ROLE, _account);
     }
 
@@ -96,11 +96,11 @@ contract MinterAccess is IMinterAccess, RelayReceiver {
      * @param _newAddress The new address of the minter.
      * @dev Different minter id's can map to the same address.
      */
-    function upgradeAddress(address _oldAddress, address _newAddress) external override {
+    function upgradeAddress(address _oldAddress, address _newAddress) external {
         require(_oldAddress == _msgSender(), 'OLD_NOT_SENDER');
         LibMinterAccessStorage.MinterStorage storage ms = LibMinterAccessStorage.minterStorage();
         uint256 minter = ms.addressToMinter[_oldAddress];
-        require(minter != 0, 'NON_MEMBER');
+        require(minter != 0, 'NON_MINTER');
         ms.addressToMinter[_oldAddress] = 0;
         ms.addressToMinter[_newAddress] = minter;
         ms.minterToAddress[minter] = _newAddress;
@@ -119,7 +119,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver {
      * @dev Different minter id's can map to the same address.
      * @return Address of the minter for the given minter index in the minterToAddress storage.
      */
-    function getAddressByMinter(uint256 _minter) external view override returns (address) {
+    function getAddressByMinter(uint256 _minter) external view returns (address) {
         return LibMinterAccessStorage.minterStorage().minterToAddress[_minter];
     }
 
@@ -127,7 +127,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver {
      * @param _address The address of the minter account.
      * @return Index of the minter for a given address.
      */
-    function getMinterByAddress(address _address) external view override returns (uint256) {
+    function getMinterByAddress(address _address) external view returns (uint256) {
         return LibMinterAccessStorage.minterStorage().addressToMinter[_address];
     }
 
@@ -215,14 +215,9 @@ contract MinterAccess is IMinterAccess, RelayReceiver {
     //
     bytes32 internal constant DEFAULT_ADMIN_ROLE = 0x00;
     bytes32 internal constant MINTER_ROLE = keccak256('MINTER_ROLE');
-    bytes32 internal constant MANAGER_ROLE = keccak256('MANAGER_ROLE');
-
-    function _isManager(address _account) internal view returns (bool) {
-        return _hasRole(MANAGER_ROLE, _account);
-    }
 
     function _isMinter(address _account) internal view returns (bool) {
-        return _hasRole(MINTER_ROLE, _account) || _hasRole(MANAGER_ROLE, _account);
+        return _hasRole(MINTER_ROLE, _account);
     }
 
     function _getOwner() internal view returns (address) {

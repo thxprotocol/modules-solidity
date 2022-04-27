@@ -5,10 +5,10 @@ pragma experimental ABIEncoderV2;
 interface INonFungibleTokenFactory {
     event NonFungibleTokenDeployed(address token);
 
-    function deployUnlimitedSupplyToken(
+    function deployNonFungibleToken(
         string memory _name,
         string memory _symbol,
-        address[] memory _minters,
-        address _admin
+        address _to,
+        string memory _baseURI
     ) external;
 }

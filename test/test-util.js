@@ -12,6 +12,7 @@ describe('Unlimited Token', function () {
         token = await unlimitedSupplyTokenContract(
             factory.deployUnlimitedSupplyToken('Test Token', 'TST', [], await owner.getAddress()),
         );
+        //const contract = diamond(['AccessControl', 'MinterAccess', 'UnlimitedSupplyToken', 'Ownable']);
     });
 
     it('Cannot mint when not in minter list', async () => {

@@ -11,7 +11,7 @@ library LibNonFungibleTokenStorage {
     struct NonFungibleTokenStorage {
         Counters.Counter tokenIds;
     }
-
+    
     function nonFungibleTokenStorage() internal pure returns (NonFungibleTokenStorage storage bs) {
         bytes32 position = STORAGE_POSITION;
         assembly {

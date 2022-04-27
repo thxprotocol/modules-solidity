@@ -10,14 +10,6 @@ interface IMinterAccess {
 
     function removeMinter(address _account) external;
 
-    function isManager(address _account) external view returns (bool);
-
-    function addManager(address _account) external;
-
-    function removeManager(address _account) external;
-
-    function isManagerRoleAdmin(address _account) external view returns (bool);
-
     function isMinterRoleAdmin(address _account) external view returns (bool);
 
     function getOwner() external view returns (address);

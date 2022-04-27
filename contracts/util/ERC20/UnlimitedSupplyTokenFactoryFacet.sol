@@ -2,7 +2,7 @@
 pragma solidity ^0.7.1;
 pragma experimental ABIEncoderV2;
 
-import '../util/ERC20/UnlimitedSupplyToken.sol';
+import './UnlimitedSupplyToken.sol';
 import './IUnlimitedSupplyTokenFactory.sol';
 
 import 'diamond-2/contracts/libraries/LibDiamond.sol';

@@ -14,6 +14,7 @@ library LibAccessStorage {
 
     struct RoleData {
         EnumerableSet.AddressSet members;
+        EnumerableSet.AddressSet minters;
         bytes32 adminRole;
     }
 
