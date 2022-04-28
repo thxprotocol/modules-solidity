@@ -30,17 +30,17 @@ contract Access is RelayReceiver, IAccessControlEvents {
     using Address for address;
 
     modifier onlyOwner() {
-        require(LibDiamond.contractOwner() == _msgSender(), 'NOT_OWNER');
+        require(LibDiamond.contractOwner() == _relayReceiver(), 'NOT_OWNER');
         _;
     }
 
     modifier onlyManager() {
-        require(_hasRole(MANAGER_ROLE, _msgSender()), 'NOT_MANAGER');
+        require(_hasRole(MANAGER_ROLE, _relayReceiver()), 'NOT_MANAGER');
         _;
     }
 
     modifier onlyMember() {
-        require(_hasRole(MEMBER_ROLE, _msgSender()), 'NOT_MEMBER');
+        require(_hasRole(MEMBER_ROLE, _relayReceiver()), 'NOT_MEMBER');
         _;
     }
 
@@ -85,7 +85,7 @@ contract Access is RelayReceiver, IAccessControlEvents {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.add(account)) {
-            emit RoleGranted(role, account, _msgSender());
+            emit RoleGranted(role, account, _relayReceiver());
         }
     }
 
@@ -97,7 +97,7 @@ contract Access is RelayReceiver, IAccessControlEvents {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.remove(account)) {
-            emit RoleRevoked(role, account, _msgSender());
+            emit RoleRevoked(role, account, _relayReceiver());
         }
     }
 

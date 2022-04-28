@@ -24,7 +24,7 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_withdrawPollVote(bool)'));
         bytes memory _call = abi.encodeWithSelector(sig, _agree);
 
-        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
     }
 
@@ -33,7 +33,7 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_withdrawPollRevokeVote()'));
         bytes memory _call = abi.encodeWithSelector(sig);
 
-        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
     }
 
@@ -42,7 +42,7 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_withdrawPollFinalize()'));
         bytes memory _call = abi.encodeWithSelector(sig);
 
-        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
     }
 
@@ -51,7 +51,7 @@ contract WithdrawPollProxy is IWithdrawPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_withdrawPollApprovalState()'));
         bytes memory _call = abi.encodeWithSelector(sig);
 
-        (bool success, bytes memory data) = address(this).staticcall(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).staticcall(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
         return abi.decode(data, (bool));
     }

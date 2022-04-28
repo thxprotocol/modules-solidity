@@ -13,7 +13,7 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import '../../MinterAccess/MinterAccess.sol';
 import './LibNonFungibleTokenStorage.sol';
 
-contract NonFungibleToken is ERC721, Ownable, MinterAccess {
+contract NonFungibleToken is ERC721, MinterAccess, Ownable {
     using Counters for Counters.Counter;
 
     constructor(

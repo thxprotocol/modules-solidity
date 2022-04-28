@@ -105,7 +105,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
      */
     function _rewardPollVote(bool _agree) external override isReward isSelf {
         vote(_agree);
-        emit RewardPollVoted(baseData().id, _msgSender(), _agree);
+        emit RewardPollVoted(baseData().id, _relayReceiver(), _agree);
     }
 
     /**
@@ -113,7 +113,7 @@ contract RewardPoll is BasePoll, IRewardPoll {
      */
     function _rewardPollRevokeVote() external override isReward isSelf {
         revokeVote();
-        emit RewardPollRevokedVote(baseData().id, _msgSender());
+        emit RewardPollRevokedVote(baseData().id, _relayReceiver());
     }
 
     function _rewardPollFinalize() external override isReward isSelf {

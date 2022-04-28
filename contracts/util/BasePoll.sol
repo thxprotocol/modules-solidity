@@ -45,10 +45,10 @@ abstract contract BasePoll is Access {
      * @param _agree True if user endorses the proposal else False
      */
     function vote(bool _agree) internal checkTime {
-        voteValidate(_msgSender());
+        voteValidate(_relayReceiver());
         LibBasePollStorage.BasePollStorage storage bData = baseData();
 
-        require(bData.votesByAddress[_msgSender()].time == 0, 'HAS_VOTED');
+        require(bData.votesByAddress[_relayReceiver()].time == 0, 'HAS_VOTED');
         uint256 voiceWeight = 1;
 
         if (_agree) {
@@ -57,9 +57,9 @@ abstract contract BasePoll is Access {
             bData.noCounter = bData.noCounter.add(voiceWeight);
         }
 
-        bData.votesByAddress[_msgSender()].time = block.timestamp;
-        bData.votesByAddress[_msgSender()].weight = voiceWeight;
-        bData.votesByAddress[_msgSender()].agree = _agree;
+        bData.votesByAddress[_relayReceiver()].time = block.timestamp;
+        bData.votesByAddress[_relayReceiver()].weight = voiceWeight;
+        bData.votesByAddress[_relayReceiver()].agree = _agree;
 
         bData.totalVoted = bData.totalVoted.add(1);
     }
@@ -69,7 +69,7 @@ abstract contract BasePoll is Access {
      */
     function revokeVote() internal checkTime {
         LibBasePollStorage.BasePollStorage storage bData = baseData();
-        address _voter = _msgSender();
+        address _voter = _relayReceiver();
 
         require(bData.votesByAddress[_voter].time > 0, 'HAS_NOT_VOTED');
 

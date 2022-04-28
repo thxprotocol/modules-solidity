@@ -4,7 +4,7 @@ pragma solidity ^0.7.4;
 // Copied from https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/GSN/GSNRecipient.sol
 // But kept minimalist.
 contract RelayReceiver {
-    function _msgSender() internal pure returns (address payable result) {
+    function _relayReceiver() internal pure returns (address payable result) {
         // If not call from RelayHub, return original sender
         // We need to read 20 bytes (an address) located at array index msg.data.length - 20. In memory, the array
         // is prefixed with a 32-byte length value, so we first add 32 to get the memory read index. However, doing

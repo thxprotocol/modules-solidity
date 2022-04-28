@@ -70,7 +70,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
      */
     function grantRole(bytes32 role, address account) external override {
         require(
-            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, _msgSender()),
+            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, _relayReceiver()),
             'AccessControl: sender must be an admin to grant'
         );
         _grantRole(role, account);
@@ -83,7 +83,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
      */
     function revokeRole(bytes32 role, address account) external override {
         require(
-            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, _msgSender()),
+            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, _relayReceiver()),
             'AccessControl: sender must be an admin to revoke'
         );
         _revokeRole(role, account);
@@ -95,7 +95,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
      * @param account Address of the account
      */
     function renounceRole(bytes32 role, address account) external override {
-        require(account == _msgSender(), 'AccessControl: can only renounce roles for self');
+        require(account == _relayReceiver(), 'AccessControl: can only renounce roles for self');
         _revokeRole(role, account);
     }
 
@@ -140,7 +140,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.add(account)) {
-            emit RoleGranted(role, account, _msgSender());
+            emit RoleGranted(role, account, _relayReceiver());
         }
     }
 
@@ -152,7 +152,7 @@ contract AccessControl is IAccessControl, IAccessControlEvents, RelayReceiver {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.remove(account)) {
-            emit RoleRevoked(role, account, _msgSender());
+            emit RoleRevoked(role, account, _relayReceiver());
         }
     }
 }

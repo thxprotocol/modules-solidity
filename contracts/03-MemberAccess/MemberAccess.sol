@@ -58,7 +58,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
      * @param _account Address of the account to give the member role to.
      */
     function addMember(address _account) external override {
-        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(MANAGER_ROLE, _relayReceiver()) || _hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
         setupMember(_account);
         _grantRole(MEMBER_ROLE, _account);
     }
@@ -67,7 +67,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
      * @param _account Address of the account to revoke the member role for.
      */
     function removeMember(address _account) external override {
-        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(MANAGER_ROLE, _relayReceiver()) || _hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
         _revokeRole(MEMBER_ROLE, _account);
     }
 
@@ -83,7 +83,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
      * @param _account Address of the account to give the manager role to.
      */
     function addManager(address _account) external override {
-        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(MANAGER_ROLE, _relayReceiver()) || _hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
         setupMember(_account);
         _grantRole(MANAGER_ROLE, _account);
     }
@@ -92,8 +92,8 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
      * @param _account Address of the account to revoke the manager role for.
      */
     function removeManager(address _account) external override {
-        require(_hasRole(MANAGER_ROLE, _msgSender()) || _hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
-        require(_msgSender() != _account, 'OWN_ACCOUNT');
+        require(_hasRole(MANAGER_ROLE, _relayReceiver()) || _hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
+        require(_relayReceiver() != _account, 'OWN_ACCOUNT');
         _revokeRole(MANAGER_ROLE, _account);
     }
 
@@ -127,7 +127,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
      * @dev Different member id's can map to the same address.
      */
     function upgradeAddress(address _oldAddress, address _newAddress) external override {
-        require(_oldAddress == _msgSender(), 'OLD_NOT_SENDER');
+        require(_oldAddress == _relayReceiver(), 'OLD_NOT_SENDER');
         LibMemberAccessStorage.MemberStorage storage ms = LibMemberAccessStorage.memberStorage();
         uint256 member = ms.addressToMember[_oldAddress];
         require(member != 0, 'NON_MEMBER');
@@ -228,7 +228,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.add(account)) {
-            emit RoleGranted(role, account, _msgSender());
+            emit RoleGranted(role, account, _relayReceiver());
         }
     }
 
@@ -240,7 +240,7 @@ contract MemberAccess is IMemberID, IPoolRoles, RelayReceiver, IAccessControlEve
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.remove(account)) {
-            emit RoleRevoked(role, account, _msgSender());
+            emit RoleRevoked(role, account, _relayReceiver());
         }
     }
 

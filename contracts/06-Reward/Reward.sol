@@ -79,7 +79,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
         uint256 _withdrawDuration
     ) external override onlyOwner {
         // todo verify amount
-        require(_isMember(_msgSender()), 'NOT_MEMBER');
+        require(_isMember(_relayReceiver()), 'NOT_MEMBER');
         LibRewardPollStorage.Reward storage reward = LibRewardPollStorage.rewardStorage().rewards[_id - 1];
 
         // storage will be deleted (e.g. set to default) after poll is finalized
@@ -101,7 +101,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
      * @param _id The ID of the reward to claim.
      */
     function enableReward(uint256 _id) external override onlyOwner {
-        require(_isManager(_msgSender()), 'NOT_MANAGER');
+        require(_isManager(_relayReceiver()), 'NOT_MANAGER');
 
         LibRewardPollStorage.Reward storage reward = LibRewardPollStorage.rewardStorage().rewards[_id - 1];
         require(reward.state != LibRewardPollStorage.RewardState.Enabled, 'ALREADY_ENABLED');
@@ -114,7 +114,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
      * @param _id The ID of the reward to claim.
      */
     function disableReward(uint256 _id) external override onlyOwner {
-        require(_isManager(_msgSender()), 'NOT_MANAGER');
+        require(_isManager(_relayReceiver()), 'NOT_MANAGER');
 
         LibRewardPollStorage.Reward storage reward = LibRewardPollStorage.rewardStorage().rewards[_id - 1];
         require(reward.state != LibRewardPollStorage.RewardState.Disabled, 'ALREADY_DISABLED');
@@ -127,7 +127,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
      * @param _id The ID of the reward to claim for the other member
      */
     function claimRewardFor(uint256 _id, address _beneficiary) public override {
-        require(_isMember(_msgSender()), 'NOT_MEMBER');
+        require(_isMember(_relayReceiver()), 'NOT_MEMBER');
         require(_isMember(_beneficiary), 'NOT_MEMBER');
 
         LibRewardPollStorage.Reward memory current = LibRewardPollStorage.rewardStorage().rewards[_id - 1];
@@ -141,7 +141,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
      * @param _id The ID of the reward to claim
      */
     function claimReward(uint256 _id) external override {
-        claimRewardFor(_id, _msgSender());
+        claimRewardFor(_id, _relayReceiver());
     }
 
     /**
@@ -203,7 +203,7 @@ contract Reward is Access, IReward, IWithdrawEvents {
         rpStorage.withdrawAmount = _withdrawAmount;
         rpStorage.withdrawDuration = _withdrawDuration;
 
-        emit RewardPollCreated(bst.pollCounter, _msgSender(), _id, _withdrawAmount);
+        emit RewardPollCreated(bst.pollCounter, _relayReceiver(), _id, _withdrawAmount);
         return baseStorage.id;
     }
 }

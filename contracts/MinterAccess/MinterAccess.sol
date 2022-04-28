@@ -46,7 +46,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
     }
 
     modifier onlyMinter() {
-        require(_hasRole(MINTER_ROLE, _msgSender()), 'NOT_MINTER');
+        require(_hasRole(MINTER_ROLE, _relayReceiver()), 'NOT_MINTER');
         _;
     }
 
@@ -62,7 +62,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      * @param _account Address of the account to give the minter role to.
      */
     function addMinter(address _account) external override {
-        require(_hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
         setupMinter(_account);
         _grantRole(MINTER_ROLE, _account);
     }
@@ -71,7 +71,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      * @param _account Address of the account to revoke the minter role for.
      */
     function removeMinter(address _account) external override {
-        require(_hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), 'ACCESS');
+        require(_hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
         _revokeRole(MINTER_ROLE, _account);
     }
 
@@ -97,7 +97,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      * @dev Different minter id's can map to the same address.
      */
     function upgradeAddress(address _oldAddress, address _newAddress) external {
-        require(_oldAddress == _msgSender(), 'OLD_NOT_SENDER');
+        require(_oldAddress == _relayReceiver(), 'OLD_NOT_SENDER');
         LibMinterAccessStorage.MinterStorage storage ms = LibMinterAccessStorage.minterStorage();
         uint256 minter = ms.addressToMinter[_oldAddress];
         require(minter != 0, 'NON_MINTER');
@@ -194,7 +194,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].minters.add(account)) {
-            emit RoleGranted(role, account, _msgSender());
+            emit RoleGranted(role, account, _relayReceiver());
         }
     }
 
@@ -206,7 +206,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].minters.remove(account)) {
-            emit RoleRevoked(role, account, _msgSender());
+            emit RoleRevoked(role, account, _relayReceiver());
         }
     }
 

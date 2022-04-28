@@ -32,7 +32,7 @@ contract RewardPollProxy is IRewardPollProxy, RelayReceiver {
         // Encode the function call with the given _agree argument
         bytes memory _call = abi.encodeWithSelector(sig, _agree);
         // Call the function on behalf of the original sender of the message.
-        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
     }
 
@@ -41,7 +41,7 @@ contract RewardPollProxy is IRewardPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_rewardPollRevokeVote()'));
         bytes memory _call = abi.encodeWithSelector(sig);
 
-        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
     }
 
@@ -50,7 +50,7 @@ contract RewardPollProxy is IRewardPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_rewardPollFinalize()'));
         bytes memory _call = abi.encodeWithSelector(sig);
 
-        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).call(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
     }
 
@@ -59,7 +59,7 @@ contract RewardPollProxy is IRewardPollProxy, RelayReceiver {
         bytes4 sig = bytes4(keccak256('_rewardPollApprovalState()'));
         bytes memory _call = abi.encodeWithSelector(sig);
 
-        (bool success, bytes memory data) = address(this).staticcall(abi.encodePacked(_call, position, _msgSender()));
+        (bool success, bytes memory data) = address(this).staticcall(abi.encodePacked(_call, position, _relayReceiver()));
         require(success, string(data));
         return abi.decode(data, (bool));
     }

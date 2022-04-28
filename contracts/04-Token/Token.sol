@@ -64,12 +64,12 @@ contract Token is IToken, RelayReceiver {
         uint256 amount = _amount.sub(fee);
 
         if (fee > 0) {
-            s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
+            s.token.safeTransferFrom(_relayReceiver(), registry.feeCollector(), fee);
             emit DepositFeeCollected(fee);
         }
         s.balance = s.balance.add(amount);
-        s.token.safeTransferFrom(_msgSender(), address(this), amount);
-        emit Depositted(_msgSender(), amount);
+        s.token.safeTransferFrom(_relayReceiver(), address(this), amount);
+        emit Depositted(_relayReceiver(), amount);
     }
 
     /**

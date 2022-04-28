@@ -118,12 +118,12 @@ contract WithdrawPoll is BasePoll, IWithdrawPoll {
 
     function _withdrawPollVote(bool _agree) external override isWithdraw isSelf {
         vote(_agree);
-        emit WithdrawPollVoted(baseData().id, _msgSender(), _agree);
+        emit WithdrawPollVoted(baseData().id, _relayReceiver(), _agree);
     }
 
     function _withdrawPollRevokeVote() external override isWithdraw isSelf {
         revokeVote();
-        emit WithdrawPollRevokedVote(baseData().id, _msgSender());
+        emit WithdrawPollRevokedVote(baseData().id, _relayReceiver());
     }
 
     function _withdrawPollFinalize() external override isWithdraw isSelf {
