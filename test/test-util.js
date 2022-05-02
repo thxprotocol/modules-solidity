@@ -2,6 +2,32 @@ const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { unlimitedSupplyTokenContract, createTokenFactory } = require('./utils');
 
+// const diamond = async (factoryFacets) => {
+//     factoryFacets = [
+//         await ethers.getContractFactory('AssetPoolFactoryFacet'),
+//         await ethers.getContractFactory('OwnershipFacet'),
+//     ];
+//     diamondCutFactory = [];
+//     for (let i = 0; i < factoryFacets.length; i++) {
+//         const f = await factoryFacets[i].deploy();
+//         diamondCutFactory.push({
+//             action: FacetCutAction.Add,
+//             facetAddress: f.address,
+//             functionSelectors: getSelectors(f),
+//         });
+//     }
+
+//     [owner] = await ethers.getSigners();
+//     const Diamond = await ethers.getContractFactory('Diamond');
+//     const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
+//     factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
+//     await factory.setDefaultController(await owner.getAddress());
+
+//     return factory;
+// };
+
+
+
 describe('Unlimited Token', function () {
     let token;
 

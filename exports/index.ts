@@ -28,9 +28,7 @@ export const contractNames = [
     'AssetPoolFactoryFacet',
     'TokenFactoryFacet',
     'PoolRegistryFacet',
-    'MinterAccess',
-    'UnlimitedSupplyTokenFactoryFacet',
-    'NonFungibleTokenFactoryFacet'
+    'MinterAccess'
 ] as const;
 export type ContractName = typeof contractNames[number] | 'UnlimitedSupplyToken' | 'NonFungibleToken';
 
@@ -45,7 +43,7 @@ export interface ExportJsonFile {
     contracts: { [key: string]: ContractConfig };
 }
 
-export type DiamondVariant = 'defaultPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry' | 'unlimitedSupplyToken' | 'nonFungibleToken';
+export type DiamondVariant = 'defaultPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
 const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     defaultPool: [
         'AccessControl',
@@ -59,9 +57,7 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     ],
     assetPoolFactory: ['AssetPoolFactoryFacet'],
     tokenFactory: ['TokenFactoryFacet'],
-    assetPoolRegistry: ['PoolRegistryFacet'],
-    unlimitedSupplyToken:['UnlimitedSupplyTokenFactoryFacet'],
-    nonFungibleToken:['NonFungibleTokenFactoryFacet']
+    assetPoolRegistry: ['PoolRegistryFacet']
 };
 
 export const diamondVariants = Object.keys(diamondVariantsConfig) as DiamondVariant[];
