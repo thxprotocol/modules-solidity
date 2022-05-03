@@ -28,9 +28,9 @@ contract TokenTimeLock{
     //update total staked
     balances[msg.sender] = balances[msg.sender].add(amount);
     // Omrekenen tijd in weken naar seconden
-    increase = _increase.mul(604800);
+    _increase = _increase.mul(604800);
     //updated locktime 1 week from now
-    lockTime[msg.sender] = block.timestamp.add(increase);
+    lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
     //THXtoken.transferFrom(msg.sender, address(this), amount);
     // Transfer stTHX naar User
