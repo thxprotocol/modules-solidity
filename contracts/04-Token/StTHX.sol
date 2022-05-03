@@ -13,8 +13,21 @@ contract DevToken is ERC20, Ownable {
         transferOwnership(owner_);
     }
 
+    //function addminter();
+
+    //function removeminter():
+    
+
     function mint(address receiver, uint256 amount) external onlyOwner returns (uint256) {
         _mint(receiver, amount);
         return amount;
+
+
     }
+
+    //function burn();
+
+    //function _beforetokenTransfer();
+
+
 }
