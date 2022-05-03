@@ -14,11 +14,9 @@ contract TokenTimeLock{
   mapping(address => uint) public balances;
   //when you can withdraw is saved in lockTime
   mapping(address => uint) public lockTime;
-  //total staked amount
-  mapping(address => uint) public stakedAmount;
   IERC20 private THXtoken;
   IERC20 stTHXtoken;
-  mapping(address => uint) public tokenHolder;
+
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
