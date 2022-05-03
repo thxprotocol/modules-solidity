@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -14,29 +14,29 @@ contract TokenTimeLock{
   mapping(address => uint) public balances;
   //when you can withdraw is saved in lockTime
   mapping(address => uint) public lockTime;
-  //total staked amount
-  mapping(address => uint) public stakedAmount;
   IERC20 private THXtoken;
   IERC20 stTHXtoken;
-  mapping(address => uint) public tokenHolder;
+
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
     stTHXtoken = IERC20 (_stTHXtoken);
   }
 
-  function deposit (uint256 amount, uint week) external payable {
+  function deposit (uint256 amount, uint _increase) external payable {
     require(amount > 0, "Cannot stake 0");
     //update total staked
     balances[msg.sender] = balances[msg.sender].add(amount);
+    // Omrekenen tijd in weken naar seconden
+    increase = _increase.mul(604800);
     //updated locktime 1 week from now
-    lockTime[msg.sender] = block.timestamp + week;
-    THXtoken.transferFrom(msg.sender, address(this), amount);
+    lockTime[msg.sender] = block.timestamp.add(increase);
+    // Transfer THX naar contract voor staken
+    //THXtoken.transferFrom(msg.sender, address(this), amount);
+    // Transfer stTHX naar User
+    //stTHXtoken.transferFrom(address(this), msg.sender, amount);
+    // Log hoeveel gestaked is
     emit Staked(msg.sender, amount);
-  }
-
-  function increaseLockTime(uint _increase) public{
-    lockTime[msg.sender] = lockTime[msg.sender].add(_increase);
   }
 
   function withdraw() public{
@@ -48,10 +48,12 @@ contract TokenTimeLock{
 
     //update balance
     uint amount = balances[msg.sender];
-    balances[msg.sender] = 0;
+    delete balances[msg.sender];
 
+    //burn staked thx
+    //stTHXtoken._burn(msg.sender, amount);
     //send the money to the sender
-    THXtoken.transferFrom(address(this), msg.sender, amount);
+    //THXtoken.transferFrom(address(this), msg.sender, amount);
     emit Withdrawn(msg.sender, amount);
   }
 
