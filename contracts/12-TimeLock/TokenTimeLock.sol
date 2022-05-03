@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
+import 'hardhat/console.sol';
+
 //one can deposit into this contract but you must wait 1 week before you can withdraw your funds
 
 contract TokenTimeLock{
@@ -20,7 +22,7 @@ contract TokenTimeLock{
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
-    stTHXtoken = IERC20 (_stTHXtoken);
+    stTHXtoken = IERC20(_stTHXtoken);
   }
 
   function deposit (uint256 amount, uint _increase) external payable {
@@ -32,9 +34,11 @@ contract TokenTimeLock{
     //updated locktime 1 week from now
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
-    //THXtoken.transferFrom(msg.sender, address(this), amount);
-    // Transfer stTHX naar User
-    //stTHXtoken.transferFrom(address(this), msg.sender, amount);
+    THXtoken.transferFrom(msg.sender, address(this), amount);
+    
+    // // // Transfer stTHX naar User
+    // stTHXtoken.transferFrom(address(this), msg.sender, amount);
+
     // Log hoeveel gestaked is
     emit Staked(msg.sender, amount);
   }
@@ -51,9 +55,9 @@ contract TokenTimeLock{
     delete balances[msg.sender];
 
     //burn staked thx
-    //stTHXtoken._burn(msg.sender, amount);
+    stTHXtoken._burn(msg.sender, amount);
     //send the money to the sender
-    //THXtoken.transferFrom(address(this), msg.sender, amount);
+    // THXtoken.transferFrom(address(this), msg.sender, amount);
     emit Withdrawn(msg.sender, amount);
   }
 
