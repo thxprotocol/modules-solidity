@@ -26,7 +26,7 @@ contract TokenTimeLock{
   }
 
   function deposit (uint256 amount, uint _increase) external payable {
-    require(amount >= 10, "Cannot stake 0");
+    require(amount >= 10, "Cannot stake less than 10");
     //update total staked
     balances[msg.sender] = balances[msg.sender].add(amount);
     // Omrekenen tijd in weken naar seconden
