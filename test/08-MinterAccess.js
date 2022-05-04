@@ -1,47 +1,29 @@
 const { expect } = require('chai');
 const { constants } = require('ethers');
-const { diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
+const { getFacetCut } = require('./utils.js');
 
-const diamondTest = async () => {
-    factoryFacets = [
-        await ethers.getContractFactory('AssetPoolFactoryFacet'),
-        await ethers.getContractFactory('OwnershipFacet'),
-    ];
-    diamondCutFactory = [];
-    for (let i = 0; i < factoryFacets.length; i++) {
-        const f = await factoryFacets[i].deploy();
-        diamondCutFactory.push({
-            action: FacetCutAction.Add,
-            facetAddress: f.address,
-            functionSelectors: getSelectors(f),
-        });
-    }
-
-    [owner] = await ethers.getSigners();
-    const Diamond = await ethers.getContractFactory('Diamond');
-    const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
-    factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
-    await factory.setDefaultController(await owner.getAddress());
-
-    return factory;
-};
-
-describe('08 minter access', function () {
+describe.only('08 minter access', function () {
     let owner;
     let voter;
     let minterAccess;
 
     before(async function () {
         [owner, voter, collector] = await ethers.getSigners();
-        const registry = await createPoolRegistry(await collector.getAddress(), 0);
-        const factory = await diamond();
-        const diamondCuts = await getDiamondCuts([
-            'MinterAccess',
-            'UnlimitedSupplyToken',
-            'DiamondCutFacet',
-            'DiamondLoupeFacet'
-        ]);
-        minterAccess = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
+
+        const minterAccessFactory = await ethers.getContractFactory('MinterAccess');
+        const ustFactory = await ethers.getContractFactory('UnlimitedSupplyToken');
+
+        diamondCut = [];
+        diamondCut.push(getFacetCut(await minterAccessFactory.deploy()));
+        diamondCut.push(
+            getFacetCut(
+                await ustFactory.deploy('Test Token', 'TTT', [await owner.getAddress()], await owner.getAddress()),
+            ),
+        );
+
+        const diamondFactory = await ethers.getContractFactory('Diamond');
+        minterAccess = await diamondFactory.deploy(diamondCut, [await owner.getAddress()]);
+        minterAccess = await ethers.getContractAt('IMinterAccess', minterAccess.address);
     });
     it('Initial state', async function () {
         expect(await minterAccess.isMinter(await owner.getAddress())).to.eq(true);

@@ -1,4 +1,4 @@
-const { utils } = require('ethers/lib');
+const { utils, ContractFactory } = require('ethers/lib');
 const { constants } = require('ethers');
 
 FacetCutAction = {
@@ -18,6 +18,14 @@ const hex2a = (hex) => {
         if (v) str += String.fromCharCode(v);
     }
     return str.trim();
+};
+
+const getFacetCut = (f) => {
+    return {
+        action: FacetCutAction.Add,
+        facetAddress: f.address,
+        functionSelectors: getSelectors(f),
+    };
 };
 
 const helpSign = async (solution, name, args, account) => {
@@ -179,4 +187,5 @@ module.exports = {
     ADMIN_ROLE,
     ENABLE_REWARD,
     DISABLE_REWARD,
+    getFacetCut,
 };
