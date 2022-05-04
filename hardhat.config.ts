@@ -4,6 +4,7 @@ import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
 import 'hardhat-gas-reporter';
 import 'hardhat-deploy';
+import type { HardhatUserConfig } from 'hardhat/types';
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const POLYGON_PRIVATE_KEY_DEV = process.env.POLYGON_PRIVATE_KEY_DEV || '';
 
-const config: any = {
+const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
     solidity: {
         version: '0.7.4',
@@ -71,24 +72,24 @@ const config: any = {
 };
 
 if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
-    config.networks.mumbai = {
+    config.networks!.mumbai = {
         url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY],
         timeout: 2483647,
     };
-    config.networks.matic = {
+    config.networks!.matic = {
         url: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY],
         timeout: 2483647,
     };
 }
 if (POLYGON_PRIVATE_KEY_DEV && INFURA_PROJECT_ID) {
-    config.networks.mumbaidev = {
+    config.networks!.mumbaidev = {
         url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY_DEV],
         timeout: 2483647,
     };
-    config.networks.maticdev = {
+    config.networks!.maticdev = {
         url: `https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY_DEV],
         timeout: 2483647,

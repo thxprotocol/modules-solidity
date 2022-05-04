@@ -1,12 +1,16 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('Example', function() {
+describe.only('FeeCollector', function() {
     let owner;
     let contract;
+    let token;
+    let addr1;
+    let addr2;
+    let addrs
 
-    before(async function () {
-        [owner, addr1] = await ethers.getSigners();
+    beforeEach(async function () {
+        [owner, token, addr1, addr2, ...addrs] = await ethers.getSigners();
 
         const Contract = await ethers.getContractFactory('FeeCollector');
         contract = await Contract.deploy();
@@ -14,7 +18,30 @@ describe('Example', function() {
         await contract.deployed();
     });
 
-    it('Example test', async function () {
-        // TODO
+    it('Set single reward', async function () {
+        await contract.setRewards(addr1.address, [
+            { 
+                token: token.address, 
+                amount: 5 
+            },
+        ]);
+
+        console.log(await contract.connect(addr1).getRewards());
+    });
+
+    it('Set bulk rewards', async function () {
+        await contract.setRewardsBulk([
+            {
+                recipient: addr1.address, 
+                tokens: [
+                    { 
+                        token: token.address, 
+                        amount: 5 
+                    },
+                ]
+            },
+        ]);
+
+        console.log(await contract.connect(addr1).getRewards());
     });
 });

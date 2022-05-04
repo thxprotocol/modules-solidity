@@ -18,19 +18,35 @@ contract FeeCollector is Ownable {
 
     mapping(address => Reward[]) public rewards;
 
-    event WithdrawalReward(address from, address to, uint amount);
+    event WithdrawReward(address from, address to, uint amount);
 
-    function setRewards(RawParticipant[] memory _raw) public onlyOwner {
-        // Converting input rewards array into rewards mapping
-        for (uint i=0; i < _raw.length; i++) {
-            RawParticipant memory rawParticipant = _raw[i];
-            rewards[rawParticipant.recipient] = rawParticipant.tokens;
+    modifier onlyHasRewards {
+        require(rewards[msg.sender].length > 0, 'No rewards have been assigned to address');
+        _;
+    }
+
+    function setRewards(address _target, Reward[] memory _tokens) public onlyOwner {
+        delete rewards[_target];
+        for (uint i=0; i < _tokens.length; i++) {
+            rewards[_target].push(Reward(_tokens[i].token, _tokens[i].amount));
         }
     }
 
-    function withdrawal() external {
-        require(rewards[msg.sender].length > 0, 'No rewards for this token have been assigned to address');
+    function setRewardsBulk(RawParticipant[] memory _raw) public onlyOwner {
+        for (uint i=0; i < _raw.length; i++) {
+            setRewards(_raw[i].recipient, _raw[i].tokens);
+        }
+    }
 
+    function getRewards() public view onlyHasRewards returns (Reward[] memory) {
+        return rewards[msg.sender];
+    }
+
+    function withdraw(IERC20 _token) external onlyHasRewards {
+        // TODO   
+    }
+
+    function withdrawBulk() external onlyHasRewards {
         for (uint i=0; i < rewards[msg.sender].length; i++) {
             Reward memory reward = rewards[msg.sender][i];
 
@@ -39,13 +55,9 @@ contract FeeCollector is Ownable {
 
             reward.token.transfer(msg.sender, reward.amount);
 
-            emit WithdrawalReward(address(this), msg.sender, reward.amount);
+            emit WithdrawReward(address(this), msg.sender, reward.amount);
 
             delete rewards[msg.sender][i];
         }
-    }
-
-    function getRewards() public view returns (Reward[] memory) {
-        return rewards[msg.sender];
     }
 }
