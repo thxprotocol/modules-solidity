@@ -1,27 +1,28 @@
 // SPDX-License-Identifier: Apache-2.0
 
-pragma solidity ^0.7.4;
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
 
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-
-contract StTHX is ERC20 {
+contract StTHX is ERC20, ERC20Burnable {
     address public immutable admin;
     mapping(address => bool) public minters;
 
     constructor(
         string memory _name,
         string memory _symbol,
-        address[] memory _minters,
+        //address[] memory _minters,
         address _admin
     ) ERC20(_name, _symbol) {
         require(_admin != address(0), 'INVALID_ADDRESS');
         admin = _admin;
 
-        for (uint256 i = 0; i < _minters.length; ++i) {
-            require(_minters[i] != address(0), 'NOT_MINTER');
-            minters[_minters[i]] = true;
-        }
+        // for (uint256 i = 0; i < _minters.length; ++i) {
+        //     require(_minters[i] != address(0), 'NOT_MINTER');
+        //     minters[_minters[i]] = true;
+        // }
     }
 
     modifier onlyAdmin() {
@@ -59,8 +60,10 @@ contract StTHX is ERC20 {
         }
     }
 
-    function _burn(address account, uint256 amount) external onlyAdmin{
-        require(balanceOf(account) >= amount, 'NOT_ENOUGH_BALANCE');
-        _burn(account, amount);
-    }
+
+
+    // function _burn(uint256 amount) external onlyAdmin{
+    //     require(balanceOf(msg.sender) >= amount, 'NOT_ENOUGH_BALANCE');
+    //     _burn(msg.sender, amount);
+    // }
 }
