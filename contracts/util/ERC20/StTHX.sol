@@ -13,16 +13,16 @@ contract StTHX is ERC20, ERC20Burnable {
     constructor(
         string memory _name,
         string memory _symbol,
-        //address[] memory _minters,
+        address[] memory _minters,
         address _admin
     ) ERC20(_name, _symbol) {
         require(_admin != address(0), 'INVALID_ADDRESS');
         admin = _admin;
 
-        // for (uint256 i = 0; i < _minters.length; ++i) {
-        //     require(_minters[i] != address(0), 'NOT_MINTER');
-        //     minters[_minters[i]] = true;
-        // }
+         for (uint256 i = 0; i < _minters.length; ++i) {
+             require(_minters[i] != address(0), 'NOT_MINTER');
+             minters[_minters[i]] = true;
+        }
     }
 
     modifier onlyAdmin() {
