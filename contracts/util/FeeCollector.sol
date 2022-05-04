@@ -43,21 +43,39 @@ contract FeeCollector is Ownable {
     }
 
     function withdraw(IERC20 _token) external onlyHasRewards {
-        // TODO   
+        Reward[] memory temp = rewards[msg.sender];
+
+        for (uint i=0; i < temp.length; i++) {
+            if (temp[i].token == _token) {
+                withdrawToken(i);
+                delete temp[i];
+            }
+        }
+
+        delete rewards[msg.sender];
+
+        for (uint i=0; i < temp.length; i++) {
+            if (temp[i].amount != 0) {
+                rewards[msg.sender].push(Reward(temp[i].token, temp[i].amount));
+            }
+        }
     }
 
     function withdrawBulk() external onlyHasRewards {
         for (uint i=0; i < rewards[msg.sender].length; i++) {
-            Reward memory reward = rewards[msg.sender][i];
-
-            uint256 contractBalance = reward.token.balanceOf(address(this));
-            require(contractBalance < reward.amount, 'Contract balance too low');
-
-            reward.token.transfer(msg.sender, reward.amount);
-
-            emit WithdrawReward(address(this), msg.sender, reward.amount);
-
-            delete rewards[msg.sender][i];
+            withdrawToken(i);
         }
+        delete rewards[msg.sender];
+    }
+
+    function withdrawToken(uint index) private {
+        Reward memory reward = rewards[msg.sender][index];
+
+        // uint256 contractBalance = reward.token.balanceOf(address(this));
+        // require(contractBalance < reward.amount, 'Contract balance too low');
+
+        // reward.token.transfer(msg.sender, reward.amount);
+
+        emit WithdrawReward(address(this), msg.sender, reward.amount);
     }
 }

@@ -2,14 +2,10 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
 describe.only('FeeCollector', function() {
-    let contract;
-    let owner;
-    let token;
-    let addr1;
-    let addr2;
+    let contract, owner, token, addr1, addr2, addr3;
 
     beforeEach(async function () {
-        [owner, token, addr1, addr2] = await ethers.getSigners();
+        [owner, token, addr1, addr2, ...addr3] = await ethers.getSigners();
 
         const Contract = await ethers.getContractFactory('FeeCollector');
         contract = await Contract.deploy();
@@ -29,12 +25,12 @@ describe.only('FeeCollector', function() {
 
         await contract.setRewards(addr1.address, [reward]);
 
-        const setValue = await contract.connect(addr1).getRewards();
-        expect(setValue[0][0].toString()).to.eq(reward.token);
-        expect(setValue[0][1].toNumber()).to.eq(reward.amount);
+        const assignedRewards = await contract.connect(addr1).getRewards();
+        expect(assignedRewards[0][0].toString()).to.eq(reward.token);
+        expect(assignedRewards[0][1].toNumber()).to.eq(reward.amount);
     });
 
-    it('Set bulk rewards', async function () {
+    it('Set multiple rewards', async function () {
         const reward = {
             token: token.address,
             amount: 5,
@@ -56,12 +52,55 @@ describe.only('FeeCollector', function() {
             },
         ]);
 
-        const setValue = await contract.connect(addr1).getRewards();
-        expect(setValue[0][0].toString()).to.eq(reward.token);
-        expect(setValue[0][1].toNumber()).to.eq(reward.amount);
+        const assignedRewards = await contract.connect(addr1).getRewards();
+        expect(assignedRewards[0][0].toString()).to.eq(reward.token);
+        expect(assignedRewards[0][1].toNumber()).to.eq(reward.amount);
 
-        const setValue2 = await contract.connect(addr2).getRewards();
-        expect(setValue2[0][0].toString()).to.eq(reward2.token);
-        expect(setValue2[0][1].toNumber()).to.eq(reward2.amount);
+        const assignedRewards2 = await contract.connect(addr2).getRewards();
+        expect(assignedRewards2[0][0].toString()).to.eq(reward2.token);
+        expect(assignedRewards2[0][1].toNumber()).to.eq(reward2.amount);
+    });
+
+    it('Require rewards to be set to withdraw', async function () {
+        await expect(contract.connect(addr1).withdraw(token.address)).to.be.reverted;
+        await expect(contract.connect(addr1).withdrawBulk(token.address)).to.be.reverted;
+    });
+
+    it('Withdraw single token', async function () {
+        const reward = {
+            token: token.address,
+            amount: 5,
+        }
+
+        const reward2 = {
+            token: '0xc0ffee254729296a45a3885639AC7E10F9d54979',
+            amount: 27,
+        }
+
+        await contract.setRewards(addr1.address, [reward, reward2]);
+
+        await contract.connect(addr1).withdraw(token.address);
+
+        const assignedRewards = await contract.connect(addr1).getRewards();
+        expect(assignedRewards[0][0].toString()).to.eq(reward2.token);
+        expect(assignedRewards[0][1].toNumber()).to.eq(reward2.amount);
+    });
+
+    it('Withdraw multiple tokens', async function () {
+        const reward = {
+            token: token.address,
+            amount: 5,
+        }
+
+        const reward2 = {
+            token: '0xc0ffee254729296a45a3885639AC7E10F9d54979',
+            amount: 27,
+        }
+
+        await contract.setRewards(addr1.address, [reward, reward2]);
+
+        await contract.connect(addr1).withdrawBulk();
+
+        await expect(contract.connect(addr1).getRewards()).to.be.reverted;
     });
 });
