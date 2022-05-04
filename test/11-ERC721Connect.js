@@ -35,7 +35,7 @@ describe.only('11 ERC721Connect', function () {
 
     it('can mint erc721 from the pool', async () => {
         const uri = '1234567890.json';
-        await expect(nftPool.mintFor(await collector.getAddress(), uri)).to.emit(erc721, 'Transfer');
+        await expect(nftPool.mintFor(await collector.getAddress(), uri)).to.emit(nftPool, 'ERC721Minted');
         expect(await erc721.balanceOf(await collector.getAddress())).to.eq(1);
         expect(await erc721.tokenURI(1)).to.eq(baseUrl + uri);
     });

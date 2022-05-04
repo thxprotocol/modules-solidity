@@ -48,6 +48,8 @@ contract ERC721Connect is IERC721Connect, RelayReceiver {
         LibDiamond.enforceIsContractOwner();
         INonFungibleToken nft = INonFungibleToken(LibERC721ConnectStorage.store().token);
 
-        nft.mint(_beneficiary, _tokenUri);
+        uint256 tokenId = nft.mint(_beneficiary, _tokenUri);
+        
+        emit ERC721Minted(_beneficiary, tokenId);
     }
 }
