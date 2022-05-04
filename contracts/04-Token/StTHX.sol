@@ -2,16 +2,10 @@
 
 pragma solidity ^0.7.4;
 
-/******************************************************************************\
-* @title ERC20 Unlimited Supply
-* @author Evert Kors <evert@thx.network>
-* @notice Used for point systems with an unlimited supply. Mints the required tokens whenever they are needed.
-* @dev Not upgradable contract.
-/******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
-contract UnlimitedSupplyToken is ERC20 {
+contract StTHX is ERC20 {
     address public immutable admin;
     mapping(address => bool) public minters;
 
