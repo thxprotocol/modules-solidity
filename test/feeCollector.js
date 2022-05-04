@@ -11,7 +11,7 @@ describe.only('TimeLockController', function () {
         factory = await createTokenFactory();
 
         thxToken = await limitedSupplyTokenContract(
-            factory.deployLimitedSupplyToken('THX Token', 'THX', await admin.getAddress(), 1000),
+            factory.deployLimitedSupplyToken('THX Token', 'THX', await admin.getAddress(), 10000),
         );
 
         const stThxToken = await unlimitedSupplyTokenContract(
@@ -31,8 +31,11 @@ describe.only('TimeLockController', function () {
         await stThxToken.addMinter(stThxToken.address);
     });
 
-    it('Should be able to stake THX', async function () {
+    it('Should be able to stake THX and stakes more than 10 thx', async function () {
         await thxToken.approve(timelockcontroller.address, 1000);
         await expect(timelockcontroller.deposit(1000, 1)).to.emit(timelockcontroller, 'Staked');
+    });
+    it('Check if users balance is lowered', async function () {
+        await thxToken.balanceOf(admin.getAddress()) == 9000;
     });
 });

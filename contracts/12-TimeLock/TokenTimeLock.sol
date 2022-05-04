@@ -35,7 +35,6 @@ contract TokenTimeLock{
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
     THXtoken.transferFrom(msg.sender, address(this), amount);
-    
     // // // Transfer stTHX naar User
     // stTHXtoken.transferFrom(address(this), msg.sender, amount);
 
@@ -55,9 +54,9 @@ contract TokenTimeLock{
     delete balances[msg.sender];
 
     //burn staked thx
-    stTHXtoken._burn(msg.sender, amount);
+    //stTHXtoken._burn(msg.sender, amount);
     //send the money to the sender
-    // THXtoken.transferFrom(address(this), msg.sender, amount);
+    THXtoken.transferFrom(address(this), msg.sender, amount);
     emit Withdrawn(msg.sender, amount);
   }
 

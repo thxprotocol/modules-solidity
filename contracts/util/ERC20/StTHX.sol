@@ -59,8 +59,8 @@ contract StTHX is ERC20 {
         }
     }
 
-    function _burn(address account, uint256 amount) external onlyAdmin{
-        require(balanceOf(account) >= amount, 'NOT_ENOUGH_BALANCE');
-        _burn(account, amount);
-    }
+    //function _burn(address account, uint256 amount) external onlyAdmin{
+    //    require(balanceOf(account) >= amount, 'NOT_ENOUGH_BALANCE');
+    //    _burn(account, amount);
+    //}
 }
