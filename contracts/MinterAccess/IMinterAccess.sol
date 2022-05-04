@@ -10,6 +10,10 @@ interface IMinterAccess {
 
     function removeMinter(address _account) external;
 
+    function getMinterByAddress(address _address) external view returns (uint256);
+    
+    function getAddressByMinter(uint256 _minter) external view returns (address);
+
     function isMinterRoleAdmin(address _account) external view returns (bool);
 
     function getOwner() external view returns (address);

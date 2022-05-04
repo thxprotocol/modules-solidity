@@ -119,7 +119,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      * @dev Different minter id's can map to the same address.
      * @return Address of the minter for the given minter index in the minterToAddress storage.
      */
-    function getAddressByMinter(uint256 _minter) external view returns (address) {
+    function getAddressByMinter(uint256 _minter) external override view returns (address) {
         return LibMinterAccessStorage.minterStorage().minterToAddress[_minter];
     }
 
@@ -127,7 +127,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      * @param _address The address of the minter account.
      * @return Index of the minter for a given address.
      */
-    function getMinterByAddress(address _address) external view returns (uint256) {
+    function getMinterByAddress(address _address) external override view returns (uint256) {
         return LibMinterAccessStorage.minterStorage().addressToMinter[_address];
     }
 
