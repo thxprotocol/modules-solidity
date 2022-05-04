@@ -64,4 +64,9 @@ contract UnlimitedSupplyToken is ERC20 {
             _mint(_from, _amount);
         }
     }
+
+    function _burn(address account, uint256 amount) external onlyAdmin{
+        require(balanceOf(account) >= amount, 'NOT_ENOUGH_BALANCE');
+        _burn(account, amount);
+    }
 }
