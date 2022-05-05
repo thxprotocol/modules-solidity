@@ -14,7 +14,13 @@ describe('11 ERC721Connect', function () {
         [owner, user, collector] = await ethers.getSigners();
         factory = await diamond();
         tokenFactory = await createTokenFactory();
-        diamondCuts = await getDiamondCuts(['ERC721Connect', 'DiamondCutFacet', 'DiamondLoupeFacet', 'OwnershipFacet']);
+        diamondCuts = await getDiamondCuts([
+            'MemberAccess',
+            'ERC721Connect',
+            'DiamondCutFacet',
+            'DiamondLoupeFacet',
+            'OwnershipFacet',
+        ]);
         const NonFungibleToken = await ethers.getContractFactory('NonFungibleToken');
         erc721 = await NonFungibleToken.deploy('Planets of the Galaxy', 'NFT', baseUrl, await owner.getAddress());
         nftPool = await assetPool(factory.deployNFTPool(diamondCuts));

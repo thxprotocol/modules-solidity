@@ -57,7 +57,7 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
         'WithdrawByPoll',
         'WithdrawByPollProxy',
     ],
-    nftPool: ['AccessControl', 'ERC721Connect', 'RelayHubFacet'],
+    nftPool: ['AccessControl', 'MemberAccess', 'ERC721Connect', 'RelayHubFacet'],
     assetPoolFactory: ['AssetPoolFactoryFacet'],
     tokenFactory: ['TokenFactoryFacet'],
     assetPoolRegistry: ['PoolRegistryFacet'],
