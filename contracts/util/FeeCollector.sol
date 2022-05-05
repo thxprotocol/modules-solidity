@@ -71,10 +71,10 @@ contract FeeCollector is Ownable {
     function withdrawToken(uint index) private {
         Reward memory reward = rewards[msg.sender][index];
 
-        // uint256 contractBalance = reward.token.balanceOf(address(this));
-        // require(contractBalance < reward.amount, 'Contract balance too low');
-
-        // reward.token.transfer(msg.sender, reward.amount);
+        uint256 contractBalance = reward.token.balanceOf(address(this));
+        require(contractBalance >= reward.amount, 'Contract balance too low');
+        
+        reward.token.transfer(msg.sender, reward.amount);
 
         emit WithdrawReward(address(this), msg.sender, reward.amount);
     }
