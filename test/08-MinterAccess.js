@@ -24,6 +24,7 @@ describe.only('08 minter access', function () {
         const diamondFactory = await ethers.getContractFactory('Diamond');
         minterAccess = await diamondFactory.deploy(diamondCut, [await owner.getAddress()]);
         minterAccess = await ethers.getContractAt('IMinterAccess', minterAccess.address);
+        await minterAccess.initializeRoles(await owner.getAddress());
     });
     it('Initial state', async function () {
         expect(await minterAccess.isMinter(await owner.getAddress())).to.eq(true);
@@ -37,16 +38,19 @@ describe.only('08 minter access', function () {
         expect(await minterAccess.getMinterByAddress(await owner.getAddress())).to.eq(1001);
         expect(await minterAccess.getAddressByMinter(1001)).to.eq(await owner.getAddress());
     });
-    it('Add minter', async function () {
-        expect(await minterAccess.isMinter(await voter.getAddress())).to.eq(false);
-        expect(await minterAccess.getMinterByAddress(await voter.getAddress())).to.eq(0);
-        expect(await minterAccess.getAddressByMinter(0)).to.eq(constants.AddressZero);
+    it.only('Add minter', async function () {
+        // expect(await minterAccess.isAdmin(await owner.getAddress())).to.eq(true);
+        // expect(await minterAccess.isMinter(await voter.getAddress())).to.eq(false);
+        // expect(await minterAccess.getMinterByAddress(await voter.getAddress())).to.eq(0);
+        // expect(await minterAccess.getAddressByMinter(0)).to.eq(constants.AddressZero);
+        console.log('owner', owner.address)
+        console.log('owner minteraccess', minterAccess.owner())
+        console.log('voter', voter.address)
+        await minterAccess.connect(owner).addMinter(await voter.getAddress());
 
-        await minterAccess.addMinter(await voter.getAddress());
-
-        expect(await minterAccess.isMinter(await voter.getAddress())).to.eq(true);
-        expect(await minterAccess.getMinterByAddress(await voter.getAddress())).to.eq(1002);
-        expect(await minterAccess.getAddressByMinter(1002)).to.eq(await voter.getAddress());
+        // expect(await minterAccess.isMinter(await voter.getAddress())).to.eq(true);
+        // expect(await minterAccess.getMinterByAddress(await voter.getAddress())).to.eq(1002);
+        // expect(await minterAccess.getAddressByMinter(1002)).to.eq(await voter.getAddress());
     });
 
     it('Remove minter', async function () {

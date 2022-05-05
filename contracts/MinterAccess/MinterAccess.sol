@@ -28,6 +28,7 @@ import './LibMinterAccessStorage.sol';
 import './IMinterAccess.sol';
 
 import '../TMP/RelayReceiver.sol';
+import "hardhat/console.sol";
 
 contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
     event MinterAddressChanged(uint256 indexed minterID, address indexed previousAddress, address indexed newAddress);
@@ -62,6 +63,7 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      * @param _account Address of the account to give the minter role to.
      */
     function addMinter(address _account) external override {
+        console.log('add minter msg sender is', _relayReceiver());
         require(_hasRole(DEFAULT_ADMIN_ROLE, _relayReceiver()), 'ACCESS');
         setupMinter(_account);
         _grantRole(MINTER_ROLE, _account);
@@ -161,7 +163,6 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
      */
     function _hasRole(bytes32 role, address account) internal view virtual returns (bool) {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
-
         return rs.roles[role].minters.contains(account);
     }
 
@@ -175,24 +176,12 @@ contract MinterAccess is IMinterAccess, RelayReceiver, IAccessControlEvents {
     }
 
     /**
-     * @dev Called during initialization
-     * @param role Bytes32 array representing the role.
-     * @param adminRole Address of the role admin
-     */
-    function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {
-        LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
-
-        emit RoleAdminChanged(role, rs.roles[role].adminRole, adminRole);
-        rs.roles[role].adminRole = adminRole;
-    }
-
-    /**
      * @param role Bytes32 array representing the role.
      * @param account Address of the account
      */
     function _grantRole(bytes32 role, address account) internal virtual {
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
-
+        
         if (rs.roles[role].minters.add(account)) {
             emit RoleGranted(role, account, _relayReceiver());
         }
