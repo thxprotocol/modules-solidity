@@ -1,14 +1,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.4;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 
-contract StTHX is ERC20, ERC20Burnable {
+
+contract StTHX is ERC20 {
     address public immutable admin;
     mapping(address => bool) public minters;
+    uint256 private _totalSupply;
+    mapping (address => uint256) public _balances;
+
+
+
+    using SafeMath for uint256;
 
     constructor(
         string memory _name,
@@ -29,6 +37,8 @@ contract StTHX is ERC20, ERC20Burnable {
         require(msg.sender == admin, 'ADMIN_ONLY');
         _;
     }
+
+
 
     /**
      * Add a new minter to this contract
@@ -60,10 +70,37 @@ contract StTHX is ERC20, ERC20Burnable {
         }
     }
 
+    function mint(address account, uint256 value) public  {
+
+        _totalSupply = _totalSupply.add(value);
+        _balances[account] = _balances[account].add(value);
+        emit Transfer(address(0), account, value);
+    }
 
 
-    // function _burn(uint256 amount) external onlyAdmin{
-    //     require(balanceOf(msg.sender) >= amount, 'NOT_ENOUGH_BALANCE');
-    //     _burn(msg.sender, amount);
-    // }
+    function burn(uint256 amount) external payable {
+    _burn(msg.sender, amount);
+    } 
+
+
+    function _burn(address account, uint256 amount) internal onlyAdmin override {
+        // Requires that the message sender has enough tokens to burn
+        //require(balanceOf(msg.sender) >= amount, 'NOT_ENOUGH_BALANCE');
+
+        //check if the amount is not equal to 0 
+        require(amount != 0);
+        // Subtracts amount from callers balance and total supply
+        //balanceOf(msg.sender).sub(amount);
+        //_burn(msg.sender, amount);
+
+        //check if the account address is not a zero address
+        require(account != address(0));
+
+        _totalSupply = _totalSupply.sub(amount);
+        _balances[account] = _balances[account].sub(amount);
+        emit Transfer(account, address(0), amount);
+        
+        // Since you cant actually burn tokens on the blockchain, sending to address 0, which none has the private keys to, removes them from the circulating supply
+    
+    }
 }
