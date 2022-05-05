@@ -13,6 +13,8 @@ import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
+import 'hardhat/console.sol';
+
 contract UnlimitedSupplyToken is ERC20, AccessControl, Ownable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     
@@ -31,7 +33,8 @@ contract UnlimitedSupplyToken is ERC20, AccessControl, Ownable {
         address _to,
         uint256 _amount
     ) internal override {
-        require(hasRole(MINTER_ROLE, _from), "NOT_M");
-        _mint(_from, _amount);
+        if (hasRole(MINTER_ROLE, _from)) {
+            _mint(_from, _amount);
+        }
     }
 }
