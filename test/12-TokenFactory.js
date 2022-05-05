@@ -1,8 +1,12 @@
 const { expect } = require('chai');
-const { keccak256, toUtf8Bytes } = require('ethers/lib/utils');
-const { createTokenFactory, limitedSupplyTokenContract, unlimitedSupplyTokenContract } = require('./utils');
+const {
+    createTokenFactory,
+    nonFungibleTokenContract,
+    limitedSupplyTokenContract,
+    unlimitedSupplyTokenContract,
+} = require('./utils');
 
-describe.only('Token Factory', function () {
+describe('Token Factory', function () {
     let factory, owner, receiver;
 
     before(async function () {
@@ -102,44 +106,84 @@ describe.only('Token Factory', function () {
         });
     });
 
-    // describe('NFT', function () {
-    //     const baseURI = 'https://metadata.thx.network';
-    //     let tokenContract;
+    describe('NFT', function () {
+        const baseURI = 'https://api.thx.network/v1/metadata',
+            name = 'Test Non Fungible Token',
+            symbol = 'TST-NFT';
 
-    //     it('deploy', async function () {
-    //         tokenContract = await nonFungibleTokenContract(
-    //             factory.deployNonFungibleToken('Test NFT', 'NFT', await owner.getAddress(), baseURI),
-    //         );
+        let tokenContract, minterRole;
 
-    //         expect(await tokenContract.name()).to.eq('Test NFT');
-    //         expect(await tokenContract.symbol()).to.eq('NFT');
-    //         expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(0);
-    //         expect(await tokenContract.totalSupply()).to.eq(0);
-    //         expect(await tokenContract.baseURI()).to.eq(baseURI);
-    //     });
-    //     it('mint', async function () {
-    //         const path = '/tokenuri/0.json';
+        before(async function () {
+            [owner, user] = await ethers.getSigners();
+            tokenContract = await nonFungibleTokenContract(
+                factory.deployNonFungibleToken(name, symbol, baseURI, await owner.getAddress()),
+            );
+            minterRole = await tokenContract.MINTER_ROLE();
+        });
 
-    //         expect(tokenContract.connect(receiver).mint(await receiver.getAddress(), path)).to.revertedWith(
-    //             'ONLY_OWNER',
-    //         );
-    //         expect(tokenContract.mint(await receiver.getAddress(), path)).to.emit(tokenContract, 'Transfer');
+        it('Initial state', async () => {
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(0);
+            expect(await tokenContract.totalSupply()).to.eq(0);
+            expect(await tokenContract.name()).to.eq(name);
+            expect(await tokenContract.symbol()).to.eq(symbol);
+        });
 
-    //         expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(1);
-    //         expect(await tokenContract.totalSupply()).to.eq(1);
-    //         expect(await tokenContract.tokenURI(1)).to.eq(baseURI + path);
-    //     });
-    //     it('transfer', async function () {
-    //         expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(0);
-    //         expect(tokenContract.connect(receiver).approve(await owner.getAddress(), 1)).to.emit(
-    //             tokenContract,
-    //             'Approval',
-    //         );
-    //         expect(
-    //             tokenContract.connect(receiver).transferFrom(await receiver.getAddress(), await owner.getAddress(), 1),
-    //         ).to.emit(tokenContract, 'Transfer');
-    //         expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(1);
-    //         expect(await tokenContract.balanceOf(await receiver.getAddress())).to.eq(0);
-    //     });
-    // });
+        it('mint', async function () {
+            const uri = '/123456789123';
+
+            await expect(tokenContract.connect(user).mint(await user.getAddress(), uri)).to.revertedWith('NOT_MINTER');
+            await expect(tokenContract.mint(await user.getAddress(), uri)).to.emit(tokenContract, 'Transfer');
+
+            expect(await tokenContract.balanceOf(await user.getAddress())).to.eq(1);
+            expect(await tokenContract.totalSupply()).to.eq(1);
+            expect(await tokenContract.tokenURI(1)).to.eq(baseURI + uri);
+        });
+
+        it('transfer', async function () {
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(0);
+            expect(tokenContract.connect(user).approve(await owner.getAddress(), 1)).to.emit(tokenContract, 'Approval');
+            expect(
+                tokenContract.connect(user).transferFrom(await user.getAddress(), await owner.getAddress(), 1),
+            ).to.emit(tokenContract, 'Transfer');
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(1);
+            expect(await tokenContract.balanceOf(await user.getAddress())).to.eq(0);
+        });
+
+        it('owner should grant minter role', async () => {
+            expect(await tokenContract.hasRole(minterRole, await user.getAddress())).to.eq(false);
+            await expect(tokenContract.grantRole(minterRole, await user.getAddress())).to.emit(
+                tokenContract,
+                'RoleGranted',
+            );
+            expect(await tokenContract.hasRole(minterRole, await user.getAddress())).to.eq(true);
+        });
+
+        it('user should mint and not fail', async () => {
+            const uri = '/123456789123';
+
+            expect(await tokenContract.balanceOf(await user.getAddress())).to.eq(0);
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(1);
+            await expect(tokenContract.connect(user).mint(await owner.getAddress(), uri)).to.emit(
+                tokenContract,
+                'Transfer',
+            );
+            expect(await tokenContract.balanceOf(await user.getAddress())).to.eq(0);
+            expect(await tokenContract.balanceOf(await owner.getAddress())).to.eq(2);
+        });
+
+        it('owner should revoke minter role', async () => {
+            const uri = '/123456789123';
+
+            expect(await tokenContract.hasRole(minterRole, await user.getAddress())).to.eq(true);
+            await expect(tokenContract.revokeRole(minterRole, await user.getAddress())).to.emit(
+                tokenContract,
+                'RoleRevoked',
+            );
+            expect(await tokenContract.hasRole(minterRole, await user.getAddress())).to.eq(false);
+            expect(await tokenContract.balanceOf(await user.getAddress())).to.eq(0);
+            await expect(tokenContract.connect(user).mint(await owner.getAddress(), uri)).to.be.revertedWith(
+                'NOT_MINTER',
+            );
+        });
+    });
 });

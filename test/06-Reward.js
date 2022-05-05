@@ -8,7 +8,7 @@ describe('06 reward', function () {
     let withdraw, factory, registry;
 
     before(async function () {
-        [owner, voter] = await ethers.getSigners();
+        [owner, voter, collector] = await ethers.getSigners();
         registry = await createPoolRegistry(await collector.getAddress(), 0);
         factory = await diamond();
         const diamondCuts = await getDiamondCuts([
@@ -54,7 +54,8 @@ describe('06 reward - claim', function () {
     let solution;
 
     before(async function () {
-        [owner, voter] = await ethers.getSigners();
+        [owner, voter, collector] = await ethers.getSigners();
+        registry = await createPoolRegistry(await collector.getAddress(), 0);
 
         const diamondCuts = await getDiamondCuts([
             'MemberAccess',

@@ -57,18 +57,18 @@ describe('05 withdraw', function () {
         expect(await withdraw.getUnlockDate(1)).to.eq(unlockDate);
     });
     it('Test proposeBulkWithdraw', async function () {
-        const unlockDate = createUnlockDate(3)
+        const unlockDate = createUnlockDate(3);
         const amounts = [],
             beneficiaries = [];
-            unlockDates = [];
-            
+        unlockDates = [];
+
         for (let i = 0; i < 10; i++) {
             const signer = Wallet.createRandom();
             amounts.push(parseEther('1'));
             beneficiaries.push(await signer.getAddress());
             unlockDates.push(unlockDate);
         }
-        
+
         const ev = await events(withdraw.proposeWithdraw(parseEther('1'), await owner.getAddress(), unlockDate));
 
         const logs = await events(withdraw.proposeBulkWithdraw(amounts, beneficiaries, unlockDates));
@@ -161,7 +161,7 @@ describe('05 - proposeWithdraw', function () {
         expect(vote.agree).to.be.eq(true);
     });
     it('should NOT finalize', async function () {
-        const seconds = 864000 // 10 dayss
+        const seconds = 864000; // 10 dayss
         await ethers.provider.send('evm_increaseTime', [seconds]);
         await expect(withdraw.withdrawPollFinalize(1)).to.be.revertedWith('TOO_SOON_TO_FINALIZE_THE_POLL');
     });
@@ -170,7 +170,7 @@ describe('05 - proposeWithdraw', function () {
         expect(await withdraw.getBalance()).to.eq(parseEther('975'));
         expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('975'));
 
-        const seconds = 7890000 // 3 months
+        const seconds = 7890000; // 3 months
         await ethers.provider.send('evm_increaseTime', [seconds + 10]);
         await expect(withdraw.withdrawPollFinalize(1)).to.emit(withdraw, 'WithdrawFeeCollected');
         expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('10'));
@@ -180,56 +180,10 @@ describe('05 - proposeWithdraw', function () {
     });
 });
 
-describe('05 - UnlimitedSupplyToken', function () {
-    let withdraw;
-    let poolMember;
-    let token;
-
-    before(async function () {
-        [owner, voter, poolMember, collector] = await ethers.getSigners();
-        const UnlimitedSupplyToken = await ethers.getContractFactory('UnlimitedSupplyToken');
-        const diamondCuts = await getDiamondCuts([
-            'MemberAccess',
-            'Token',
-            'BasePollProxy',
-            'Withdraw',
-            'WithdrawPoll',
-            'WithdrawPollProxy',
-            'RelayHubFacet',
-            'DiamondCutFacet',
-            'DiamondLoupeFacet',
-            'OwnershipFacet',
-        ]);
-
-        registry = await createPoolRegistry(await collector.getAddress(), 0);
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
-        token = await UnlimitedSupplyToken.deploy('Test Token', 'TST', [withdraw.address], await owner.getAddress());
-        const unlockDate = createUnlockDate(3);
-        await withdraw.addToken(token.address);
-        await withdraw.setProposeWithdrawPollDuration(100);
-        await withdraw.addMember(await poolMember.getAddress());
-        await withdraw.proposeWithdraw(parseEther('1'), await poolMember.getAddress(), unlockDate);
-        await withdraw.withdrawPollVote(1, true);
-    });
-
-    it('finalize', async function () {
-        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(0);
-        expect(await withdraw.getBalance()).to.eq(0);
-        expect(await token.balanceOf(withdraw.address)).to.eq(0);
-
-        await ethers.provider.send('evm_increaseTime', [180]);
-        await withdraw.withdrawPollFinalize(1);
-        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('1'));
-
-        expect(await withdraw.getBalance()).to.eq(0);
-        expect(await token.balanceOf(withdraw.address)).to.eq(0);
-    });
-});
-
 function createUnlockDate(numMonths) {
     // create unlock date adding 3 months to current time
-    const now = new Date()
+    const now = new Date();
     var newDate = new Date(now.setMonth(now.getMonth() + numMonths));
-    const unlockDate = newDate.getTime() / 1000
-    return ~~unlockDate
+    const unlockDate = newDate.getTime() / 1000;
+    return ~~unlockDate;
 }
