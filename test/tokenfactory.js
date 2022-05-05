@@ -6,7 +6,7 @@ const {
     unlimitedSupplyTokenContract,
 } = require('./utils');
 
-describe('Unlimited Token factory', function () {
+describe.only('Unlimited Token factory', function () {
     let factory, owner, receiver;
 
     before(async function () {
@@ -41,6 +41,10 @@ describe('Unlimited Token factory', function () {
         expect(await tokenContract.totalSupply()).to.eq(0);
         expect(await tokenContract.symbol()).to.eq('TST');
         expect(await tokenContract.name()).to.eq('Test Token');
+
+        it('add minter', () => {
+            //
+        });
     });
 
     describe('NFT', function () {

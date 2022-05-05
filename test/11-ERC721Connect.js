@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { diamond, assetPool, getDiamondCuts, createTokenFactory } = require('./utils.js');
 
-describe.only('11 ERC721Connect', function () {
+describe('11 ERC721Connect', function () {
     let owner,
         user,
         erc721,

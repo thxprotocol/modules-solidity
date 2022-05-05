@@ -9,21 +9,20 @@ interface ITokenFactory {
     function deployNonFungibleToken(
         string memory _name,
         string memory _symbol,
-        address _to,
-        string memory _baseURI
+        string memory _baseURI,
+        address _owner
     ) external;
 
     function deployLimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address to,
-        uint256 amount
+        address _to,
+        uint256 _amount
     ) external;
 
     function deployUnlimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address[] memory _minters,
-        address _admin
+        address _owner
     ) external;
 }

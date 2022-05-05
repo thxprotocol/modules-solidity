@@ -10,58 +10,28 @@ pragma solidity ^0.7.4;
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract UnlimitedSupplyToken is ERC20 {
-    address public immutable admin;
-    mapping(address => bool) public minters;
-
+contract UnlimitedSupplyToken is ERC20, AccessControl, Ownable {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    
     constructor(
-        string memory _name,
-        string memory _symbol,
-        address[] memory _minters,
-        address _admin
-    ) ERC20(_name, _symbol) {
-        require(_admin != address(0), 'INVALID_ADDRESS');
-        admin = _admin;
-
-        for (uint256 i = 0; i < _minters.length; ++i) {
-            require(_minters[i] != address(0), 'NOT_MINTER');
-            minters[_minters[i]] = true;
-        }
+        string memory name_,
+        string memory symbol_,
+        address owner_
+    ) ERC20(name_, symbol_) {
+        transferOwnership(owner_);
+        _setupRole(DEFAULT_ADMIN_ROLE, owner_);
+        _setupRole(MINTER_ROLE, owner_);
     }
-
-    modifier onlyAdmin() {
-        require(msg.sender == admin, 'ADMIN_ONLY');
-        _;
-    }
-
-    /**
-     * Add a new minter to this contract
-     * @param _minter Minter address to add.
-     */
-    function addMinter(address _minter) public onlyAdmin {
-        require(_minter != address(0), 'INVALID_ADDRESS');
-        minters[_minter] = true;
-    }
-
-    /**
-     * Remove a minter from this contract
-     * @param _minter Minter address to remove.
-     */
-    function removeMinter(address _minter) public onlyAdmin {
-        require(_minter != address(0), 'INVALID_ADDRESS');
-        require(minters[_minter] == true, 'NOT_MINTER');
-
-        delete minters[_minter];
-    }
-
+ 
     function _beforeTokenTransfer(
         address _from,
         address _to,
         uint256 _amount
     ) internal override {
-        if (minters[_from] == true) {
-            _mint(_from, _amount);
-        }
+        require(hasRole(MINTER_ROLE, _from), "NOT_M");
+        _mint(_from, _amount);
     }
 }
