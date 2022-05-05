@@ -13,53 +13,52 @@ contract TokenFactoryFacet is ITokenFactory {
     /**
      * @param _name string Token name.
      * @param _symbol string Token symbol.
-     * @param _to address Address the total supply will be minted to.
+     * @param _baseURI address BaseURI for the tokenURI value of a token
+     * @param _owner address Address of the owner and first minter
      */
     function deployNonFungibleToken(
         string memory _name,
         string memory _symbol,
-        address _to,
-        string memory _baseURI
+        string memory _baseURI,
+        address _owner
     ) external override {
         LibDiamond.enforceIsContractOwner();
 
-        NonFungibleToken t = new NonFungibleToken(_name, _symbol, _to, _baseURI);
+        NonFungibleToken t = new NonFungibleToken(_name, _symbol, _baseURI, _owner);
         emit TokenDeployed(address(t), TokenType.NonFungible);
     }
 
     /**
      * @param _name string Token name.
      * @param _symbol string Token symbol.
-     * @param to address Address the total supply will be minted to.
-     * @param amount uint256 Total supply of this token.
+     * @param _to address Address the total supply will be minted to.
+     * @param _amount uint256 Total supply of this token.
      */
     function deployLimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address to,
-        uint256 amount
+        address _to,
+        uint256 _amount
     ) external override {
         LibDiamond.enforceIsContractOwner();
 
-        LimitedSupplyToken t = new LimitedSupplyToken(_name, _symbol, to, amount);
+        LimitedSupplyToken t = new LimitedSupplyToken(_name, _symbol, _to, _amount);
         emit TokenDeployed(address(t), TokenType.Limited);
     }
 
     /**
      * @param _name string Token name.
      * @param _symbol string Token symbol.
-     * @param _minters address[] List if address that able to mint new tokens
-     * @param _admin address Addres which is allowed to transfer tokens which are minted on the fly.
+     * @param _owner address Addres which is allowed to transfer tokens which are minted on the fly.
      */
     function deployUnlimitedSupplyToken(
         string memory _name,
         string memory _symbol,
-        address[] memory _minters,
-        address _admin
+        address _owner
     ) external override {
         LibDiamond.enforceIsContractOwner();
 
-        UnlimitedSupplyToken t = new UnlimitedSupplyToken(_name, _symbol, _minters, _admin);
+        UnlimitedSupplyToken t = new UnlimitedSupplyToken(_name, _symbol, _owner);
         emit TokenDeployed(address(t), TokenType.Unlimited);
     }
 }
