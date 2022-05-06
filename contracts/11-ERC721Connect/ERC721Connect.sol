@@ -49,7 +49,7 @@ contract ERC721Connect is IERC721Connect, RelayReceiver {
         INonFungibleToken nft = INonFungibleToken(LibERC721ConnectStorage.store().token);
 
         uint256 tokenId = nft.mint(_beneficiary, _tokenUri);
-        
+
         emit ERC721Minted(_beneficiary, tokenId);
     }
 }
