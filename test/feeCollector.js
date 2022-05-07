@@ -32,10 +32,17 @@ describe.only('TimeLockController', function () {
     });
 
     it('Should be able to stake THX and stakes more than 10 thx', async function () {
-        await thxToken.approve(timelockcontroller.address, 1000);
-        await expect(timelockcontroller.deposit(1000, 1)).to.emit(timelockcontroller, 'Staked');
+        await thxToken.approve(timelockcontroller.address, 2000);
+        await expect(timelockcontroller.deposit(2000, 1)).to.emit(timelockcontroller, 'Staked');
     });
     it('Check if users balance is lowered', async function () {
-        await thxToken.balanceOf(admin.getAddress()) == 9000;
+        let test = thxToken.balanceOf(admin.getAddress());
+        test.then(function(result) {
+            if (result == 8000){
+                console.log("yes");
+            } else {
+                console.log("no");
+            }
+         })
     });
 });
