@@ -95,7 +95,7 @@ describe.only('FeeCollector', function() {
 
         await contract.setRewards(addr1.address, [reward]);
 
-        await expect(contract.connect(addr1).withdraw(tokenContract3.address)).to.reverted;
+        await expect(contract.connect(addr1).withdraw(tokenContract3.address)).to.be.reverted;
     });
 
     it('Withdraw single token', async function () {
