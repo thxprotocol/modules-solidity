@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-pragma solidity ^0.8.7;
+pragma solidity ^0.7.4;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -11,9 +11,6 @@ contract StTHX is ERC20 {
     address public immutable admin;
     mapping(address => bool) public minters;
     uint256 private _totalSupply;
-    mapping (address => uint256) public _balances;
-
-
 
     using SafeMath for uint256;
 
