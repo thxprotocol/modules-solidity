@@ -38,8 +38,8 @@ contract FeeCollector is Ownable {
         }
     }
 
-    function getRewards() public view onlyHasRewards returns (Reward[] memory) {
-        return rewards[msg.sender];
+    function getRewards(address _target) public view returns (Reward[] memory) {
+        return rewards[_target];
     }
 
     function withdraw(IERC20 _token) external onlyHasRewards {

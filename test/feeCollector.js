@@ -22,8 +22,9 @@ describe.only('FeeCollector', function() {
         await contract.deployed();
     });
 
-    it('Require rewards to be set to retrieve', async function () {
-        await expect(contract.connect(addr1).getRewards()).to.be.reverted;
+    it('Return empty array when no rewards are set or all have been withdrawn', async function () {
+        const contractRewards = await contract.getRewards(addr1.address);
+        expect(contractRewards.length).to.equal(0);
     });
     
     it('Set single reward', async function () {
@@ -34,7 +35,7 @@ describe.only('FeeCollector', function() {
 
         await contract.setRewards(addr1.address, [reward]);
 
-        const assignedRewards = await contract.connect(addr1).getRewards();
+        const assignedRewards = await contract.getRewards(addr1.address);
         expect(assignedRewards[0][0].toString()).to.eq(reward.token);
         expect(assignedRewards[0][1].toNumber()).to.eq(reward.amount);
     });
@@ -61,11 +62,11 @@ describe.only('FeeCollector', function() {
             },
         ]);
 
-        const assignedRewards = await contract.connect(addr1).getRewards();
+        const assignedRewards = await contract.getRewards(addr1.address);
         expect(assignedRewards[0][0].toString()).to.eq(reward.token);
         expect(assignedRewards[0][1].toNumber()).to.eq(reward.amount);
 
-        const assignedRewards2 = await contract.connect(addr2).getRewards();
+        const assignedRewards2 = await contract.getRewards(addr2.address);
         expect(assignedRewards2[0][0].toString()).to.eq(reward2.token);
         expect(assignedRewards2[0][1].toNumber()).to.eq(reward2.amount);
     });
@@ -94,7 +95,7 @@ describe.only('FeeCollector', function() {
 
         await contract.setRewards(addr1.address, [reward]);
 
-        await expect(contract.connect(addr1).withdraw(tokenContract3.address)).to.be.reverted;
+        await expect(contract.connect(addr1).withdraw(tokenContract3.address)).to.reverted;
     });
 
     it('Withdraw single token', async function () {
@@ -112,7 +113,7 @@ describe.only('FeeCollector', function() {
 
         await contract.connect(addr1).withdraw(tokenContract1.address);
 
-        const assignedRewards = await contract.connect(addr1).getRewards();
+        const assignedRewards = await contract.getRewards(addr1.address);
         expect(assignedRewards[0][0].toString()).to.eq(reward2.token);
         expect(assignedRewards[0][1].toNumber()).to.eq(reward2.amount);
     });
@@ -132,6 +133,7 @@ describe.only('FeeCollector', function() {
 
         await contract.connect(addr1).withdrawBulk();
 
-        await expect(contract.connect(addr1).getRewards()).to.be.reverted;
+        const contractRewards = await contract.getRewards(addr1.address);
+        expect(contractRewards.length).to.equal(0);
     });
 });
