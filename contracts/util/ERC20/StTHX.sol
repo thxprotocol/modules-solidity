@@ -6,12 +6,9 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 
-
 contract StTHX is ERC20 {
     address public immutable admin;
     mapping(address => bool) public minters;
-    uint256 private _totalSupply;
-
     using SafeMath for uint256;
 
     constructor(
