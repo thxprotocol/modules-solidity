@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
-pragma solidity ^0.7.4;
+pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 
@@ -65,42 +64,13 @@ contract StTHX is ERC20 {
         address _to,
         uint256 _amount
     ) internal override {
-        if (minters[_from] == true) {
+        if (minters[_from] == true && _to != address(0)) {
             _mint(_from, _amount);
         }
     }
 
-    function mint(address account, uint256 value) public  {
-
-        _totalSupply = _totalSupply.add(value);
-        _balances[account] = _balances[account].add(value);
-        emit Transfer(address(0), account, value);
-    }
-
 
     function burn(uint256 amount) external payable {
-    _burn(msg.sender, amount);
+        _burn(msg.sender, amount);
     } 
-
-
-    function _burn(address account, uint256 amount) internal onlyAdmin override {
-        // Requires that the message sender has enough tokens to burn
-        //require(balanceOf(msg.sender) >= amount, 'NOT_ENOUGH_BALANCE');
-
-        //check if the amount is not equal to 0 
-        require(amount != 0);
-        // Subtracts amount from callers balance and total supply
-        //balanceOf(msg.sender).sub(amount);
-        //_burn(msg.sender, amount);
-
-        //check if the account address is not a zero address
-        require(account != address(0));
-
-        _totalSupply = _totalSupply.sub(amount);
-        _balances[account] = _balances[account].sub(amount);
-        emit Transfer(account, address(0), amount);
-        
-        // Since you cant actually burn tokens on the blockchain, sending to address 0, which none has the private keys to, removes them from the circulating supply
-    
-    }
 }
