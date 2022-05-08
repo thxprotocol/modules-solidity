@@ -18,7 +18,6 @@ import '../../utils/Access.sol';
 import '../BasePoll/lib/LibBasePollStorage.sol';
 import '../MemberAccess/lib/LibMemberAccessStorage.sol';
 
-
 contract WithdrawFacet is Access, IWithdrawFacet {
     /**
      * @notice Proposes a withdraw poll with the default withdrawPollDuration.
