@@ -10,7 +10,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum ITokenFactory.TokenType",
+        "internalType": "enum ITokenFactoryFacet.TokenType",
         "name": "tokenType",
         "type": "uint8"
       }
@@ -32,12 +32,12 @@
       },
       {
         "internalType": "address",
-        "name": "to",
+        "name": "_to",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -59,14 +59,14 @@
         "type": "string"
       },
       {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "_baseURI",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
       }
     ],
     "name": "deployNonFungibleToken",
@@ -87,13 +87,8 @@
         "type": "string"
       },
       {
-        "internalType": "address[]",
-        "name": "_minters",
-        "type": "address[]"
-      },
-      {
         "internalType": "address",
-        "name": "_admin",
+        "name": "_owner",
         "type": "address"
       }
     ],

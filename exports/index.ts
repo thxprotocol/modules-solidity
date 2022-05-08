@@ -7,37 +7,23 @@ export const networkNames = ['mumbai', 'matic', 'mumbaidev', 'maticdev', 'hardha
 export type TNetworkName = typeof networkNames[number];
 
 export const contractNames = [
-    'TokenFactoryFacet',
-    'AssetPoolRegistry', // Deprecated in 3.1.6
-    'PoolRegistryFacet',
-    'AssetPoolFactory', // Deprecated in 3.1.6
-    'PoolFactoryFacet',
-    'TokenFactory', // Deprecated in 3.1.6
     'LimitedSupplyToken',
     'UnlimitedSupplyToken',
     'NonFungibleToken',
-    'AccessControl', // Deprecated in 3.1.6
+    'TokenFactoryFacet',
+    'PoolRegistryFacet',
+    'PoolFactoryFacet',
     'AccessControlFacet',
-    'MemberAccess', // Deprecated in 3.1.6
     'MemberAccessFacet',
-    'Token', // Deprecated in 3.1.6
     'ERC20Facet',
-    'ERC721Connect', // Deprecated in 3.1.6
     'ERC721Facet',
-    'BasePollProxy', // Deprecated in 3.1.6
     'BasePollProxyFacet',
     'RelayHubFacet',
-    'Withdraw', // Deprecated in 3.1.6
     'WithdrawFacet',
-    'WithdrawPoll', // Deprecated in 3.1.6
     'WithdrawPollFacet',
-    'WithdrawPollProxy', // Deprecated in 3.1.6
     'WithdrawPollProxyFacet',
-    'WithdrawBy', // Deprecated in 3.1.6
     'WithdrawByFacet',
-    'WithdrawByPoll', // Deprecated in 3.1.6
     'WithdrawByPollFacet',
-    'WithdrawByPollProxy', // Deprecated in 3.1.6
     'WithdrawByPollProxyFacet',
     'DiamondCutFacet',
     'DiamondLoupeFacet',
