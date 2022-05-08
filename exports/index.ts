@@ -7,30 +7,41 @@ export const networkNames = ['mumbai', 'matic', 'mumbaidev', 'maticdev', 'hardha
 export type TNetworkName = typeof networkNames[number];
 
 export const contractNames = [
-    'AssetPoolRegistry',
-    'AssetPoolFactory',
-    'TokenFactory',
+    'TokenFactoryFacet',
+    'AssetPoolRegistry', // Deprecated in 3.1.6
+    'PoolRegistryFacet',
+    'AssetPoolFactory', // Deprecated in 3.1.6
+    'PoolFactoryFacet',
+    'TokenFactory', // Deprecated in 3.1.6
     'LimitedSupplyToken',
     'UnlimitedSupplyToken',
     'NonFungibleToken',
-    'AccessControl',
-    'MemberAccess',
-    'Token',
-    'ERC721Connect',
-    'BasePollProxy',
+    'AccessControl', // Deprecated in 3.1.6
+    'AccessControlFacet',
+    'MemberAccess', // Deprecated in 3.1.6
+    'MemberAccessFacet',
+    'Token', // Deprecated in 3.1.6
+    'ERC20Facet',
+    'ERC721Connect', // Deprecated in 3.1.6
+    'ERC721Facet',
+    'BasePollProxy', // Deprecated in 3.1.6
+    'BasePollProxyFacet',
     'RelayHubFacet',
-    'Withdraw',
-    'WithdrawPoll',
-    'WithdrawPollProxy',
-    'WithdrawBy',
-    'WithdrawByPoll',
-    'WithdrawByPollProxy',
+    'Withdraw', // Deprecated in 3.1.6
+    'WithdrawFacet',
+    'WithdrawPoll', // Deprecated in 3.1.6
+    'WithdrawPollFacet',
+    'WithdrawPollProxy', // Deprecated in 3.1.6
+    'WithdrawPollProxyFacet',
+    'WithdrawBy', // Deprecated in 3.1.6
+    'WithdrawByFacet',
+    'WithdrawByPoll', // Deprecated in 3.1.6
+    'WithdrawByPollFacet',
+    'WithdrawByPollProxy', // Deprecated in 3.1.6
+    'WithdrawByPollProxyFacet',
     'DiamondCutFacet',
     'DiamondLoupeFacet',
     'OwnershipFacet',
-    'AssetPoolFactoryFacet',
-    'TokenFactoryFacet',
-    'PoolRegistryFacet',
 ] as const;
 export type ContractName = typeof contractNames[number];
 
@@ -48,17 +59,17 @@ export interface ExportJsonFile {
 export type DiamondVariant = 'defaultPool' | 'nftPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
 const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     defaultPool: [
-        'AccessControl',
-        'MemberAccess',
-        'Token',
-        'BasePollProxy',
+        'AccessControlFacet',
+        'MemberAccessFacet',
+        'ERC20Facet',
         'RelayHubFacet',
-        'WithdrawBy',
-        'WithdrawByPoll',
-        'WithdrawByPollProxy',
+        'BasePollProxyFacet',
+        'WithdrawByFacet',
+        'WithdrawByPollFacet',
+        'WithdrawByPollProxyFacet',
     ],
-    nftPool: ['AccessControl', 'MemberAccess', 'ERC721Connect', 'RelayHubFacet'],
-    assetPoolFactory: ['AssetPoolFactoryFacet'],
+    nftPool: ['AccessControlFacet', 'MemberAccessFacet', 'ERC721Facet', 'RelayHubFacet'],
+    assetPoolFactory: ['PoolFactoryFacet'],
     tokenFactory: ['TokenFactoryFacet'],
     assetPoolRegistry: ['PoolRegistryFacet'],
 };

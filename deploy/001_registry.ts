@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer, collector } = await getNamedAccounts();
 
-    await diamond.deploy('AssetPoolRegistry', {
+    await diamond.deploy('PoolRegistry', {
         from: deployer,
         log: true,
         facets: ['PoolRegistryFacet'],

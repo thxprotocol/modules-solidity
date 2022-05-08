@@ -7,10 +7,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts();
 
-    await diamond.deploy('AssetPoolFactory', {
+    await diamond.deploy('PoolFactory', {
         from: deployer,
         log: true,
-        facets: ['AssetPoolFactoryFacet'],
+        facets: ['PoolFactoryFacet'],
         execute: {
             methodName: 'setDefaultController',
             args: [deployer],

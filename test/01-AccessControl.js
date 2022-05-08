@@ -9,7 +9,7 @@ const {
     createPoolRegistry,
 } = require('./utils.js');
 
-describe('01 Access Control', function () {
+describe('AccessControlFacet', function () {
     let owner;
     let voter;
     let accessControl;
@@ -19,9 +19,9 @@ describe('01 Access Control', function () {
         const registry = await createPoolRegistry(await collector.getAddress(), 0);
         const factory = await diamond();
         const diamondCuts = await getDiamondCuts([
-            'MemberAccess',
+            'MemberAccessFacet',
             'MockSetup',
-            'Token',
+            'ERC20Facet',
             'DiamondCutFacet',
             'DiamondLoupeFacet',
             'OwnershipFacet',
