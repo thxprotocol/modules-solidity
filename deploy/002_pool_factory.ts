@@ -23,4 +23,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.id = '002_asset_pool_factory';
-func.tags = ['AssetPoolFactory'];
+func.tags = ['PoolFactory'];

@@ -1,5 +1,9 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
+import { BigNumber } from 'ethers';
+
+const multiplier = BigNumber.from('10').pow(15);
+const twoHalfPercent = BigNumber.from('25').mul(multiplier);
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
@@ -13,7 +17,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         facets: ['PoolRegistryFacet'],
         execute: {
             methodName: 'initialize',
-            args: [collector, 0],
+            args: [collector, twoHalfPercent],
         },
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
@@ -23,4 +27,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.id = '001_registry';
-func.tags = ['AssetPoolRegistry'];
+func.tags = ['PoolRegistry'];

@@ -7,9 +7,15 @@ export const networkNames = ['mumbai', 'matic', 'mumbaidev', 'maticdev', 'hardha
 export type TNetworkName = typeof networkNames[number];
 
 export const contractNames = [
+    // Tokens
     'LimitedSupplyToken',
     'UnlimitedSupplyToken',
     'NonFungibleToken',
+    // Factories
+    'TokenFactory',
+    'PoolRegistry',
+    'PoolFactory',
+    // Facets
     'TokenFactoryFacet',
     'PoolRegistryFacet',
     'PoolFactoryFacet',
@@ -42,7 +48,7 @@ export interface ExportJsonFile {
     contracts: { [key: string]: ContractConfig };
 }
 
-export type DiamondVariant = 'defaultPool' | 'nftPool' | 'assetPoolFactory' | 'tokenFactory' | 'assetPoolRegistry';
+export type DiamondVariant = 'defaultPool' | 'nftPool' | 'poolFactory' | 'tokenFactory' | 'poolRegistry';
 const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
     defaultPool: [
         'AccessControlFacet',
@@ -55,9 +61,9 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
         'WithdrawByPollProxyFacet',
     ],
     nftPool: ['AccessControlFacet', 'MemberAccessFacet', 'ERC721Facet', 'RelayHubFacet'],
-    assetPoolFactory: ['PoolFactoryFacet'],
+    poolRegistry: ['PoolRegistryFacet'],
+    poolFactory: ['PoolFactoryFacet'],
     tokenFactory: ['TokenFactoryFacet'],
-    assetPoolRegistry: ['PoolRegistryFacet'],
 };
 
 export const diamondVariants = Object.keys(diamondVariantsConfig) as DiamondVariant[];
