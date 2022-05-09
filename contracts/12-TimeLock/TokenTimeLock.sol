@@ -28,6 +28,11 @@ contract TokenTimeLock{
     stTHXtoken = IERC20(_stTHXtoken);
   }
 
+  modifier onlyAdmin() {
+    require(msg.sender == admin, "ADMIN_ONLY");
+    _;
+  }
+
   function deposit (uint256 amount, uint _increase) external payable {
     require(amount >= 10, "Cannot stake less than 10");
     //update total staked
@@ -46,16 +51,9 @@ contract TokenTimeLock{
     emit Staked(msg.sender, amount);
   }
 
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "ADMIN_ONLY");
-        _;
-    }
-
-
   function getAddress() public view returns (address[] memory){
-      return addresses;
+    return addresses;
   }
-  
 
   function withdraw() public{
     //check if that the sender has deposited in this contract in the mapping and the balance >0

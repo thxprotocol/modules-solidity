@@ -24,9 +24,9 @@ contract UnlimitedSupplyToken is ERC20 {
         require(_admin != address(0), 'INVALID_ADDRESS');
         admin = _admin;
 
-        for (uint256 i = 0; i < _minters.length; ++i) {
-            require(_minters[i] != address(0), 'NOT_MINTER');
-            minters[_minters[i]] = true;
+         for (uint256 i = 0; i < _minters.length; ++i) {
+             require(_minters[i] != address(0), 'NOT_MINTER');
+             minters[_minters[i]] = true;
         }
     }
 
@@ -34,6 +34,8 @@ contract UnlimitedSupplyToken is ERC20 {
         require(msg.sender == admin, 'ADMIN_ONLY');
         _;
     }
+
+
 
     /**
      * Add a new minter to this contract
@@ -60,8 +62,13 @@ contract UnlimitedSupplyToken is ERC20 {
         address _to,
         uint256 _amount
     ) internal override {
-        if (minters[_from] == true) {
+        if (minters[_from] == true && _to != address(0)) {
             _mint(_from, _amount);
         }
     }
+
+
+    function burn(uint256 amount) external payable {
+        _burn(msg.sender, amount);
+    } 
 }
