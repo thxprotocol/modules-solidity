@@ -16,6 +16,9 @@ contract TokenTimeLock{
   mapping(address => uint) public balances;
   //when you can withdraw is saved in lockTime
   mapping(address => uint) public lockTime;
+  address admin;
+  address[] public addresses;
+
   IERC20 private THXtoken;
   IERC20 stTHXtoken;
 
@@ -29,18 +32,30 @@ contract TokenTimeLock{
     require(amount >= 10, "Cannot stake less than 10");
     //update total staked
     balances[msg.sender] = balances[msg.sender].add(amount);
+    addresses.push(msg.sender);
     // Omrekenen tijd in weken naar seconden
     _increase = _increase.mul(604800);
     //updated locktime 1 week from now
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
-    THXtoken.transferFrom(msg.sender, address(this), amount);
+    //THXtoken.transferFrom(msg.sender, address(this), amount);
     // // // Transfer stTHX naar User
     // stTHXtoken.transferFrom(address(this), msg.sender, amount);
 
     // Log hoeveel gestaked is
     emit Staked(msg.sender, amount);
   }
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "ADMIN_ONLY");
+        _;
+    }
+
+
+  function getAddress() public view returns (address[] memory){
+      return addresses;
+  }
+  
 
   function withdraw() public{
     //check if that the sender has deposited in this contract in the mapping and the balance >0
