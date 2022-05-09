@@ -26,6 +26,7 @@ contract FeeCollector is Ownable {
     }
 
     function setRewards(address _target, Reward[] memory _tokens) public onlyOwner {
+        // As a memory array is not assignable to a storage array, every entry has to be added seperately
         delete rewards[_target];
         for (uint i=0; i < _tokens.length; i++) {
             rewards[_target].push(Reward(_tokens[i].token, _tokens[i].amount));
@@ -45,6 +46,7 @@ contract FeeCollector is Ownable {
     function withdraw(IERC20 _token) external onlyHasRewards {
         Reward[] memory temp = rewards[msg.sender];
 
+        // Withdraw all corresponding rewards and delete them from the temp array
         for (uint i=0; i < temp.length; i++) {
             if (temp[i].token == _token) {
                 withdrawToken(i);
@@ -52,8 +54,9 @@ contract FeeCollector is Ownable {
             }
         }
 
+        // As deleting an entry from the array does not actually remove the entry (only clears the object), 
+        // we have have to re-add all remaining rewards back to the storage array
         delete rewards[msg.sender];
-
         for (uint i=0; i < temp.length; i++) {
             if (temp[i].amount != 0) {
                 rewards[msg.sender].push(Reward(temp[i].token, temp[i].amount));
