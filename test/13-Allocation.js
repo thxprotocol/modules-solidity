@@ -27,4 +27,20 @@ describe.only('alloctest', function () {
             }
         })
     });
+    it('Should delete the allocation', async function () {
+        await expect(alloctest.payout("0x71C7656EC7ab88b098defB751B7401B5f6d8976F"));
+    });
+
+    it('Check if delete worked', async function () {
+        let test = alloctest.showAllocation("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
+        console.log("Running delete");
+        test.then(function(result) {
+            if (result == 0){
+                console.log("Delete functie werkt");
+            } else {
+                console.log("Delete functie werkt niet");
+            }
+        })
+    });
+
 });
