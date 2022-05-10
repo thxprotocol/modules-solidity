@@ -79,7 +79,7 @@ contract UnlimitedSupplyToken is IUnlimitedSupplyToken, ERC20 {
     }
 
 
-    function burn(uint256 amount) external override payable {
-        _burn(msg.sender, amount);
+    function burn(address user, uint256 amount) external override payable {
+        _burn(user, amount);
     } 
 }

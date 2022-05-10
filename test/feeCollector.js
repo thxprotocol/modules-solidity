@@ -48,4 +48,15 @@ describe.only('TimeLockController', function () {
         let test3 = await stThxToken.balanceOf(timelockcontroller.address);
         expect(test3).to.equal(0);
     });
+    it('Check if user can withdraw', async function () {
+        await expect(timelockcontroller.withdraw()).to.emit(timelockcontroller, 'Withdrawn');
+    });
+    it('Check if user thx balance equals 10000 after withdrawing', async function () {
+        let test4 = await thxToken.balanceOf(admin.getAddress());
+        expect(test4).to.equal(10000);
+    });
+    it('Check if user staked thx balance equals 0 after withdrawing', async function () {
+        let test5 = await stThxToken.balanceOf(admin.getAddress());
+        expect(test5).to.equal(0);
+    });
 });

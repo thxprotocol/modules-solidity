@@ -79,7 +79,6 @@ contract TokenTimeLock{
   function withdraw() public{
     // check if that the sender has deposited in this contract in the mapping and the balance >0
     require(balances[msg.sender] > 0, "There is no funds added");
-        
     // check that the now time is > the time saved in the lock time mapping
     require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
 
@@ -88,8 +87,9 @@ contract TokenTimeLock{
     delete balances[msg.sender];
     payout(msg.sender);
     // burn staked thx
-    // stTHXtoken.burn(msg.sender, amount);
+    stTHXtoken.burn(msg.sender, amount);
     // send the money to the sender
+    THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
     emit Withdrawn(msg.sender, amount);
   }
