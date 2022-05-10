@@ -14,7 +14,8 @@ describe.only('alloctest', function () {
     });
 
     it('Should be allocate coin and amount and also check if its an address and integer', async function () {
-        await expect(alloctest.allocate("0x71C7656EC7ab88b098defB751B7401B5f6d8976F", 1000));
+        await expect(alloctest.allocate("0x71C7656EC7ab88b098defB751B7401B5f6d8976F", 1000)).to.emit(alloctest, 'Allocated');
+
     });
     it('Show the availabe amount per', async function () {
         let test = alloctest.showAllocation("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
@@ -28,7 +29,7 @@ describe.only('alloctest', function () {
         })
     });
     it('Should delete the allocation', async function () {
-        await expect(alloctest.payout("0x71C7656EC7ab88b098defB751B7401B5f6d8976F"));
+        alloctest.payout("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
     });
 
     it('Check if delete worked', async function () {

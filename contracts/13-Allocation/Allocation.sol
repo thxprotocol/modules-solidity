@@ -12,6 +12,7 @@ contract allocation {
   using SafeMath for uint;
   function allocate(address _tokenAddress, uint allocating) public {
     allocations[_tokenAddress][msg.sender] = allocations[_tokenAddress][msg.sender].add(allocating);
+    emit Allocated(_tokenAddress, allocating);
   }
 
   //delete test for remix
@@ -23,4 +24,7 @@ contract allocation {
   function showAllocation(address _tokenAddress) public view returns (uint256) {
     return allocations[_tokenAddress][msg.sender];
   }
+
+  event Allocated(address _tokenAddress, uint256 _allocating);
+
 }
