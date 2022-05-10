@@ -36,13 +36,7 @@ describe.only('TimeLockController', function () {
         await expect(timelockcontroller.deposit(2000, 1)).to.emit(timelockcontroller, 'Staked');
     });
     it('Check if users balance is lowered', async function () {
-        let test = thxToken.balanceOf(admin.getAddress());
-        test.then(function(result) {
-            if (result == 8000){
-                console.log("yes");
-            } else {
-                console.log("no");
-            }
-         })
+        let test = await thxToken.balanceOf(admin.getAddress());
+        expect(test).to.equal(8000);
     });
 });

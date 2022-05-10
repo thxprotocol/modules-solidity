@@ -43,7 +43,7 @@ contract TokenTimeLock{
     //updated locktime 1 week from now
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
-    //THXtoken.transferFrom(msg.sender, address(this), amount);
+    THXtoken.transferFrom(msg.sender, address(this), amount);
     // // // Transfer stTHX naar User
     // stTHXtoken.transferFrom(address(this), msg.sender, amount);
 
