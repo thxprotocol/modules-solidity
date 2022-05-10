@@ -1,10 +1,11 @@
 const { expect } = require('chai');
 const e = require('express');
+const { constants } = require('ethers');
 const { ethers } = require('hardhat');
 const { limitedSupplyTokenContract, unlimitedSupplyTokenContract, createTokenFactory } = require('./utils');
 
 describe.only('TimeLockController', function () {
-    let owner, thxToken, timelockcontroller;
+    let owner, thxToken, stThxToken, timelockcontroller;
 
     before(async function () {
         [admin, user] = await ethers.getSigners();
@@ -14,7 +15,7 @@ describe.only('TimeLockController', function () {
             factory.deployLimitedSupplyToken('THX Token', 'THX', await admin.getAddress(), 10000),
         );
 
-        const stThxToken = await unlimitedSupplyTokenContract(
+        stThxToken = await unlimitedSupplyTokenContract(
             factory.deployUnlimitedSupplyToken(
                 'Stake THX Token',
                 'stTHX',
@@ -27,16 +28,24 @@ describe.only('TimeLockController', function () {
 
         timelockcontroller = await tlcFactory.deploy(stThxToken.address, thxToken.address);
         await timelockcontroller.deployed();
-
-        await stThxToken.addMinter(stThxToken.address);
+    
+        await stThxToken.addMinter(timelockcontroller.address);
     });
 
     it('Should be able to stake THX and stakes more than 10 thx', async function () {
-        await thxToken.approve(timelockcontroller.address, 2000);
+        await thxToken.approve(timelockcontroller.address, constants.MaxUint256);
         await expect(timelockcontroller.deposit(2000, 1)).to.emit(timelockcontroller, 'Staked');
     });
-    it('Check if users balance is lowered', async function () {
+    it('Check if users balance is lowered after staking', async function () {
         let test = await thxToken.balanceOf(admin.getAddress());
         expect(test).to.equal(8000);
+    });
+    it('Check if user receives staked thx', async function () {
+        let test2 = await stThxToken.balanceOf(admin.getAddress());
+        expect(test2).to.equal(2000);
+    });
+    it('Check if contract staked thx balance equals 0', async function () {
+        let test3 = await stThxToken.balanceOf(timelockcontroller.address);
+        expect(test3).to.equal(0);
     });
 });

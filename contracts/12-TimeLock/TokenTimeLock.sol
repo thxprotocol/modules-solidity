@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "hardhat/console.sol";
+import "../util/ERC20/IUnlimitedSupplyToken.sol";
 
 // one can deposit into this contract but you must wait 1 week before you can withdraw your funds
 
@@ -23,12 +24,11 @@ contract TokenTimeLock{
   address[] public addresses;
 
   IERC20 private THXtoken;
-  IERC20 stTHXtoken;
-
+  IUnlimitedSupplyToken stTHXtoken;
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
-    stTHXtoken = IERC20(_stTHXtoken);
+    stTHXtoken = IUnlimitedSupplyToken(_stTHXtoken);
   }
 
   modifier onlyAdmin() {
@@ -47,8 +47,10 @@ contract TokenTimeLock{
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
     THXtoken.transferFrom(msg.sender, address(this), amount);
+    
     // Transfer stTHX naar User
-    // stTHXtoken.transferFrom(address(this), msg.sender, amount);
+    stTHXtoken.approve(address(this), amount);
+    stTHXtoken.transferFrom(address(this), msg.sender, amount);
 
     // Log hoeveel gestaked is
     emit Staked(msg.sender, amount);
