@@ -25,6 +25,12 @@ contract TokenTimeLock{
 
   IERC20 private THXtoken;
   IUnlimitedSupplyToken stTHXtoken;
+  IERC20 private RewardToken1;
+  IERC20 private RewardToken2;
+  IERC20 private RewardToken3;
+  IERC20 private RewardToken4;
+  
+
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
@@ -34,6 +40,13 @@ contract TokenTimeLock{
   modifier onlyAdmin() {
     require(msg.sender == admin, "ADMIN_ONLY");
     _;
+  }
+
+  function addexampleTokens(address _RewardToken1, address _RewardToken2, address _RewardToken3, address _RewardToken4) public{
+    RewardToken1 = IERC20(_RewardToken1);
+    RewardToken2 = IERC20(_RewardToken2);
+    RewardToken3 = IERC20(_RewardToken3);
+    RewardToken4 = IERC20(_RewardToken4);
   }
 
   function deposit (uint256 amount, uint _increase) external payable {
