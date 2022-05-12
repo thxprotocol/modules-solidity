@@ -62,13 +62,8 @@ contract TokenTimeLock{
     THXtoken.transferFrom(msg.sender, address(this), amount);
     
     // Transfer stTHX naar User
-<<<<<<< HEAD
-    stTHXtoken.approve(msg.sender, amount);
-    stTHXtoken.transfer(msg.sender, amount);
-=======
     stTHXtoken.approve(address(this), amount);
     stTHXtoken.transferFrom(address(this), msg.sender, amount);
->>>>>>> 9eabc13d71bbb15cf6fd7976d45645c17ec05f7c
 
     // Log hoeveel gestaked is
     emit Staked(msg.sender, amount);

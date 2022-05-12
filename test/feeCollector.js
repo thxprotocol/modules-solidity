@@ -4,7 +4,7 @@ const { constants } = require('ethers');
 const { ethers } = require('hardhat');
 const { limitedSupplyTokenContract, unlimitedSupplyTokenContract, createTokenFactory } = require('./utils');
 
-describe.only('TimeLockController', function () {
+describe('TimeLockController', function () {
     let owner, thxToken, stThxToken, timelockcontroller;
 
     before(async function () {
