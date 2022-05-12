@@ -10,8 +10,11 @@ pragma solidity ^0.7.4;
 /******************************************************************************/
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import './IUnlimitedSupplyToken.sol';
 
-contract UnlimitedSupplyToken is ERC20 {
+import 'hardhat/console.sol';
+
+contract UnlimitedSupplyToken is IUnlimitedSupplyToken, ERC20 {
     address public immutable admin;
     mapping(address => bool) public minters;
 
@@ -41,7 +44,15 @@ contract UnlimitedSupplyToken is ERC20 {
      * Add a new minter to this contract
      * @param _minter Minter address to add.
      */
-    function addMinter(address _minter) public onlyAdmin {
+    function isMinter(address _minter) external override returns (bool) {
+        return minters[_minter];
+    }
+
+    /**
+     * Add a new minter to this contract
+     * @param _minter Minter address to add.
+     */
+    function addMinter(address _minter) external override onlyAdmin {
         require(_minter != address(0), 'INVALID_ADDRESS');
         minters[_minter] = true;
     }
@@ -50,7 +61,7 @@ contract UnlimitedSupplyToken is ERC20 {
      * Remove a minter from this contract
      * @param _minter Minter address to remove.
      */
-    function removeMinter(address _minter) public onlyAdmin {
+    function removeMinter(address _minter) external override onlyAdmin {
         require(_minter != address(0), 'INVALID_ADDRESS');
         require(minters[_minter] == true, 'NOT_MINTER');
 
@@ -68,7 +79,7 @@ contract UnlimitedSupplyToken is ERC20 {
     }
 
 
-    function burn(uint256 amount) external payable {
-        _burn(msg.sender, amount);
+    function burn(address user, uint256 amount) external override payable {
+        _burn(user, amount);
     } 
 }

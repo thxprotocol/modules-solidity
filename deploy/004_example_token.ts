@@ -16,6 +16,35 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         waitConfirmations: network.live ? 3 : 0,
     });
 
+    await deploy('RewardToken1', {
+        from: deployer,
+        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('100000000', 'ether')],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
+    await deploy('RewardToken2', {
+        from: deployer,
+        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('100000000', 'ether')],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
+    await deploy('RewardToken3', {
+        from: deployer,
+        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('100000000', 'ether')],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
+    await deploy('RewardToken4', {
+        from: deployer,
+        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('100000000', 'ether')],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
+
     await deploy('UnlimitedSupplyToken', {
         from: deployer,
         args: ['THX Unlimited Supply Token', 'UNL-THX', [deployer], deployer],

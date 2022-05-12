@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "hardhat/console.sol";
+import "../util/ERC20/IUnlimitedSupplyToken.sol";
 
 // one can deposit into this contract but you must wait 1 week before you can withdraw your funds
 
@@ -23,17 +24,29 @@ contract TokenTimeLock{
   address[] public addresses;
 
   IERC20 private THXtoken;
-  IERC20 stTHXtoken;
+  IUnlimitedSupplyToken stTHXtoken;
+  IERC20 private RewardToken1;
+  IERC20 private RewardToken2;
+  IERC20 private RewardToken3;
+  IERC20 private RewardToken4;
+  
 
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
-    stTHXtoken = IERC20(_stTHXtoken);
+    stTHXtoken = IUnlimitedSupplyToken(_stTHXtoken);
   }
 
   modifier onlyAdmin() {
     require(msg.sender == admin, "ADMIN_ONLY");
     _;
+  }
+
+  function addexampleTokens(address _RewardToken1, address _RewardToken2, address _RewardToken3, address _RewardToken4) public{
+    RewardToken1 = IERC20(_RewardToken1);
+    RewardToken2 = IERC20(_RewardToken2);
+    RewardToken3 = IERC20(_RewardToken3);
+    RewardToken4 = IERC20(_RewardToken4);
   }
 
   function deposit (uint256 amount, uint _increase) external payable {
@@ -47,9 +60,15 @@ contract TokenTimeLock{
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
     THXtoken.transferFrom(msg.sender, address(this), amount);
+    
     // Transfer stTHX naar User
+<<<<<<< HEAD
     stTHXtoken.approve(msg.sender, amount);
     stTHXtoken.transfer(msg.sender, amount);
+=======
+    stTHXtoken.approve(address(this), amount);
+    stTHXtoken.transferFrom(address(this), msg.sender, amount);
+>>>>>>> 9eabc13d71bbb15cf6fd7976d45645c17ec05f7c
 
     // Log hoeveel gestaked is
     emit Staked(msg.sender, amount);
@@ -78,7 +97,6 @@ contract TokenTimeLock{
   function withdraw() public{
     // check if that the sender has deposited in this contract in the mapping and the balance >0
     require(balances[msg.sender] > 0, "There is no funds added");
-        
     // check that the now time is > the time saved in the lock time mapping
     require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
 
@@ -87,8 +105,9 @@ contract TokenTimeLock{
     delete balances[msg.sender];
     payout(msg.sender);
     // burn staked thx
-    // stTHXtoken.burn(msg.sender, amount);
+    stTHXtoken.burn(msg.sender, amount);
     // send the money to the sender
+    THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
     emit Withdrawn(msg.sender, amount);
   }
