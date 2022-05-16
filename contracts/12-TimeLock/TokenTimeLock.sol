@@ -29,12 +29,11 @@ contract TokenTimeLock{
   IERC20 private RewardToken2;
   IERC20 private RewardToken3;
   IERC20 private RewardToken4;
-  
-
 
   constructor (address _stTHXtoken, address _THXtoken ) public {
     THXtoken = IERC20(_THXtoken);
     stTHXtoken = IUnlimitedSupplyToken(_stTHXtoken);
+    admin = msg.sender;
   }
 
   modifier onlyAdmin() {
@@ -49,7 +48,7 @@ contract TokenTimeLock{
     RewardToken4 = IERC20(_RewardToken4);
   }
 
-  function deposit (uint256 amount, uint _increase) external payable {
+  function deposit(uint256 amount, uint _increase) external payable {
     require(amount >= 10, "Cannot stake less than 10");
     // update total staked
     balances[msg.sender] = balances[msg.sender].add(amount);
@@ -60,7 +59,6 @@ contract TokenTimeLock{
     lockTime[msg.sender] = block.timestamp.add(_increase);
     // Transfer THX naar contract voor staken
     THXtoken.transferFrom(msg.sender, address(this), amount);
-    
     // Transfer stTHX naar User
     stTHXtoken.approve(address(this), amount);
     stTHXtoken.transferFrom(address(this), msg.sender, amount);
@@ -69,12 +67,16 @@ contract TokenTimeLock{
     emit Staked(msg.sender, amount);
   }
 
+  function amountStaked() public view returns(uint){
+    return balances[msg.sender];
+  }
+
   function getAddress() public view returns (address[] memory){
     return addresses;
   }
 
-  // Allocating per user the coin and the amount it has    
-  function allocate (address _tokenAddress, uint allocating) public {
+  // Allocating per user the coin and the amount it has
+  function allocate(address _tokenAddress, uint allocating) public {
     allocations[_tokenAddress][msg.sender] = allocations[_tokenAddress][msg.sender].add(allocating);
     emit Allocated(_tokenAddress, allocating);
   }
@@ -98,7 +100,6 @@ contract TokenTimeLock{
     // update balance
     uint amount = balances[msg.sender];
     delete balances[msg.sender];
-    payout(msg.sender);
     // burn staked thx
     stTHXtoken.burn(msg.sender, amount);
     // send the money to the sender
