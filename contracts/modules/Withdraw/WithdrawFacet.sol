@@ -79,7 +79,7 @@ contract WithdrawFacet is Access, IWithdrawFacet {
         uint256 _duration,
         address _beneficiary,
         uint256 _unlockDate
-    ) internal returns (uint256) {
+    ) internal {
         LibBasePollStorage.BaseStorage storage bst = LibBasePollStorage.baseStorage();
         bst.pollCounter = bst.pollCounter + 1;
 

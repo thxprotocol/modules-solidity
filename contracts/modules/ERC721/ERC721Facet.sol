@@ -12,20 +12,19 @@ import 'diamond-2/contracts/libraries/LibDiamond.sol';
 import './interfaces/IERC721Facet.sol';
 import './lib/LibERC721FacetStorage.sol';
 import '../../utils/ERC721/INonFungibleToken.sol';
-import '../../utils/RelayReceiver.sol';
+import '../../utils/Access.sol';
 
-contract ERC721Facet is IERC721Facet, RelayReceiver {
+contract ERC721Facet is IERC721Facet, Access {
     using SafeMath for uint256;
 
     /**
      * @param _token Address of the ERC721 contract to connect to this pool.
      * @dev Can only be set once.
      */
-    function setERC721(address _token) external override {
+    function setERC721(address _token) external override onlyOwner {
         require(LibERC721ConnectStorage.store().token == INonFungibleToken(0), 'INIT');
         require(_token != address(0), 'ZERO');
 
-        LibDiamond.enforceIsContractOwner();
         LibERC721ConnectStorage.store().token = INonFungibleToken(_token);
 
         emit ERC721Updated(address(0), _token);
@@ -40,10 +39,9 @@ contract ERC721Facet is IERC721Facet, RelayReceiver {
      * @param _beneficiary Address of recipient for this token
      * @param _tokenUri URI of the token
      */
-    function mintFor(address _beneficiary, string memory _tokenUri) external override {
+    function mintFor(address _beneficiary, string memory _tokenUri) external override onlyOwner {
         require(LibERC721ConnectStorage.store().token != INonFungibleToken(0), 'NO_TOKEN');
 
-        LibDiamond.enforceIsContractOwner();
         INonFungibleToken nft = INonFungibleToken(LibERC721ConnectStorage.store().token);
 
         uint256 tokenId = nft.mint(_beneficiary, _tokenUri);

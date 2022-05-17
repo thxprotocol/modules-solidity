@@ -40,6 +40,13 @@ describe('ERC721Facet', function () {
         await expect(erc721.connect(owner).grantRole(role, nftPool.address)).to.emit(erc721, 'RoleGranted');
     });
 
+    it('can NOT mint erc721 if not owner', async () => {
+        const uri = '1234567890.json';
+        await expect(nftPool.connect(collector).mintFor(await collector.getAddress(), uri)).to.revertedWith(
+            'NOT_OWNER',
+        );
+    });
+
     it('can mint erc721 from the pool', async () => {
         const uri = '1234567890.json';
         await expect(nftPool.mintFor(await collector.getAddress(), uri)).to.emit(nftPool, 'ERC721Minted');
