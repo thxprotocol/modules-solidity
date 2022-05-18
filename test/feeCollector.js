@@ -98,7 +98,7 @@ describe.only('FeeCollector', function() {
         await expect(contract.connect(addr1).withdraw(tokenContract3.address)).to.be.reverted;
     });
 
-    it('Withdraw single token', async function () {
+    it('Withdrawing a single token should update the rewards storage', async function () {
         const reward = {
             token: tokenContract1.address,
             amount: 5,
@@ -118,7 +118,7 @@ describe.only('FeeCollector', function() {
         expect(assignedRewards[0][1].toNumber()).to.eq(reward2.amount);
     });
 
-    it('Withdraw multiple tokens', async function () {
+    it('Withdrawing multiple tokens should update the rewards storage', async function () {
         const reward = {
             token: tokenContract1.address,
             amount: 5,
@@ -136,4 +136,44 @@ describe.only('FeeCollector', function() {
         const contractRewards = await contract.getRewards(addr1.address);
         expect(contractRewards.length).to.equal(0);
     });
+
+    it('Withdrawing a single token should transfer the reward', async function () {
+        const initialFeeCollectorBalanceToken1 = await tokenContract1.balanceOf(contract.address);
+
+        const reward = {
+            token: tokenContract1.address,
+            amount: 5,
+        }
+
+        await contract.setRewards(addr1.address, [reward]);
+        await contract.connect(addr1).withdraw(tokenContract1.address);
+
+        expect(await tokenContract1.balanceOf(addr1.address)).to.equal(reward.amount);
+        expect(await tokenContract1.balanceOf(contract.address)).to.equal(initialFeeCollectorBalanceToken1 - reward.amount);
+    });
+
+    it('Withdrawing multiple tokens should transfer the rewards', async function () {
+        const initialFeeCollectorBalanceToken1 = await tokenContract1.balanceOf(contract.address);
+        const initialFeeCollectorBalanceToken2 = await tokenContract2.balanceOf(contract.address);
+
+        const reward = {
+            token: tokenContract1.address,
+            amount: 5,
+        }
+
+        const reward2 = {
+            token: tokenContract2.address,
+            amount: 27,
+        }
+
+        await contract.setRewards(addr1.address, [reward, reward2]);
+        await contract.connect(addr1).withdrawBulk();
+
+        expect(await tokenContract1.balanceOf(addr1.address)).to.equal(reward.amount);
+        expect(await tokenContract1.balanceOf(contract.address)).to.equal(initialFeeCollectorBalanceToken1 - reward.amount);
+
+        expect(await tokenContract2.balanceOf(addr1.address)).to.equal(reward2.amount);
+        expect(await tokenContract2.balanceOf(contract.address)).to.equal(initialFeeCollectorBalanceToken2 - reward2.amount);
+    });
+
 });
