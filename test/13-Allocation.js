@@ -3,7 +3,7 @@ const e = require('express');
 const { ethers } = require('hardhat');
 const { isCallTrace } = require('hardhat/internal/hardhat-network/stack-traces/message-trace');
 
-describe.only('alloctest', function () {
+describe('alloctest', function () {
 
     before(async function() {
         [user, user2] = await ethers.getSigners();

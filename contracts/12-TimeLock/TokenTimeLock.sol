@@ -84,14 +84,26 @@ contract TokenTimeLock {
     address _userAddress,
     address _tokenAddress,
     uint256 allocating
-  ) public onlyAdmin {
+  ) public {
     allocations[_tokenAddress][_userAddress] = allocations[_tokenAddress][_userAddress].add(allocating);
     emit Allocated(_tokenAddress, allocating);
   }
 
   // delete test for remix
-  function payout(address _tokenAddress) public {
-    delete allocations[_tokenAddress][msg.sender];
+  function payout(address _tokenAddress1, address _tokenAddress2, address _tokenAddress3, address _tokenAddress4) private {
+    require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
+    RewardToken1.approve(address(this), allocations[_tokenAddress1][msg.sender]);
+    RewardToken2.approve(address(this), allocations[_tokenAddress1][msg.sender]);
+    RewardToken3.approve(address(this), allocations[_tokenAddress1][msg.sender]);
+    RewardToken4.approve(address(this), allocations[_tokenAddress1][msg.sender]);
+    RewardToken1.transferFrom(address(this), msg.sender, allocations[_tokenAddress1][msg.sender]);
+    RewardToken2.transferFrom(address(this), msg.sender, allocations[_tokenAddress2][msg.sender]);
+    RewardToken3.transferFrom(address(this), msg.sender, allocations[_tokenAddress3][msg.sender]);
+    RewardToken4.transferFrom(address(this), msg.sender, allocations[_tokenAddress4][msg.sender]);
+    delete allocations[_tokenAddress1][msg.sender];
+    delete allocations[_tokenAddress2][msg.sender];
+    delete allocations[_tokenAddress3][msg.sender];
+    delete allocations[_tokenAddress4][msg.sender];
   }
 
     // show test voor remix
@@ -99,7 +111,7 @@ contract TokenTimeLock {
     return allocations[_tokenAddress][msg.sender];
   }
 
-  function withdraw(address _tokenAddress) public {
+  function withdraw() public {
     // check if that the sender has deposited in this contract in the mapping and the balance >0
     require(balances[msg.sender] > 0, "There is no funds added");
     // check that the now time is > the time saved in the lock time mapping
@@ -113,18 +125,7 @@ contract TokenTimeLock {
     // send the money to the sender
     THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
-
-    RewardToken1 = IERC20(_tokenAddress);
-    RewardToken1.transferFrom(address(this), msg.sender, allocations[_tokenAddress][msg.sender]);
-    RewardToken2 = IERC20(_tokenAddress);
-    RewardToken2.transferFrom(address(this), msg.sender, allocations[_tokenAddress][msg.sender]);
-    RewardToken3 = IERC20(_tokenAddress);
-    RewardToken3.transferFrom(address(this), msg.sender, allocations[_tokenAddress][msg.sender]);
-    RewardToken4 = IERC20(_tokenAddress);
-    RewardToken4.transferFrom(address(this), msg.sender, allocations[_tokenAddress][msg.sender]);
-
-    // delete allocated rewards
-    payout(_tokenAddress);
+    payout(address(RewardToken1), address(RewardToken2), address(RewardToken3), address(RewardToken4));
     emit Withdrawn(msg.sender, amount);
   }
 

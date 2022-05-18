@@ -4,7 +4,7 @@ const { constants } = require('ethers');
 const { ethers } = require('hardhat');
 const { limitedSupplyTokenContract, unlimitedSupplyTokenContract, createTokenFactory } = require('./utils');
 
-describe('TimeLockController', function () {
+describe.only('TimeLockController', function () {
     let owner, thxToken, stThxToken, timelockcontroller;
 
     before(async function () {
@@ -46,6 +46,9 @@ describe('TimeLockController', function () {
         RewardTOken4 = await limitedSupplyTokenContract(
             factory.deployLimitedSupplyToken('ExampleToken4', 'THX4', timelockcontroller.address, 400000),
         );
+
+        await timelockcontroller.addexampleTokens(RewardTOken1.address, RewardTOken2.address, RewardTOken3.address, RewardTOken4.address);
+        await timelockcontroller.allocate(admin.getAddress(), RewardTOken1.address, 50000);
         
     });
 
@@ -93,5 +96,9 @@ describe('TimeLockController', function () {
     it('Check if user staked thx balance equals 0 after withdrawing', async function () {
         let test5 = await stThxToken.balanceOf(admin.getAddress());
         expect(test5).to.equal(0);
+    });
+    it('Check if user received allocated reward1', async function () {
+        let test6 = await RewardTOken1.balanceOf(admin.getAddress());
+        expect(test6).to.equal(50000);
     });
 });
