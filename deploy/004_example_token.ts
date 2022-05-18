@@ -8,7 +8,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployer } = await getNamedAccounts();
   
-  const feeCollector = '0xf228ADAa4c3D07C8285C1025421afe2c4F320C59';
+  const feeCollector = '0x3eF13AcF26776BfEd682732ae34cBC86bb355862';
 
     await deploy('LimitedSupplyToken', {
         from: deployer,
