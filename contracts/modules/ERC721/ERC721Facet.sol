@@ -36,16 +36,16 @@ contract ERC721Facet is IERC721Facet, Access {
     }
 
     /**
-     * @param _beneficiary Address of recipient for this token
+     * @param _recipient Address of recipient for this token
      * @param _tokenUri URI of the token
      */
-    function mintFor(address _beneficiary, string memory _tokenUri) external override onlyOwner {
+    function mintFor(address _recipient, string memory _tokenUri) external override onlyOwner {
         require(LibERC721ConnectStorage.store().token != INonFungibleToken(0), 'NO_TOKEN');
 
         INonFungibleToken nft = INonFungibleToken(LibERC721ConnectStorage.store().token);
 
-        uint256 tokenId = nft.mint(_beneficiary, _tokenUri);
+        uint256 tokenId = nft.mint(_recipient, _tokenUri);
 
-        emit ERC721Minted(_beneficiary, tokenId);
+        emit ERC721Minted(_recipient, tokenId);
     }
 }

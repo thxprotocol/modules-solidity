@@ -4890,7 +4890,7 @@
             {
               "indexed": false,
               "internalType": "address",
-              "name": "_beneficiary",
+              "name": "recipient",
               "type": "address"
             },
             {
@@ -5014,7 +5014,7 @@
           "inputs": [
             {
               "internalType": "address",
-              "name": "_beneficiary",
+              "name": "_recipient",
               "type": "address"
             },
             {
