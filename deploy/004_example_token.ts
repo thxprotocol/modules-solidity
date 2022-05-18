@@ -6,11 +6,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
     const { deploy } = deployments;
 
-    const { deployer } = await getNamedAccounts();
+  const { deployer } = await getNamedAccounts();
+  
+  const feeCollector = '0xf228ADAa4c3D07C8285C1025421afe2c4F320C59';
 
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('100000000', 'ether')],
+        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('10000000', 'ether')],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
@@ -18,28 +20,28 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['ExampleToken1', 'thx1', deployer, parseUnits('100000000', 'ether')],
+        args: ['ExampleToken1', 'thx1', feeCollector, parseUnits('1000', 'ether')],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
     });
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['ExampleToken2', 'thx2', deployer, parseUnits('100000000', 'ether')],
+        args: ['ExampleToken2', 'thx2', feeCollector, parseUnits('1000', 'ether')],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
     });
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['ExampleToken3', 'thx3', deployer, parseUnits('100000000', 'ether')],
+        args: ['ExampleToken3', 'thx3', feeCollector, parseUnits('1000', 'ether')],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
     });
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['ExampleToken4', 'thx4', deployer, parseUnits('100000000', 'ether')],
+        args: ['ExampleToken4', 'thx4', feeCollector, parseUnits('1000', 'ether')],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
