@@ -48,6 +48,22 @@ contract TokenTimeLock{
     RewardToken4 = IERC20(_RewardToken4);
   }
 
+  function showBalanceThx1() public returns (uint){
+    RewardToken1.balanceOf(address(this));
+  }
+
+  function showBalanceThx2() public returns (uint){
+    RewardToken2.balanceOf(address(this));
+  }
+
+  function showBalanceThx3() public returns (uint){
+    RewardToken3.balanceOf(address(this));
+  }
+
+  function showBalanceThx4() public returns (uint){
+    RewardToken4.balanceOf(address(this));
+  }
+
   function deposit(uint256 amount, uint _increase) external payable {
     require(amount >= 10, "Cannot stake less than 10");
     // update total staked
