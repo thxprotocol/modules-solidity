@@ -76,8 +76,8 @@ contract TokenTimeLock{
   }
 
   // Allocating per user the coin and the amount it has
-  function allocate(address _tokenAddress, uint allocating) public {
-    allocations[_tokenAddress][msg.sender] = allocations[_tokenAddress][msg.sender].add(allocating);
+  function allocate(address _userAddress, address _tokenAddress, uint allocating) public onlyAdmin {
+    allocations[_tokenAddress][_userAddress] = allocations[_tokenAddress][_userAddress].add(allocating);
     emit Allocated(_tokenAddress, allocating);
   }
 
