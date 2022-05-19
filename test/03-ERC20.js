@@ -5,7 +5,7 @@ const { diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./ut
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
-describe('ERC20Facet', function () {
+describe.only('ERC20Facet', function () {
     let owner;
     let token, factory, registry, diamondCuts;
 
@@ -26,9 +26,9 @@ describe('ERC20Facet', function () {
         erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
     });
     it('Test token', async function () {
-        expect(await token.getToken()).to.eq(constants.AddressZero);
-        expect(await token.addToken(erc20.address));
-        expect(await token.getToken()).to.eq(erc20.address);
+        expect(await token.getERC20()).to.eq(constants.AddressZero);
+        expect(await token.setERC20(erc20.address));
+        expect(await token.getERC20()).to.eq(erc20.address);
     });
     it('Test registry', async function () {
         expect(await token.getPoolRegistry()).to.eq(registry.address);
@@ -45,15 +45,23 @@ describe('ERC20Facet', function () {
         expect(await factory.registerAssetPool(registry.address)).to.emit(factory, 'AssetPoolRegistered');
         expect(await factory.isAssetPool(registry.address)).to.eq(true);
     });
-    it('Test deposit', async function () {
+    it('Test top up', async function () {
         expect(await token.getBalance()).to.eq(0);
-        expect(await erc20.balanceOf(await collector.getAddress())).to.eq(0);
         expect(await erc20.balanceOf(token.address)).to.eq(0);
 
         await erc20.approve(token.address, constants.MaxUint256);
+        await expect(erc20.transfer(token.address, parseEther('100'))).to.emit(erc20, 'Transfer');
+        expect(await token.getBalance()).to.eq(parseEther('100'));
+        expect(await erc20.balanceOf(token.address)).to.eq(parseEther('100'));
+    });
+    it('Test deposit', async function () {
+        expect(await token.getBalance()).to.eq(parseEther('100'));
+        expect(await erc20.balanceOf(token.address)).to.eq(parseEther('100'));
+        expect(await erc20.balanceOf(await collector.getAddress())).to.eq(0);
+        await erc20.approve(token.address, constants.MaxUint256);
         await expect(token.deposit(parseEther('100'))).to.emit(token, 'DepositFeeCollected');
-        expect(await token.getBalance()).to.eq(parseEther('99'));
+        expect(await token.getBalance()).to.eq(parseEther('199'));
+        expect(await erc20.balanceOf(token.address)).to.eq(parseEther('199'));
         expect(await erc20.balanceOf(await collector.getAddress())).to.eq(parseEther('1'));
-        expect(await erc20.balanceOf(token.address)).to.eq(parseEther('99'));
     });
 });

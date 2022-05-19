@@ -41,7 +41,7 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
      * @return pool token balance for the asset pool
      */
     function getBalance() external view override returns (uint256) {
-        return LibTokenStorage.tokenStorage().balance;
+        return LibTokenStorage.tokenStorage().token.balanceOf(address(this));
     }
 
     /**
@@ -62,7 +62,7 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
             s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
             emit DepositFeeCollected(fee);
         }
-        s.balance = s.balance.add(amount);
+        
         s.token.safeTransferFrom(_msgSender(), address(this), amount);
         emit Depositted(_msgSender(), amount);
     }
@@ -71,17 +71,18 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
      * @param _token Address of the ERC20 contract to use in the asset pool.
      * @dev Can only be set once.
      */
-    function addToken(address _token) external override {
+    function setERC20(address _token) external override {
         require(LibTokenStorage.tokenStorage().token == IERC20(0), 'INIT');
         require(_token != address(0), 'ZERO');
 
         LibDiamond.enforceIsContractOwner();
         LibTokenStorage.tokenStorage().token = IERC20(_token);
-        emit TokenUpdated(address(0), _token);
+        
+        emit ERC20Updated(address(0), _token);
     }
 
     /// @return address of the ERC20 contract used in the asset pool.
-    function getToken() external view override returns (address) {
+    function getERC20() external view override returns (address) {
         return address(LibTokenStorage.tokenStorage().token);
     }
 }

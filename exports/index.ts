@@ -61,9 +61,9 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
         'WithdrawByPollProxyFacet',
     ],
     nftPool: ['AccessControlFacet', 'MemberAccessFacet', 'ERC721Facet', 'RelayHubFacet'],
-    poolRegistry: ['PoolRegistryFacet'],
-    poolFactory: ['PoolFactoryFacet'],
-    tokenFactory: ['TokenFactoryFacet'],
+    poolRegistry: ['PoolRegistryFacet', 'RelayHubFacet'],
+    poolFactory: ['PoolFactoryFacet', 'RelayHubFacet'],
+    tokenFactory: ['TokenFactoryFacet', 'RelayHubFacet'],
 };
 
 export const diamondVariants = Object.keys(diamondVariantsConfig) as DiamondVariant[];

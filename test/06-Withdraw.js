@@ -106,7 +106,7 @@ describe('WithdrawFacet - Propose', function () {
         ]);
 
         withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
-        await withdraw.addToken(token.address);
+        await withdraw.setERC20(token.address);
         await token.approve(withdraw.address, parseEther('1000'));
         await withdraw.deposit(parseEther('1000'));
         expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25'));
