@@ -6,9 +6,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
     const { deploy } = deployments;
 
-  const { deployer } = await getNamedAccounts();
-  
-  const feeCollector = '0x3eF13AcF26776BfEd682732ae34cBC86bb355862';
+    const { deployer } = await getNamedAccounts();
+
+    const feeCollector = '0x3eF13AcF26776BfEd682732ae34cBC86bb355862';
 
     await deploy('LimitedSupplyToken', {
         from: deployer,
@@ -62,14 +62,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
     });
-  
-      await deploy('TokenTimeLock', {
-          from: deployer,
-          args: ['0x7150A3CC09429583471020A6CE5228A57736180a', '0xB952d9b5de7804691e7936E88915A669B15822ef'],
-          log: true,
-          autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
-          waitConfirmations: network.live ? 3 : 0,
-      });
+
+    await deploy('TokenTimeLock', {
+        from: deployer,
+        args: ['0x7150A3CC09429583471020A6CE5228A57736180a', '0xB952d9b5de7804691e7936E88915A669B15822ef'],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
 
     await deploy('NonFungibleToken', {
         from: deployer,
