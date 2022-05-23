@@ -1,5 +1,5 @@
-const { utils } = require('ethers/lib');
 const { constants } = require('ethers');
+const { keccak256, toUtf8Bytes, arrayify } = require('ethers/lib/utils');
 
 FacetCutAction = {
     Add: 0,
@@ -20,12 +20,18 @@ const hex2a = (hex) => {
     return str.trim();
 };
 
-const helpSign = async (solution, name, args, account) => {
+const getCallData = async (solution, name, args, account) => {
     nonce = await solution.getLatestNonce(account.address);
     nonce = parseInt(nonce) + 1;
     const call = solution.interface.encodeFunctionData(name, args);
     const hash = web3.utils.soliditySha3(call, nonce);
-    const sig = await account.signMessage(ethers.utils.arrayify(hash));
+    const sig = await account.signMessage(arrayify(hash));
+
+    return { call, nonce, sig };
+};
+
+const helpSign = async (solution, name, args, account) => {
+    const { call, nonce, sig } = await getCallData(solution, name, args, account);
     tx = await solution.call(call, nonce, sig);
     receipt = await tx.wait();
     return receipt;
@@ -45,12 +51,8 @@ const getDiamondCuts = async (facetContractNames) => {
     return diamondCut;
 };
 
-const assetPool = async (deploy) => {
-    tx = await deploy;
-    tx = await tx.wait();
-    const address = tx.events[tx.events.length - 1].args.assetPool;
-    solution = await ethers.getContractAt('IDefaultDiamond', address);
-    return solution;
+const findEvent = (events, eventName) => {
+    return events.find((ev) => ev.event == eventName);
 };
 
 const events = async (tx) => {
@@ -68,17 +70,18 @@ const timestamp = async (tx) => {
 const getSelectors = function (contract) {
     const signatures = [];
     for (const key of Object.keys(contract.functions)) {
-        signatures.push(utils.keccak256(utils.toUtf8Bytes(key)).substr(0, 10));
+        signatures.push(keccak256(toUtf8Bytes(key)).substr(0, 10));
     }
     return signatures;
 };
 
-const diamond = async () => {
-    factoryFacets = [
+const deployPoolFactory = async () => {
+    const factoryFacets = [
+        await ethers.getContractFactory('RelayHubFacet'),
         await ethers.getContractFactory('PoolFactoryFacet'),
         await ethers.getContractFactory('OwnershipFacet'),
     ];
-    diamondCutFactory = [];
+    const diamondCutFactory = [];
     for (let i = 0; i < factoryFacets.length; i++) {
         const f = await factoryFacets[i].deploy();
         diamondCutFactory.push({
@@ -87,17 +90,17 @@ const diamond = async () => {
             functionSelectors: getSelectors(f),
         });
     }
-
-    [owner] = await ethers.getSigners();
+    const [owner] = await ethers.getSigners();
     const Diamond = await ethers.getContractFactory('Diamond');
     const diamond = await Diamond.deploy(diamondCutFactory, [await owner.getAddress()]);
-    factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
+    const factory = await ethers.getContractAt('IDefaultFactory', diamond.address);
+
     await factory.setDefaultController(await owner.getAddress());
 
     return factory;
 };
 
-const createTokenFactory = async () => {
+const deployTokenFactory = async () => {
     factoryFacets = [await ethers.getContractFactory('TokenFactoryFacet')];
     diamondCutFactory = [];
     for (let i = 0; i < factoryFacets.length; i++) {
@@ -115,7 +118,7 @@ const createTokenFactory = async () => {
     return ethers.getContractAt('IDefaultTokenFactory', diamond.address);
 };
 
-const createPoolRegistry = async (feeCollector, feePercentage) => {
+const deployPoolRegistry = async (feeCollector, feePercentage) => {
     factoryFacets = [await ethers.getContractFactory('PoolRegistryFacet')];
     diamondCuts = [];
     for (let i = 0; i < factoryFacets.length; i++) {
@@ -133,6 +136,31 @@ const createPoolRegistry = async (feeCollector, feePercentage) => {
     const registry = await ethers.getContractAt('IDefaultPoolRegistry', diamond.address);
     await registry.initialize(feeCollector, feePercentage);
     return registry;
+};
+
+const deployDefaultPool = async (diamondCuts, registryAddress, tokenAddress) => {
+    [owner] = await ethers.getSigners();
+    const factory = await deployPoolFactory();
+    const { call, nonce, sig } = await getCallData(
+        factory,
+        'deployDefaultPool',
+        [diamondCuts, registryAddress, tokenAddress],
+        owner,
+    );
+    const receipt = await (await factory.call(call, nonce, sig)).wait();
+    const address = findEvent(receipt.events, 'PoolDeployed').args.pool;
+
+    return await ethers.getContractAt('IDefaultDiamond', address);
+};
+
+const deployNFTPool = async (diamondCuts, tokenAddress) => {
+    [owner] = await ethers.getSigners();
+    const factory = await deployPoolFactory();
+    const { call, nonce, sig } = await getCallData(factory, 'deployNFTPool', [diamondCuts, tokenAddress], owner);
+    const receipt = await (await factory.call(call, nonce, sig)).wait();
+    const address = findEvent(receipt.events, 'PoolDeployed').args.pool;
+
+    return await ethers.getContractAt('IDefaultDiamond', address);
 };
 
 const limitedSupplyTokenContract = async (deploy) => {
@@ -153,30 +181,40 @@ const nonFungibleTokenContract = async (deploy) => {
     return ethers.getContractAt('NonFungibleToken', address);
 };
 
+function createUnlockDate(numMonths) {
+    // create unlock date adding 3 months to current time
+    const now = new Date();
+    var newDate = new Date(now.setMonth(now.getMonth() + numMonths));
+    const unlockDate = newDate.getTime() / 1000;
+    return ~~unlockDate;
+}
+
 const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';
 const MANAGER_ROLE = '0x241ecf16d79d0f8dbfb92cbc07fe17840425976cf0667f022fe9877caa831b08';
+const MINTER_ROLE = keccak256(toUtf8Bytes('MINTER_ROLE'));
 const ADMIN_ROLE = constants.HashZero;
-const ENABLE_REWARD = ethers.BigNumber.from('2').pow(250);
-const DISABLE_REWARD = ethers.BigNumber.from('2').pow(251);
 
 module.exports = {
     FacetCutAction,
     hex2a,
     helpSign,
     getDiamondCuts,
-    assetPool,
     events,
     timestamp,
     getSelectors,
-    diamond,
-    createTokenFactory,
-    createPoolRegistry,
+    deployPoolFactory,
+    deployTokenFactory,
+    deployPoolRegistry,
+    deployDefaultPool,
+    deployNFTPool,
     limitedSupplyTokenContract,
     unlimitedSupplyTokenContract,
     nonFungibleTokenContract,
     MEMBER_ROLE,
     MANAGER_ROLE,
+    MINTER_ROLE,
     ADMIN_ROLE,
-    ENABLE_REWARD,
-    DISABLE_REWARD,
+    getCallData,
+    findEvent,
+    createUnlockDate,
 };

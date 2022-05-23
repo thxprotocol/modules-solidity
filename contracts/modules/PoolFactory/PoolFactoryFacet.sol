@@ -7,74 +7,57 @@ import './lib/LibFactoryStorage.sol';
 import './interfaces/IPoolFactoryFacet.sol';
 import '../../interfaces/IDefaultDiamond.sol';
 import '../../utils/RelayDiamond.sol';
-
-contract PoolFactoryFacet is IPoolFactoryFacet {
+import '../../utils/Access.sol';
+ 
+contract PoolFactoryFacet is IPoolFactoryFacet, Access {
     /**
      * @notice Sets the controller for the factory diamond.
      * @param _controller Address of the diamond controller.
      */
-    function setDefaultController(address _controller) external override {
-        LibDiamond.enforceIsContractOwner();
+    function setDefaultController(address _controller) external override onlyOwner {
         LibFactoryStorage.s().defaultController = _controller;
     }
-
+ 
     /**
-     * @notice Registers a pool address in the internal register. Only accessible for diamond owner.
-     * @param _pool Address of pool that should be registered.
-     */
-    function registerAssetPool(address _pool) external override {
-        LibDiamond.enforceIsContractOwner();
-        LibFactoryStorage.Data storage s = LibFactoryStorage.s();
-        s.assetPools.push(_pool);
-        s.isAssetPool[_pool] = true;
-        emit AssetPoolRegistered(_pool);
-    }
-
-    function isAssetPool(address _pool) external view override returns (bool) {
-        LibFactoryStorage.Data storage s = LibFactoryStorage.s();
-        return s.isAssetPool[_pool];
-    }
-
-    /**
-     * @notice Deploys and stores the reference to an asset pool based on the current defaultCut.
+     * @notice Deploys and stores the reference to an pool based on the current defaultCut.
      * @dev Transfers ownership to the controller and initializes access control.
-     * @param _facets Asset Pool facets for the factory diamond to deploy.
+     * @param _facets Pool facets for the factory diamond to deploy.
      * @param _registry Registry address to point the pool to.
      */
-    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external override {
+    function deployDefaultPool(IDiamondCut.FacetCut[] memory _facets, address _registry, address _token) external override {
         require(_registry != address(0), 'NO_REGISTRY');
-        LibDiamond.enforceIsContractOwner();
+        require(_token != address(0), 'NO_TOKEN');
+        require(_msgSender() == LibDiamond.diamondStorage().contractOwner, 'NOT_OWNER');
+
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
-        //direct is required for the initialize functions below
-        RelayDiamond d = new RelayDiamond(_facets, address(this));
-        IDefaultDiamond assetPool = IDefaultDiamond(address(d));
-
-        assetPool.setPoolRegistry(_registry);
-        assetPool.transferOwnership(s.defaultController);
-        assetPool.initializeRoles(s.defaultController);
-
-        s.assetPools.push(address(d));
-        s.isAssetPool[address(d)] = true;
-        emit AssetPoolDeployed(address(d));
+        RelayDiamond diamond = new RelayDiamond(_facets, address(this));
+        
+        IDefaultDiamond pool = IDefaultDiamond(address(diamond));
+        pool.setPoolRegistry(_registry);
+        pool.setERC20(_token);
+        pool.transferOwnership(s.defaultController);
+        pool.initializeRoles(s.defaultController);
+        
+        emit PoolDeployed(address(diamond));
     }
 
     /**
      * @notice Deploys and stores the reference to an nft pool based.
      * @dev Transfers ownership to the controller and initializes access control.
-     * @param _facets Asset Pool facets for the factory diamond to deploy.
+     * @param _facets Pool facets for the factory diamond to deploy.
      */
-    function deployNFTPool(IDiamondCut.FacetCut[] memory _facets) external override {
-        LibDiamond.enforceIsContractOwner();
+    function deployNFTPool(IDiamondCut.FacetCut[] memory _facets, address _token) external override  {
+       require(_msgSender() == LibDiamond.diamondStorage().contractOwner, 'NOT_OWNER');
+       require(_token != address(0), 'NO_TOKEN');
+        
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
-        //direct is required for the initialize functions below
-        RelayDiamond d = new RelayDiamond(_facets, address(this));
-        IDefaultDiamond assetPool = IDefaultDiamond(address(d));
-
-        assetPool.transferOwnership(s.defaultController);
-        assetPool.initializeRoles(s.defaultController);
-
-        s.assetPools.push(address(d));
-        s.isAssetPool[address(d)] = true;
-        emit AssetPoolDeployed(address(d));
+        RelayDiamond diamond = new RelayDiamond(_facets, address(this));
+        
+        IDefaultDiamond pool = IDefaultDiamond(address(diamond));
+        pool.setERC721(_token);
+        pool.transferOwnership(s.defaultController);
+        pool.initializeRoles(s.defaultController);
+        
+        emit PoolDeployed(address(diamond));
     }
 }

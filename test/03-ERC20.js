@@ -1,18 +1,17 @@
 const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
+const { getDiamondCuts, deployPoolRegistry, deployDefaultPool } = require('./utils.js');
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
-describe.only('ERC20Facet', function () {
+describe('ERC20Facet', function () {
     let owner;
-    let token, factory, registry, diamondCuts;
+    let token, registry, diamondCuts;
 
     before(async function () {
-        [owner, collector] = await ethers.getSigners();
-        registry = await createPoolRegistry(await collector.getAddress(), onePercent);
-        factory = await diamond();
+        [owner, collector, recipient] = await ethers.getSigners();
+        registry = await deployPoolRegistry(await collector.getAddress(), onePercent);
         diamondCuts = await getDiamondCuts([
             'MemberAccessFacet',
             'ERC20Facet',
@@ -21,13 +20,11 @@ describe.only('ERC20Facet', function () {
             'OwnershipFacet',
         ]);
 
-        token = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
         const ExampleToken = await ethers.getContractFactory('ExampleToken');
         erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
+        token = await deployDefaultPool(diamondCuts, registry.address, erc20.address);
     });
     it('Test token', async function () {
-        expect(await token.getERC20()).to.eq(constants.AddressZero);
-        expect(await token.setERC20(erc20.address));
         expect(await token.getERC20()).to.eq(erc20.address);
     });
     it('Test registry', async function () {
@@ -38,30 +35,32 @@ describe.only('ERC20Facet', function () {
     it('Test set registry', async function () {
         expect(await token.setPoolRegistry(registry.address)).to.emit(registry, 'RegistryUpdated');
     });
-    it('Test asset pool registration', async function () {
-        // For ease of testing and lack of interface validation in solidity we misuse registry address here
-        // Should only register actual pool addresses
-        expect(await factory.isAssetPool(registry.address)).to.eq(false);
-        expect(await factory.registerAssetPool(registry.address)).to.emit(factory, 'AssetPoolRegistered');
-        expect(await factory.isAssetPool(registry.address)).to.eq(true);
-    });
     it('Test top up', async function () {
         expect(await token.getBalance()).to.eq(0);
         expect(await erc20.balanceOf(token.address)).to.eq(0);
 
         await erc20.approve(token.address, constants.MaxUint256);
         await expect(erc20.transfer(token.address, parseEther('100'))).to.emit(erc20, 'Transfer');
+
         expect(await token.getBalance()).to.eq(parseEther('100'));
         expect(await erc20.balanceOf(token.address)).to.eq(parseEther('100'));
     });
     it('Test deposit', async function () {
-        expect(await token.getBalance()).to.eq(parseEther('100'));
-        expect(await erc20.balanceOf(token.address)).to.eq(parseEther('100'));
         expect(await erc20.balanceOf(await collector.getAddress())).to.eq(0);
+
         await erc20.approve(token.address, constants.MaxUint256);
-        await expect(token.deposit(parseEther('100'))).to.emit(token, 'DepositFeeCollected');
+        await expect(token.pay(parseEther('100'))).to.emit(token, 'PaymentFeeCollected');
+
         expect(await token.getBalance()).to.eq(parseEther('199'));
         expect(await erc20.balanceOf(token.address)).to.eq(parseEther('199'));
         expect(await erc20.balanceOf(await collector.getAddress())).to.eq(parseEther('1'));
+    });
+    it('Test transfer to many', async function () {
+        await expect(
+            token.transferToMany([recipient.address, recipient.address], [parseEther('5'), parseEther('15')]),
+        ).to.emit(token, 'TransferredTo');
+        expect(await token.getBalance()).to.eq(parseEther('178.8'));
+        expect(await erc20.balanceOf(token.address)).to.eq(parseEther('178.8'));
+        expect(await erc20.balanceOf(recipient.address)).to.eq(parseEther('20'));
     });
 });
