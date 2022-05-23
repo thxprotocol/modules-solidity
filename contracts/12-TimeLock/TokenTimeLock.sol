@@ -90,26 +90,25 @@ contract TokenTimeLock {
   }
 
   // delete test for remix
-  function payout(address _tokenAddress1, address _tokenAddress2, address _tokenAddress3, address _tokenAddress4) private {
-    require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
-    RewardToken1.approve(address(this), allocations[_tokenAddress1][msg.sender]);
-    RewardToken2.approve(address(this), allocations[_tokenAddress1][msg.sender]);
-    RewardToken3.approve(address(this), allocations[_tokenAddress1][msg.sender]);
-    RewardToken4.approve(address(this), allocations[_tokenAddress1][msg.sender]);
-    RewardToken1.transferFrom(address(this), msg.sender, allocations[_tokenAddress1][msg.sender]);
-    RewardToken2.transferFrom(address(this), msg.sender, allocations[_tokenAddress2][msg.sender]);
-    RewardToken3.transferFrom(address(this), msg.sender, allocations[_tokenAddress3][msg.sender]);
-    RewardToken4.transferFrom(address(this), msg.sender, allocations[_tokenAddress4][msg.sender]);
-    delete allocations[_tokenAddress1][msg.sender];
-    delete allocations[_tokenAddress2][msg.sender];
-    delete allocations[_tokenAddress3][msg.sender];
-    delete allocations[_tokenAddress4][msg.sender];
+  function payout(address _user, address _tokenAddress1, address _tokenAddress2, address _tokenAddress3, address _tokenAddress4) public onlyAdmin {
+    RewardToken1.approve(address(this), allocations[_tokenAddress1][_user]);
+    RewardToken2.approve(address(this), allocations[_tokenAddress1][_user]);
+    RewardToken3.approve(address(this), allocations[_tokenAddress1][_user]);
+    RewardToken4.approve(address(this), allocations[_tokenAddress1][_user]);
+    RewardToken1.transferFrom(address(this), _user, allocations[_tokenAddress1][_user]);
+    RewardToken2.transferFrom(address(this), _user, allocations[_tokenAddress2][_user]);
+    RewardToken3.transferFrom(address(this), _user, allocations[_tokenAddress3][_user]);
+    RewardToken4.transferFrom(address(this), _user, allocations[_tokenAddress4][_user]);
+    delete allocations[_tokenAddress1][_user];
+    delete allocations[_tokenAddress2][_user];
+    delete allocations[_tokenAddress3][_user];
+    delete allocations[_tokenAddress4][_user];
   }
 
     // show test voor remix
-  function showAllocation(address _tokenAddress) public view returns (uint256) {
-    return allocations[_tokenAddress][msg.sender];
-  }
+  // function showAllocation(address _tokenAddress) public view returns (uint256) {
+  //   return allocations[_tokenAddress][msg.sender];
+  // }
 
   function withdraw() public {
     // check if that the sender has deposited in this contract in the mapping and the balance >0
@@ -125,7 +124,6 @@ contract TokenTimeLock {
     // send the money to the sender
     THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
-    payout(address(RewardToken1), address(RewardToken2), address(RewardToken3), address(RewardToken4));
     emit Withdrawn(msg.sender, amount);
   }
 
