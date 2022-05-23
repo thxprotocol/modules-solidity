@@ -2,19 +2,26 @@ const { expect } = require('chai');
 const { parseEther } = require('ethers/lib/utils');
 const { ethers } = require('hardhat');
 const { constants, BigNumber, Wallet } = require('ethers');
-const { events, diamond, timestamp, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
+const {
+    MINTER_ROLE,
+    events,
+    timestamp,
+    getDiamondCuts,
+    deployPoolRegistry,
+    deployDefaultPool,
+    createUnlockDate,
+} = require('./utils.js');
 
 const multiplier = BigNumber.from('10').pow(15);
 const twoHalfPercent = BigNumber.from('25').mul(multiplier);
 
 describe('WithdrawFacet', function () {
     let owner;
-    let withdraw, registry, factory;
+    let withdraw, registry;
 
     before(async function () {
         [owner, voter] = await ethers.getSigners();
-        registry = await createPoolRegistry(await collector.getAddress(), 0);
-        factory = await diamond();
+        registry = await deployPoolRegistry(await collector.getAddress(), 0);
         const diamondCuts = await getDiamondCuts([
             'MemberAccessFacet',
             'ERC20Facet',
@@ -27,7 +34,11 @@ describe('WithdrawFacet', function () {
             'OwnershipFacet',
         ]);
 
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
+        const UnlimitedSupplyToken = await ethers.getContractFactory('UnlimitedSupplyToken');
+        erc20 = await UnlimitedSupplyToken.deploy('Test Token', 'UNL-TKN', await owner.getAddress());
+
+        withdraw = await deployDefaultPool(diamondCuts, registry.address, erc20.address);
+        await erc20.grantRole(MINTER_ROLE, withdraw.address);
         await withdraw.setProposeWithdrawPollDuration(100);
     });
     it('Initial state', async function () {
@@ -76,22 +87,11 @@ describe('WithdrawFacet', function () {
 });
 
 describe('WithdrawFacet - Propose', function () {
-    let withdraw;
-
-    let owner;
-    let voter;
-    let poolMember;
-    let token, registry;
-
-    let withdrawTimestamp;
+    let withdraw, owner, voter, poolMember, withdrawTimestamp;
 
     before(async function () {
         [owner, voter, poolMember, collector] = await ethers.getSigners();
-        const ExampleToken = await ethers.getContractFactory('ExampleToken');
-        token = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
-
-        registry = await createPoolRegistry(await collector.getAddress(), twoHalfPercent);
-
+        const registry = await deployPoolRegistry(await collector.getAddress(), twoHalfPercent);
         const diamondCuts = await getDiamondCuts([
             'MemberAccessFacet',
             'ERC20Facet',
@@ -104,12 +104,12 @@ describe('WithdrawFacet - Propose', function () {
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
+        const LimitedSupplyToken = await ethers.getContractFactory('LimitedSupplyToken');
 
-        withdraw = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
-        await withdraw.setERC20(token.address);
-        await token.approve(withdraw.address, parseEther('1000'));
-        await withdraw.deposit(parseEther('1000'));
-        expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25'));
+        erc20 = await LimitedSupplyToken.deploy('Test Token', 'UNL-TKN', await owner.getAddress(), parseEther('1000'));
+        withdraw = await deployDefaultPool(diamondCuts, registry.address, erc20.address);
+
+        await erc20.transfer(withdraw.address, parseEther('1000'));
         await withdraw.setProposeWithdrawPollDuration(100);
     });
     it('Test proposeWithdraw', async function () {
@@ -137,7 +137,7 @@ describe('WithdrawFacet - Propose', function () {
     });
     it('propose reward as non member', async function () {
         await expect(
-            withdraw.connect(voter).proposeWithdraw(parseEther('20'), await owner.getAddress(), createUnlockDate(3)),
+            withdraw.connect(voter).proposeWithdraw(parseEther('10'), await owner.getAddress(), createUnlockDate(3)),
         ).to.be.revertedWith('NOT_OWNER');
     });
     it('vote', async function () {
@@ -152,29 +152,21 @@ describe('WithdrawFacet - Propose', function () {
         expect(vote.agree).to.be.eq(true);
     });
     it('should NOT finalize', async function () {
-        const seconds = 864000; // 10 dayss
+        const seconds = 864000; // 10 days
         await ethers.provider.send('evm_increaseTime', [seconds]);
         await expect(withdraw.withdrawPollFinalize(1)).to.be.revertedWith('TOO_SOON_TO_FINALIZE_THE_POLL');
     });
     it('finalize', async function () {
-        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(0);
-        expect(await withdraw.getBalance()).to.eq(parseEther('975'));
-        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('975'));
+        expect(await erc20.balanceOf(await poolMember.getAddress())).to.eq(0);
+        expect(await withdraw.getBalance()).to.eq(parseEther('1000'));
+        expect(await erc20.balanceOf(withdraw.address)).to.eq(parseEther('1000'));
 
         const seconds = 7890000; // 3 months
         await ethers.provider.send('evm_increaseTime', [seconds + 10]);
         await expect(withdraw.withdrawPollFinalize(1)).to.emit(withdraw, 'WithdrawFeeCollected');
-        expect(await token.balanceOf(await poolMember.getAddress())).to.eq(parseEther('10'));
-        expect(await token.balanceOf(await collector.getAddress())).to.eq(parseEther('25.25'));
-        expect(await token.balanceOf(withdraw.address)).to.eq(parseEther('964.75'));
-        expect(await withdraw.getBalance()).to.eq(parseEther('964.75'));
+        expect(await erc20.balanceOf(await poolMember.getAddress())).to.eq(parseEther('10'));
+        expect(await erc20.balanceOf(await collector.getAddress())).to.eq(parseEther('0.25'));
+        expect(await erc20.balanceOf(withdraw.address)).to.eq(parseEther('989.75'));
+        expect(await withdraw.getBalance()).to.eq(parseEther('989.75'));
     });
 });
-
-function createUnlockDate(numMonths) {
-    // create unlock date adding 3 months to current time
-    const now = new Date();
-    var newDate = new Date(now.setMonth(now.getMonth() + numMonths));
-    const unlockDate = newDate.getTime() / 1000;
-    return ~~unlockDate;
-}

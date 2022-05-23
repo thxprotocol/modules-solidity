@@ -12,10 +12,10 @@ import '@openzeppelin/contracts/math/SafeMath.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 import './interfaces/IERC20Facet.sol';
 import './lib/LibTokenStorage.sol';
-import '../../utils/RelayReceiver.sol';
+import '../../utils/Access.sol';
 import '../PoolRegistry/interfaces/IPoolRegistryFacet.sol';
 
-contract ERC20Facet is IERC20Facet, RelayReceiver {
+contract ERC20Facet is Access, IERC20Facet {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -24,8 +24,7 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
      * @param _registry Address of the registry contract.
      * @dev Registry contains general pool settings and will be governable at some point.
      */
-    function setPoolRegistry(address _registry) external override {
-        LibDiamond.enforceIsContractOwner();
+    function setPoolRegistry(address _registry) external override onlyOwner {
         LibTokenStorage.tokenStorage().registry = _registry;
         emit RegistryUpdated(address(0), _registry);
     }
@@ -35,6 +34,26 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
      */
     function getPoolRegistry() external view override returns (address) {
         return LibTokenStorage.tokenStorage().registry;
+    }
+
+    /**
+     * @param _erc20 Address of the ERC20 contract to use in the asset pool.
+     * @dev Can only be set once.
+     */
+    function setERC20(address _erc20) external override onlyOwner {
+        require(LibTokenStorage.tokenStorage().token == IERC20(0), 'INIT');
+        require(_erc20 != address(0), 'ZERO');
+        
+        uint256 MAX_INT = 2**256 - 1;
+        
+        LibTokenStorage.tokenStorage().token = IERC20(_erc20);
+        LibTokenStorage.tokenStorage().token.approve(address(this), MAX_INT);
+        emit ERC20Updated(address(0), _erc20);
+    }
+
+    /// @return address of the ERC20 contract used in the asset pool.
+    function getERC20() external view override returns (address) {
+        return address(LibTokenStorage.tokenStorage().token);
     }
 
     /**
@@ -49,7 +68,7 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
      * @param _amount Deposit amount to transfer to the pool.
      * @dev Make sure a transfer for the given amount is approved before calling.
      */
-    function deposit(uint256 _amount) external override {
+    function pay(uint256 _amount) external override {
         require(_amount > 0, 'ZERO_AMOUNT');
         LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
@@ -60,29 +79,31 @@ contract ERC20Facet is IERC20Facet, RelayReceiver {
 
         if (fee > 0) {
             s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
-            emit DepositFeeCollected(fee);
+            emit PaymentFeeCollected(fee);
         }
         
         s.token.safeTransferFrom(_msgSender(), address(this), amount);
-        emit Depositted(_msgSender(), amount);
+        emit Paid(_msgSender(), amount);
     }
+ 
+    function transferToMany(address[] memory _recipients, uint256[] memory _amounts) external override onlyOwner {
+        require(_amounts.length == _recipients.length, 'INVALID_INPUT');
 
-    /**
-     * @param _token Address of the ERC20 contract to use in the asset pool.
-     * @dev Can only be set once.
-     */
-    function setERC20(address _token) external override {
-        require(LibTokenStorage.tokenStorage().token == IERC20(0), 'INIT');
-        require(_token != address(0), 'ZERO');
-
-        LibDiamond.enforceIsContractOwner();
-        LibTokenStorage.tokenStorage().token = IERC20(_token);
+        LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
+        IPoolRegistryFacet registry = IPoolRegistryFacet(s.registry);
+                
+        for (uint256 i = 0; i < _recipients.length; i++) {
+            require(_amounts[i] > 0, 'ZERO_AMOUNT');
         
-        emit ERC20Updated(address(0), _token);
-    }
-
-    /// @return address of the ERC20 contract used in the asset pool.
-    function getERC20() external view override returns (address) {
-        return address(LibTokenStorage.tokenStorage().token);
+            uint256 fee = _amounts[i].mul(registry.feePercentage()).div(10**18);
+           
+            if (fee > 0) {
+                s.token.safeTransferFrom(address(this), registry.feeCollector(), fee);
+                emit TransferFeeCollected(fee);
+            }
+            
+            s.token.safeTransferFrom(address(this), _recipients[i], _amounts[i]);
+            emit TransferredTo(_recipients[i], _amounts[i]);
+        }
     }
 }

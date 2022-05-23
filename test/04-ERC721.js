@@ -1,19 +1,17 @@
 const { expect } = require('chai');
-const { diamond, assetPool, getDiamondCuts, createTokenFactory } = require('./utils.js');
+const { deployNFTPool, getDiamondCuts, deployTokenFactory } = require('./utils.js');
 
 describe('ERC721Facet', function () {
     let owner,
         user,
         erc721,
-        factory,
         diamondCuts,
         nftPool,
         baseUrl = 'https://api.thx.network/v1/metadata/';
 
     before(async function () {
         [owner, user, collector] = await ethers.getSigners();
-        factory = await diamond();
-        tokenFactory = await createTokenFactory();
+        tokenFactory = await deployTokenFactory();
         diamondCuts = await getDiamondCuts([
             'MemberAccessFacet',
             'ERC721Facet',
@@ -23,15 +21,16 @@ describe('ERC721Facet', function () {
         ]);
         const NonFungibleToken = await ethers.getContractFactory('NonFungibleToken');
         erc721 = await NonFungibleToken.deploy('Planets of the Galaxy', 'NFT', baseUrl, await owner.getAddress());
-        nftPool = await assetPool(factory.deployNFTPool(diamondCuts));
+
+        nftPool = await deployNFTPool(diamondCuts, erc721.address);
     });
 
     it('can read nft owner', async () => {
         expect(await erc721.owner()).to.eq(await owner.getAddress());
     });
 
-    it('can connect erc721 contract', async () => {
-        await expect(nftPool.setERC721(erc721.address)).to.emit(nftPool, 'ERC721Updated');
+    it('can not connect erc721 contract again', async () => {
+        await expect(nftPool.setERC721(erc721.address)).to.revertedWith('INIT');
         expect(await nftPool.getERC721()).to.eq(erc721.address);
     });
 

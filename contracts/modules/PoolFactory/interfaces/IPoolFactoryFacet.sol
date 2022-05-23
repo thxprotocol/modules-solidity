@@ -5,16 +5,9 @@ pragma experimental ABIEncoderV2;
 import 'diamond-2/contracts/interfaces/IDiamondCut.sol';
 
 interface IPoolFactoryFacet {
-    event AssetPoolDeployed(address assetPool);
-    event AssetPoolRegistered(address assetPool);
-
-    function setDefaultController(address _controller) external;
-
-    function registerAssetPool(address _pool) external;
-
-    function isAssetPool(address _pool) external view returns (bool);
-
-    function deployAssetPool(IDiamondCut.FacetCut[] memory _facets, address _registry) external;
-
-    function deployNFTPool(IDiamondCut.FacetCut[] memory _facets) external;
+    event PoolDeployed(address pool);
+    
+    function setDefaultController(address _controller) external;  
+    function deployDefaultPool(IDiamondCut.FacetCut[] memory _facets, address _registry, address _token) external;
+    function deployNFTPool(IDiamondCut.FacetCut[] memory _facets, address _token) external;
 }
