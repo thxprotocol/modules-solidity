@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.7.4;
+
+interface IERC20Facet {
+    event ERC20Updated(address old, address current);
+    event RegistryUpdated(address old, address current);
+    event DepositFeeCollected(uint256 fee);
+    event Depositted(address sender, uint256 amount);
+
+    function getBalance() external view returns (uint256);
+    function deposit(uint256 _amount) external; // TODO Should move to future EscrowFacet
+    function setPoolRegistry(address _registry) external;
+    function getPoolRegistry() external view returns (address);
+    function setERC20(address _token) external;
+    function getERC20() external view returns (address);
+}

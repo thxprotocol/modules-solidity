@@ -27,8 +27,8 @@ const helpSign = async (solution, name, args, account) => {
     const hash = web3.utils.soliditySha3(call, nonce);
     const sig = await account.signMessage(ethers.utils.arrayify(hash));
     tx = await solution.call(call, nonce, sig);
-    tx = await tx.wait();
-    return tx;
+    receipt = await tx.wait();
+    return receipt;
 };
 
 const getDiamondCuts = async (facetContractNames) => {
@@ -75,7 +75,7 @@ const getSelectors = function (contract) {
 
 const diamond = async () => {
     factoryFacets = [
-        await ethers.getContractFactory('AssetPoolFactoryFacet'),
+        await ethers.getContractFactory('PoolFactoryFacet'),
         await ethers.getContractFactory('OwnershipFacet'),
     ];
     diamondCutFactory = [];

@@ -10,7 +10,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['THX Token', 'THX', deployer, parseUnits('1000000', 'ether')],
+        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('100000000', 'ether')],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
+
+    await deploy('UnlimitedSupplyToken', {
+        from: deployer,
+        args: ['THX Unlimited Supply Token', 'UNL-THX', deployer],
+        log: true,
+        autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+        waitConfirmations: network.live ? 3 : 0,
+    });
+
+    await deploy('NonFungibleToken', {
+        from: deployer,
+        args: ['THX Non Fungible Token', 'NFT-THX', 'https://api.thx.network/v1/metadata/', deployer],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
