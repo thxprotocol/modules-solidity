@@ -780,24 +780,86 @@
             {
               "indexed": false,
               "internalType": "address",
-              "name": "assetPool",
+              "name": "pool",
               "type": "address"
             }
           ],
-          "name": "AssetPoolDeployed",
+          "name": "PoolDeployed",
           "type": "event"
         },
         {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
               "internalType": "address",
-              "name": "assetPool",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
               "type": "address"
             }
           ],
-          "name": "AssetPoolRegistered",
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
           "type": "event"
         },
         {
@@ -828,9 +890,14 @@
               "internalType": "address",
               "name": "_registry",
               "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
             }
           ],
-          "name": "deployAssetPool",
+          "name": "deployDefaultPool",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -858,41 +925,14 @@
               "internalType": "struct IDiamondCut.FacetCut[]",
               "name": "_facets",
               "type": "tuple[]"
+            },
+            {
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
             }
           ],
           "name": "deployNFTPool",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "_pool",
-              "type": "address"
-            }
-          ],
-          "name": "isAssetPool",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "_pool",
-              "type": "address"
-            }
-          ],
-          "name": "registerAssetPool",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -1466,24 +1506,86 @@
             {
               "indexed": false,
               "internalType": "address",
-              "name": "assetPool",
+              "name": "pool",
               "type": "address"
             }
           ],
-          "name": "AssetPoolDeployed",
+          "name": "PoolDeployed",
           "type": "event"
         },
         {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
               "internalType": "address",
-              "name": "assetPool",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
               "type": "address"
             }
           ],
-          "name": "AssetPoolRegistered",
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
           "type": "event"
         },
         {
@@ -1514,9 +1616,14 @@
               "internalType": "address",
               "name": "_registry",
               "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
             }
           ],
-          "name": "deployAssetPool",
+          "name": "deployDefaultPool",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -1544,41 +1651,14 @@
               "internalType": "struct IDiamondCut.FacetCut[]",
               "name": "_facets",
               "type": "tuple[]"
+            },
+            {
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
             }
           ],
           "name": "deployNFTPool",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "_pool",
-              "type": "address"
-            }
-          ],
-          "name": "isAssetPool",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "_pool",
-              "type": "address"
-            }
-          ],
-          "name": "registerAssetPool",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -4736,12 +4816,18 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "uint256",
-              "name": "fee",
-              "type": "uint256"
+              "internalType": "address",
+              "name": "old",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "current",
+              "type": "address"
             }
           ],
-          "name": "DepositFeeCollected",
+          "name": "ERC20Updated",
           "type": "event"
         },
         {
@@ -4760,7 +4846,20 @@
               "type": "uint256"
             }
           ],
-          "name": "Depositted",
+          "name": "Paid",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            }
+          ],
+          "name": "PaymentFeeCollected",
           "type": "event"
         },
         {
@@ -4786,46 +4885,108 @@
           "anonymous": false,
           "inputs": [
             {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            }
+          ],
+          "name": "TransferFeeCollected",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
               "indexed": false,
               "internalType": "address",
-              "name": "old",
+              "name": "recipient",
               "type": "address"
             },
             {
               "indexed": false,
-              "internalType": "address",
-              "name": "current",
-              "type": "address"
-            }
-          ],
-          "name": "TokenUpdated",
-          "type": "event"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "_token",
-              "type": "address"
-            }
-          ],
-          "name": "addToken",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "uint256",
-              "name": "_amount",
+              "name": "amount",
               "type": "uint256"
             }
           ],
-          "name": "deposit",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
+          "name": "TransferredTo",
+          "type": "event"
         },
         {
           "inputs": [],
@@ -4835,6 +4996,19 @@
               "internalType": "uint256",
               "name": "",
               "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getERC20",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
             }
           ],
           "stateMutability": "view",
@@ -4854,16 +5028,29 @@
           "type": "function"
         },
         {
-          "inputs": [],
-          "name": "getToken",
-          "outputs": [
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "pay",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
             {
               "internalType": "address",
-              "name": "",
+              "name": "_erc20",
               "type": "address"
             }
           ],
-          "stateMutability": "view",
+          "name": "setERC20",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -4875,6 +5062,24 @@
             }
           ],
           "name": "setPoolRegistry",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_recipients",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "_amounts",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "transferToMany",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"

@@ -43,9 +43,9 @@ contract ERC20Facet is Access, IERC20Facet {
     function setERC20(address _erc20) external override onlyOwner {
         require(LibTokenStorage.tokenStorage().token == IERC20(0), 'INIT');
         require(_erc20 != address(0), 'ZERO');
-        
+
         uint256 MAX_INT = 2**256 - 1;
-        
+
         LibTokenStorage.tokenStorage().token = IERC20(_erc20);
         LibTokenStorage.tokenStorage().token.approve(address(this), MAX_INT);
         emit ERC20Updated(address(0), _erc20);
@@ -81,27 +81,27 @@ contract ERC20Facet is Access, IERC20Facet {
             s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
             emit PaymentFeeCollected(fee);
         }
-        
+
         s.token.safeTransferFrom(_msgSender(), address(this), amount);
         emit Paid(_msgSender(), amount);
     }
- 
+
     function transferToMany(address[] memory _recipients, uint256[] memory _amounts) external override onlyOwner {
         require(_amounts.length == _recipients.length, 'INVALID_INPUT');
 
         LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
         IPoolRegistryFacet registry = IPoolRegistryFacet(s.registry);
-                
+
         for (uint256 i = 0; i < _recipients.length; i++) {
             require(_amounts[i] > 0, 'ZERO_AMOUNT');
-        
+
             uint256 fee = _amounts[i].mul(registry.feePercentage()).div(10**18);
-           
+
             if (fee > 0) {
                 s.token.safeTransferFrom(address(this), registry.feeCollector(), fee);
                 emit TransferFeeCollected(fee);
             }
-            
+
             s.token.safeTransferFrom(address(this), _recipients[i], _amounts[i]);
             emit TransferredTo(_recipients[i], _amounts[i]);
         }
