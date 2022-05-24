@@ -454,18 +454,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "old",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "current",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
       }
     ],
-    "name": "ERC20Updated",
+    "name": "DepositFeeCollected",
     "type": "event"
   },
   {
@@ -484,7 +478,7 @@
         "type": "uint256"
       }
     ],
-    "name": "Paid",
+    "name": "Depositted",
     "type": "event"
   },
   {
@@ -492,12 +486,18 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "old",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "current",
+        "type": "address"
       }
     ],
-    "name": "PaymentFeeCollected",
+    "name": "ERC20Updated",
     "type": "event"
   },
   {
@@ -552,6 +552,19 @@
     "type": "event"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getBalance",
     "outputs": [
@@ -588,19 +601,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "pay",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

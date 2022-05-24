@@ -68,7 +68,7 @@ contract ERC20Facet is Access, IERC20Facet {
      * @param _amount Deposit amount to transfer to the pool.
      * @dev Make sure a transfer for the given amount is approved before calling.
      */
-    function pay(uint256 _amount) external override {
+    function deposit(uint256 _amount) external override {
         require(_amount > 0, 'ZERO_AMOUNT');
         LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
 
@@ -79,11 +79,11 @@ contract ERC20Facet is Access, IERC20Facet {
 
         if (fee > 0) {
             s.token.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
-            emit PaymentFeeCollected(fee);
+            emit DepositFeeCollected(fee);
         }
 
         s.token.safeTransferFrom(_msgSender(), address(this), amount);
-        emit Paid(_msgSender(), amount);
+        emit Depositted(_msgSender(), amount);
     }
 
     function transferToMany(address[] memory _recipients, uint256[] memory _amounts) external override onlyOwner {

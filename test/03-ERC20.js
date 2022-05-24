@@ -49,7 +49,7 @@ describe('ERC20Facet', function () {
         expect(await erc20.balanceOf(await collector.getAddress())).to.eq(0);
 
         await erc20.approve(token.address, constants.MaxUint256);
-        await expect(token.pay(parseEther('100'))).to.emit(token, 'PaymentFeeCollected');
+        await expect(token.deposit(parseEther('100'))).to.emit(token, 'DepositFeeCollected');
 
         expect(await token.getBalance()).to.eq(parseEther('199'));
         expect(await erc20.balanceOf(token.address)).to.eq(parseEther('199'));

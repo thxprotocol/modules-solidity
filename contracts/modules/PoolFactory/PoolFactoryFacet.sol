@@ -32,7 +32,6 @@ contract PoolFactoryFacet is IPoolFactoryFacet, Access {
     ) external override {
         require(_registry != address(0), 'NO_REGISTRY');
         require(_token != address(0), 'NO_TOKEN');
-        require(_msgSender() == LibDiamond.diamondStorage().contractOwner, 'NOT_OWNER');
 
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
         RelayDiamond diamond = new RelayDiamond(_facets, address(this));
@@ -52,7 +51,6 @@ contract PoolFactoryFacet is IPoolFactoryFacet, Access {
      * @param _facets Pool facets for the factory diamond to deploy.
      */
     function deployNFTPool(IDiamondCut.FacetCut[] memory _facets, address _token) external override {
-        require(_msgSender() == LibDiamond.diamondStorage().contractOwner, 'NOT_OWNER');
         require(_token != address(0), 'NO_TOKEN');
 
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();

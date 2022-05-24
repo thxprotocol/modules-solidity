@@ -58,10 +58,10 @@ describe('RelayHubFacet', function () {
         await expect(solution.call(call, nonce, sig)).to.be.revertedWith('INVALID_NONCE');
     });
     it('Relayception', async function () {
-        // Approve for the pay call
+        // Approve for the deposit call
         await erc20.connect(voter).approve(solution.address, parseEther('1'));
 
-        const call = solution.interface.encodeFunctionData('pay', [parseEther('1')]);
+        const call = solution.interface.encodeFunctionData('deposit', [parseEther('1')]);
         const nonce = Number(await solution.getLatestNonce(await voter.getAddress())) + 1;
         const hash = web3.utils.soliditySha3(call, nonce);
         const sig = await voter.signMessage(ethers.utils.arrayify(hash));
