@@ -42,7 +42,7 @@ contract PoolFactoryFacet is IPoolFactoryFacet, Access {
         pool.transferOwnership(s.defaultController);
         pool.initializeRoles(s.defaultController);
 
-        emit PoolDeployed(address(diamond));
+        emit PoolDeployed(address(diamond), _token);
     }
 
     /**
@@ -61,6 +61,6 @@ contract PoolFactoryFacet is IPoolFactoryFacet, Access {
         pool.transferOwnership(s.defaultController);
         pool.initializeRoles(s.defaultController);
 
-        emit PoolDeployed(address(diamond));
+        emit PoolDeployed(address(diamond), _token);
     }
 }
