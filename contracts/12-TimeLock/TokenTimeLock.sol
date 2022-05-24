@@ -21,6 +21,8 @@ contract TokenTimeLock {
 
   address admin;
   address[] public addresses;
+  address[] public tokenAddresses;
+
 
   IERC20 private THXtoken;
   IUnlimitedSupplyToken stTHXtoken;
@@ -29,9 +31,20 @@ contract TokenTimeLock {
 //   IERC20 private RewardToken3;
 //   IERC20 private RewardToken4;
 
-  constructor(address _stTHXtoken, address _THXtoken) public {
+  constructor(address _stTHXtoken, address _THXtoken,  address[] memory tokenArray ) public {
     THXtoken = IERC20(_THXtoken);
     stTHXtoken = IUnlimitedSupplyToken(_stTHXtoken);
+
+    for (uint256 i = 0; i < tokenArray.length; i++) {
+      
+      tokenAddresses.push(tokenArray[i]);
+    }
+
+
+    require(tokenArray.length > 0, "No tokens provided");
+    
+
+
     admin = msg.sender;
   }
 
@@ -41,15 +54,19 @@ contract TokenTimeLock {
   }
 
   function addexampleTokens(
-    address _RewardToken1
+    address _RewardToken
     // address _RewardToken2,
     // address _RewardToken3,
     // address _RewardToken4
-  ) public {
-    RewardToken = IERC20(_RewardToken1);
-    //RewardToken2 = IERC20(_RewardToken2);
-    //RewardToken3 = IERC20(_RewardToken3);
-    //RewardToken4 = IERC20(_RewardToken4);
+  ) public onlyAdmin returns (string memory) {
+    // if statement of een token al in de array bestaat
+    RewardToken = IERC20(_RewardToken);
+    for (uint i = 0; i < tokenAddresses.length; i++) {
+      if (tokenAddresses[i] == _RewardToken) {
+        return "token already added";
+      }
+      tokenAddresses.push(_RewardToken);
+    }
   }
 
   function deposit(uint256 amount, uint256 _increase) external payable {
