@@ -24,10 +24,10 @@ contract TokenTimeLock {
 
   IERC20 private THXtoken;
   IUnlimitedSupplyToken stTHXtoken;
-  IERC20 private RewardToken1;
-  IERC20 private RewardToken2;
-  IERC20 private RewardToken3;
-  IERC20 private RewardToken4;
+  IERC20 private RewardToken;
+//   IERC20 private RewardToken2;
+//   IERC20 private RewardToken3;
+//   IERC20 private RewardToken4;
 
   constructor(address _stTHXtoken, address _THXtoken) public {
     THXtoken = IERC20(_THXtoken);
@@ -41,15 +41,15 @@ contract TokenTimeLock {
   }
 
   function addexampleTokens(
-    address _RewardToken1,
-    address _RewardToken2,
-    address _RewardToken3,
-    address _RewardToken4
+    address _RewardToken1
+    // address _RewardToken2,
+    // address _RewardToken3,
+    // address _RewardToken4
   ) public {
-    RewardToken1 = IERC20(_RewardToken1);
-    RewardToken2 = IERC20(_RewardToken2);
-    RewardToken3 = IERC20(_RewardToken3);
-    RewardToken4 = IERC20(_RewardToken4);
+    RewardToken = IERC20(_RewardToken1);
+    //RewardToken2 = IERC20(_RewardToken2);
+    //RewardToken3 = IERC20(_RewardToken3);
+    //RewardToken4 = IERC20(_RewardToken4);
   }
 
   function deposit(uint256 amount, uint256 _increase) external payable {
@@ -90,19 +90,19 @@ contract TokenTimeLock {
   }
 
   // delete test for remix
-  function payout(address _user, address _tokenAddress1, address _tokenAddress2, address _tokenAddress3, address _tokenAddress4) public onlyAdmin {
-    RewardToken1.approve(address(this), allocations[_tokenAddress1][_user]);
-    RewardToken2.approve(address(this), allocations[_tokenAddress1][_user]);
-    RewardToken3.approve(address(this), allocations[_tokenAddress1][_user]);
-    RewardToken4.approve(address(this), allocations[_tokenAddress1][_user]);
-    RewardToken1.transferFrom(address(this), _user, allocations[_tokenAddress1][_user]);
-    RewardToken2.transferFrom(address(this), _user, allocations[_tokenAddress2][_user]);
-    RewardToken3.transferFrom(address(this), _user, allocations[_tokenAddress3][_user]);
-    RewardToken4.transferFrom(address(this), _user, allocations[_tokenAddress4][_user]);
-    delete allocations[_tokenAddress1][_user];
-    delete allocations[_tokenAddress2][_user];
-    delete allocations[_tokenAddress3][_user];
-    delete allocations[_tokenAddress4][_user];
+  function payout(address _user, address _tokenAddress) public onlyAdmin {
+    RewardToken.approve(address(this), allocations[_tokenAddress][_user]);
+    // RewardToken2.approve(address(this), allocations[_tokenAddress1][_user]);
+    // RewardToken3.approve(address(this), allocations[_tokenAddress1][_user]);
+    // RewardToken4.approve(address(this), allocations[_tokenAddress1][_user]);
+    // RewardToken1.transferFrom(address(this), _user, allocations[_tokenAddress1][_user]);
+    // RewardToken2.transferFrom(address(this), _user, allocations[_tokenAddress2][_user]);
+    // RewardToken3.transferFrom(address(this), _user, allocations[_tokenAddress3][_user]);
+    // RewardToken4.transferFrom(address(this), _user, allocations[_tokenAddress4][_user]);
+    delete allocations[_tokenAddress][_user];
+    // delete allocations[_tokenAddress2][_user];
+    // delete allocations[_tokenAddress3][_user];
+    // delete allocations[_tokenAddress4][_user];
   }
 
     // show test voor remix
