@@ -24,11 +24,6 @@ contract TokenTimeLock {
 
   IERC20 private THXtoken;
   IUnlimitedSupplyToken stTHXtoken;
-  IERC20 private RewardToken;
-
-//   IERC20 private RewardToken2;
-//   IERC20 private RewardToken3;
-//   IERC20 private RewardToken4;
 
   constructor(address _stTHXtoken, address _THXtoken) public {
     THXtoken = IERC20(_THXtoken);
