@@ -21,52 +21,24 @@ contract TokenTimeLock {
 
   address admin;
   address[] public addresses;
-  address[] public tokenAddresses;
-
 
   IERC20 private THXtoken;
   IUnlimitedSupplyToken stTHXtoken;
   IERC20 private RewardToken;
+
 //   IERC20 private RewardToken2;
 //   IERC20 private RewardToken3;
 //   IERC20 private RewardToken4;
 
-  constructor(address _stTHXtoken, address _THXtoken,  address[] memory tokenArray ) public {
+  constructor(address _stTHXtoken, address _THXtoken) public {
     THXtoken = IERC20(_THXtoken);
     stTHXtoken = IUnlimitedSupplyToken(_stTHXtoken);
-
-    for (uint256 i = 0; i < tokenArray.length; i++) {
-      
-      tokenAddresses.push(tokenArray[i]);
-    }
-
-
-    require(tokenArray.length > 0, "No tokens provided");
-    
-
-
     admin = msg.sender;
   }
 
   modifier onlyAdmin() {
     require(msg.sender == admin, "ADMIN_ONLY");
     _;
-  }
-
-  function addexampleTokens(
-    address _RewardToken
-    // address _RewardToken2,
-    // address _RewardToken3,
-    // address _RewardToken4
-  ) public onlyAdmin returns (string memory) {
-    // if statement of een token al in de array bestaat
-    RewardToken = IERC20(_RewardToken);
-    for (uint i = 0; i < tokenAddresses.length; i++) {
-      if (tokenAddresses[i] == _RewardToken) {
-        return "token already added";
-      }
-      tokenAddresses.push(_RewardToken);
-    }
   }
 
   function deposit(uint256 amount, uint256 _increase) external payable {
@@ -108,18 +80,9 @@ contract TokenTimeLock {
 
   // delete test for remix
   function payout(address _user, address _tokenAddress) public onlyAdmin {
-    RewardToken.approve(address(this), allocations[_tokenAddress][_user]);
-    // RewardToken2.approve(address(this), allocations[_tokenAddress1][_user]);
-    // RewardToken3.approve(address(this), allocations[_tokenAddress1][_user]);
-    // RewardToken4.approve(address(this), allocations[_tokenAddress1][_user]);
-    // RewardToken1.transferFrom(address(this), _user, allocations[_tokenAddress1][_user]);
-    // RewardToken2.transferFrom(address(this), _user, allocations[_tokenAddress2][_user]);
-    // RewardToken3.transferFrom(address(this), _user, allocations[_tokenAddress3][_user]);
-    // RewardToken4.transferFrom(address(this), _user, allocations[_tokenAddress4][_user]);
+    IERC20(_tokenAddress).approve(address(this), allocations[_tokenAddress][_user]);
+    IERC20(_tokenAddress).transferFrom(address(this), _user, allocations[_tokenAddress][_user]);
     delete allocations[_tokenAddress][_user];
-    // delete allocations[_tokenAddress2][_user];
-    // delete allocations[_tokenAddress3][_user];
-    // delete allocations[_tokenAddress4][_user];
   }
 
     // show test voor remix
@@ -131,7 +94,7 @@ contract TokenTimeLock {
     // check if that the sender has deposited in this contract in the mapping and the balance >0
     require(balances[msg.sender] > 0, "There is no funds added");
     // check that the now time is > the time saved in the lock time mapping
-    require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
+    //require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
 
     // update balance
     uint256 amount = balances[msg.sender];

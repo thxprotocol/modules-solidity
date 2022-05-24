@@ -57,8 +57,8 @@ describe.only('TimeLockController', function () {
       factory.deployLimitedSupplyToken('ExampleToken4', 'THX4', timelockcontroller.address, 400000),
     );
 
-    await timelockcontroller.addexampleTokens(RewardTOken1.address, RewardTOken2.address, RewardTOken3.address, RewardTOken4.address);
     await timelockcontroller.allocate(admin.getAddress(), RewardTOken1.address, 50000);
+    await timelockcontroller.allocate(admin.getAddress(), RewardTOken2.address, 20000);
 
   });
 
@@ -108,7 +108,13 @@ describe.only('TimeLockController', function () {
     expect(test5).to.equal(0);
   });
   it('Check if user received allocated reward1', async function () {
+    await timelockcontroller.payout(admin.getAddress(), RewardTOken1.address);
     let test6 = await RewardTOken1.balanceOf(admin.getAddress());
     expect(test6).to.equal(50000);
+  });
+  it('Check if user received allocated reward2', async function () {
+    await timelockcontroller.payout(admin.getAddress(), RewardTOken2.address);
+    let test7 = await RewardTOken2.balanceOf(admin.getAddress());
+    expect(test7).to.equal(20000);
   });
 });
