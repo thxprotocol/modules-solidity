@@ -65,6 +65,8 @@ describe.only('TimeLockController', function () {
   it('Should be able to stake THX and stakes more than 10 thx', async function () {
     await thxToken.approve(timelockcontroller.address, constants.MaxUint256);
     await expect(timelockcontroller.deposit(2000, 1)).to.emit(timelockcontroller, 'Staked');
+    let test9 = await timelockcontroller.getAddress();
+    console.log("Addresssssssss", test9);
   });
   it('Check if users balance is lowered after staking', async function () {
     let test = await thxToken.balanceOf(admin.getAddress());
@@ -116,5 +118,10 @@ describe.only('TimeLockController', function () {
     await timelockcontroller.payout(admin.getAddress(), RewardTOken2.address);
     let test7 = await RewardTOken2.balanceOf(admin.getAddress());
     expect(test7).to.equal(20000);
+  });
+
+  it('Check if address is removed from addresses', async function () {
+    let test8 = await timelockcontroller.getAddress();
+    console.log("Addresssssssss", test8);
   });
 });

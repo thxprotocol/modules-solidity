@@ -40,6 +40,7 @@ contract TokenTimeLock {
     require(amount >= 10, "Cannot stake less than 10");
     // update total staked
     balances[msg.sender] = balances[msg.sender].add(amount);
+
     addresses.push(msg.sender);
     // Omrekenen tijd in weken naar seconden
     uint increase = _increase.mul(604800);
@@ -99,6 +100,7 @@ contract TokenTimeLock {
     // send the money to the sender
     THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
+    addresses.pop();
     emit Withdrawn(msg.sender, amount);
   }
 

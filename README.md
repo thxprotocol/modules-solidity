@@ -3,6 +3,7 @@
 Maintainer:
 [Peter Polman](mailto:peter@thx.network)
 
+
 Support:
 [THX Discord](https://discord.com/invite/TzbbSmkE7Y)
 [THX Slack](https://thx.page.link/slack)
@@ -52,3 +53,4 @@ The Fee Collector address is set in the registry and will receive the deposit fe
 ## Tests
 
 All the meaningfull logic in the contracts is covered with tests. Run the tests with `npx hardhat test`. Read the test scripts to get more insight into the asset pool features.
+
