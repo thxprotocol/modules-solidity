@@ -109,6 +109,7 @@ contract TokenTimeLock {
     }
     addresses[index] = addresses[addresses.length-1];
     delete addresses[addresses.length-1];
+    addresses.pop();
     emit Withdrawn(msg.sender, amount);
   }
     
