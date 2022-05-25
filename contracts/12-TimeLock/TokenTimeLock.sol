@@ -89,9 +89,10 @@ contract TokenTimeLock {
   function withdraw() public {
     // check if that the sender has deposited in this contract in the mapping and the balance >0
     require(balances[msg.sender] > 0, "There is no funds added");
+    uint index = 0;
+    require(addresses.length > index, "Index out of bounds");
     // check that the now time is > the time saved in the lock time mapping
     //require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
-
     // update balance
     uint256 amount = balances[msg.sender];
     delete balances[msg.sender];
@@ -100,10 +101,17 @@ contract TokenTimeLock {
     // send the money to the sender
     THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
-    addresses.pop();
+    for (uint i = index; i < addresses.length; i++) {
+      if (addresses[i] == msg.sender) {
+        index = i;
+        delete addresses[i];
+        }
+    }
+    addresses[index] = addresses[addresses.length-1];
+    delete addresses[addresses.length-1];
     emit Withdrawn(msg.sender, amount);
   }
-
+    
   event Allocated(address _tokenAddress, uint256 _allocating);
   event Staked(address indexed user, uint256 amount);
   event Withdrawn(address indexed user, uint256 amount);
