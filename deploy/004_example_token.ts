@@ -10,9 +10,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const feeCollector = '0x3eF13AcF26776BfEd682732ae34cBC86bb355862';
 
+    const testUser = '0xaf9d56684466fcfcea0a2b7fc137ab864d642946';
+
     await deploy('LimitedSupplyToken', {
         from: deployer,
-        args: ['THX Limited Supply Token', 'LIM-THX', deployer, parseUnits('10000000', 'ether')],
+        args: [
+            'THX Limited Supply Token',
+            'LIM-THX',
+            '0xaf9d56684466fcfcea0a2b7fc137ab864d642946',
+            parseUnits('10000000', 'ether'),
+        ],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
@@ -49,7 +56,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     await deploy('UnlimitedSupplyToken', {
         from: deployer,
-        args: ['THX Unlimited Supply Token', 'UNL-THX', [deployer], deployer],
+        args: [
+            'THX Unlimited Supply Token',
+            'UNL-THX',
+            [deployer, '0x3eF13AcF26776BfEd682732ae34cBC86bb355862'],
+            deployer,
+        ],
         log: true,
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
