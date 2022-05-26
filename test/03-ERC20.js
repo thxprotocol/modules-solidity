@@ -5,7 +5,7 @@ const { getDiamondCuts, deployPoolRegistry, deployDefaultPool } = require('./uti
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
-describe('ERC20Facet', function () {
+describe.only('ERC20Facet', function () {
     let owner;
     let token, registry, diamondCuts;
 
@@ -40,7 +40,7 @@ describe('ERC20Facet', function () {
         expect(await erc20.balanceOf(token.address)).to.eq(0);
 
         await erc20.approve(token.address, constants.MaxUint256);
-        await expect(erc20.transfer(token.address, parseEther('100'))).to.emit(erc20, 'Transfer');
+        await expect(token.topup(parseEther('100'))).to.emit(token, 'Topup');
 
         expect(await token.getBalance()).to.eq(parseEther('100'));
         expect(await erc20.balanceOf(token.address)).to.eq(parseEther('100'));

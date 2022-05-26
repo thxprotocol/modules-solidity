@@ -86,6 +86,13 @@ contract ERC20Facet is Access, IERC20Facet {
         emit Depositted(_msgSender(), amount);
     }
 
+    function topup(uint256 _amount) external override onlyOwner {
+        require(_amount > 0, 'ZERO_AMOUNT');
+        LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
+        s.token.safeTransferFrom(_msgSender(), address(this), _amount);
+        emit Topup(_msgSender(), _amount);
+    }
+
     function transferToMany(address[] memory _recipients, uint256[] memory _amounts) external override onlyOwner {
         require(_amounts.length == _recipients.length, 'INVALID_INPUT');
 
