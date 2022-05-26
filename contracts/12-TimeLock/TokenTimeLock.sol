@@ -102,22 +102,20 @@ contract TokenTimeLock {
     THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
     for (uint i = index; i<addresses.length; i++){
-            //require(addresses[i] != msg.sender, "no address found");
-            if (addresses[i] == msg.sender) {
-                index = i;
-                delete addresses[i];
-                addresses[index] = addresses[addresses.length -1 ];
-            }
-        }
-        
-        //addresses[index] = addresses[addresses.length -1 ];
-        delete addresses[addresses.length-1];
-        addresses.pop();
-    
-        emit Withdrawn(msg.sender, amount);
+      //require(addresses[i] != msg.sender, "no address found");
+      if (addresses[i] == msg.sender) {
+        index = i;
+        delete addresses[i];
+        addresses[index] = addresses[addresses.length - 1];
+      }
     }
+    //addresses[index] = addresses[addresses.length -1 ];
+    delete addresses[addresses.length-1];
+    addresses.pop();
 
-    
+    emit Withdrawn(msg.sender, amount);
+  }
+
   event Allocated(address _tokenAddress, uint256 _allocating);
   event Staked(address indexed user, uint256 amount);
   event Withdrawn(address indexed user, uint256 amount);
