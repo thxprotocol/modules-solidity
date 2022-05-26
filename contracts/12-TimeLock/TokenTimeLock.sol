@@ -12,8 +12,6 @@ import "../util/ERC20/IUnlimitedSupplyToken.sol";
 
 contract TokenTimeLock {
   using SafeMath for uint256;
-  // amount you deposited is saved in balances
-  mapping(address => uint256) public balances;
   // when you can withdraw is saved in lockTime
   mapping(address => uint256) public lockTime;
 
@@ -38,9 +36,6 @@ contract TokenTimeLock {
 
   function deposit(uint256 amount, uint256 _increase) external payable {
     require(amount >= 10, "Cannot stake less than 10");
-    // update total staked
-    balances[msg.sender] = balances[msg.sender].add(amount);
-
     addresses.push(msg.sender);
     // Omrekenen tijd in weken naar seconden
     uint increase = _increase.mul(604800);
@@ -57,7 +52,7 @@ contract TokenTimeLock {
   }
 
   function amountStaked() public view returns (uint256) {
-    return balances[msg.sender];
+    return stTHXtoken.balanceOf(msg.sender);
   }
 
   function getAddress() public view returns (address[] memory) {
@@ -88,14 +83,14 @@ contract TokenTimeLock {
 
   function withdraw() public {
     // check if that the sender has deposited in this contract in the mapping and the balance >0
-    require(balances[msg.sender] > 0, "There is no funds added");
+    require(stTHXtoken.balanceOf(msg.sender) > 0, "There are no stThxTokens in your wallet");
     uint index = 0;
     require(addresses.length > index, "Index out of bounds");
+    require(lockTime[msg.sender] > 0, "User needs to have locktime");
     // check that the now time is > the time saved in the lock time mapping
     //require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
     // update balance
-    uint256 amount = balances[msg.sender];
-    delete balances[msg.sender];
+    uint256 amount = stTHXtoken.balanceOf(msg.sender);
     // burn staked thx
     stTHXtoken.burn(msg.sender, amount);
     // send the money to the sender
@@ -111,6 +106,7 @@ contract TokenTimeLock {
     }
     //addresses[index] = addresses[addresses.length -1 ];
     delete addresses[addresses.length-1];
+    delete lockTime[msg.sender];
     addresses.pop();
 
     emit Withdrawn(msg.sender, amount);
