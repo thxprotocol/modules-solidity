@@ -64,7 +64,7 @@ contract TokenTimeLock {
     address _userAddress,
     address _tokenAddress,
     uint256 allocating
-  ) public {
+  ) public onlyAdmin {
     allocations[_tokenAddress][_userAddress] = allocations[_tokenAddress][_userAddress].add(allocating);
     emit Allocated(_tokenAddress, allocating);
   }
