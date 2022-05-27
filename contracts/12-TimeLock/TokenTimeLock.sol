@@ -51,10 +51,6 @@ contract TokenTimeLock {
     emit Staked(msg.sender, amount);
   }
 
-  function amountStaked() public view returns (uint256) {
-    return stTHXtoken.balanceOf(msg.sender);
-  }
-
   function getAddress() public view returns (address[] memory) {
     return addresses;
   }
