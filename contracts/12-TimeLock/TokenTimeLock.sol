@@ -55,7 +55,7 @@ contract TokenTimeLock {
     return addresses;
   }
 
-    // Allocating per user the coin and the amount it has
+  // Allocating per user the coin and the amount it has
   function allocate(
     address _userAddress,
     address _tokenAddress,
@@ -72,11 +72,6 @@ contract TokenTimeLock {
     delete allocations[_tokenAddress][_user];
   }
 
-    // show test voor remix
-  // function showAllocation(address _tokenAddress) public view returns (uint256) {
-  //   return allocations[_tokenAddress][msg.sender];
-  // }
-
   function withdraw() public {
     // check if that the sender has deposited in this contract in the mapping and the balance >0
     require(stTHXtoken.balanceOf(msg.sender) > 0, "There are no stThxTokens in your wallet");
@@ -84,7 +79,7 @@ contract TokenTimeLock {
     require(addresses.length > index, "Index out of bounds");
     require(lockTime[msg.sender] > 0, "User needs to have locktime");
     // check that the now time is > the time saved in the lock time mapping
-    //require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
+    require(block.timestamp > lockTime[msg.sender], "lock time has not expired yet");
     // update balance
     uint256 amount = stTHXtoken.balanceOf(msg.sender);
     // burn staked thx
@@ -93,14 +88,12 @@ contract TokenTimeLock {
     THXtoken.approve(address(this), amount);
     THXtoken.transferFrom(address(this), msg.sender, amount);
     for (uint i = index; i<addresses.length; i++){
-      //require(addresses[i] != msg.sender, "no address found");
       if (addresses[i] == msg.sender) {
         index = i;
         delete addresses[i];
         addresses[index] = addresses[addresses.length - 1];
       }
     }
-    //addresses[index] = addresses[addresses.length -1 ];
     delete addresses[addresses.length-1];
     delete lockTime[msg.sender];
     addresses.pop();
