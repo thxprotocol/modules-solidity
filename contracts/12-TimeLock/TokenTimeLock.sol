@@ -36,11 +36,23 @@ contract TokenTimeLock {
 
   function deposit(uint256 amount, uint256 _increase) external payable {
     require(amount >= 10, "Cannot stake less than 10");
-    addresses.push(msg.sender);
+    bool addressCheck = false;
+    for (uint i = 0; i < addresses.length; i++) {
+      if (addresses[i] == msg.sender) {
+        addressCheck = true;
+      }
+    }
+    if (addressCheck == false) {
+      addresses.push(msg.sender);
+    }
     // Omrekenen tijd in weken naar seconden
     uint increase = _increase.mul(604800);
     // updated locktime 1 week from now
-    lockTime[msg.sender] = block.timestamp.add(increase);
+    if (lockTime[msg.sender] == 0) {
+      lockTime[msg.sender] = block.timestamp.add(increase);
+    } else {
+      lockTime[msg.sender] = lockTime[msg.sender].add(increase);
+    }
     // Transfer THX naar contract voor staken
     THXtoken.transferFrom(msg.sender, address(this), amount);
     // Transfer stTHX naar User
@@ -53,6 +65,10 @@ contract TokenTimeLock {
 
   function getAddress() public view returns (address[] memory) {
     return addresses;
+  }
+
+  function getLocktime() public view returns (uint256) {
+    return lockTime[msg.sender];
   }
 
   // Allocating per user the coin and the amount it has
