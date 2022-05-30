@@ -82,10 +82,10 @@ contract TokenTimeLock {
   }
 
   // delete test for remix
-  function payout(address _user, address _tokenAddress) public onlyAdmin {
-    IERC20(_tokenAddress).approve(address(this), allocations[_tokenAddress][_user]);
-    IERC20(_tokenAddress).transferFrom(address(this), _user, allocations[_tokenAddress][_user]);
-    delete allocations[_tokenAddress][_user];
+  function payout(address _user, address _tokenAddress, uint256 rewards) public onlyAdmin {
+    IERC20(_tokenAddress).approve(address(this), rewards);
+    IERC20(_tokenAddress).transferFrom(address(this), _user, rewards);
+    // delete allocations[_tokenAddress][_user];
   }
 
   function withdraw() public {
