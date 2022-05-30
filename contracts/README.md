@@ -2,11 +2,11 @@
 
 ##### Maintainers
 
-[Almar Gemmel](mailto: Almar.gemmel@hva.nl)
-[Mert Gokseli](mailto: mert.gokseli@hva.nl)
-[Juriaan de Nijs](mailto: juriaan.de.nijs@hva.nl)
-[Davey Zaal](mailto: davey.zaal@hva.nl)
-[Daniël van Apeldoorn](mailto: daniel.van.apeldoorn@hva.nl)
+[Almar Gemmel](mailto:Almar.gemmel@hva.nl)\
+[Mert Gokseli](mailto:mert.gokseli@hva.nl)\
+[Juriaan de Nijs](mailto:juriaan.de.nijs@hva.nl)\
+[Davey Zaal](mailto:davey.zaal@hva.nl)\
+[Daniël van Apeldoorn](mailto:daniel.van.apeldoorn@hva.nl)
 
 StTHX.sol & TokenTimeLock.sol are the contracts that are used for creating a staking mechanism within THX. They make use of ERC20 imports to ensure that an user has the option to stake and receive staked THX(stTHX) which represents the number of tokens invested. The user can choose the duration of the staking which makes the amount invested locked for a given time period. After the staking period the user gets rewarded with fees which are calculated respectfully.
 
