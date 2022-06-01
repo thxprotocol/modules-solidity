@@ -73,7 +73,7 @@ contract TokenTimeLock {
 
   //see which addreses are stored in the addresses array
 
-  function getAddress() public view returns (address[] memory) onlyAdmin{
+  function getAddress() public view onlyAdmin returns (address[] memory){
     return addresses;
   }
 
