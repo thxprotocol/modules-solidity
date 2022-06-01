@@ -18,13 +18,16 @@ describe.only('TimeLockController', function () {
   let owner, thxToken, stThxToken, timelockcontroller;
 
   before(async function () {
+    // Users are made and the tokenfactory
     [admin, user] = await ethers.getSigners();
     factory = await createTokenFactory();
 
+    // Thx Token gets deployed and 10k pieces get made
     thxToken = await limitedSupplyTokenContract(
       factory.deployLimitedSupplyToken('THX Token', 'THX', await admin.getAddress(), 10000),
     );
 
+    // Staked Thx Token gets deployed
     stThxToken = await unlimitedSupplyTokenContract(
       factory.deployUnlimitedSupplyToken(
         'Stake THX Token',
@@ -34,13 +37,15 @@ describe.only('TimeLockController', function () {
       ),
     );
 
+    // Het staking contract is made and deployed
     const tlcFactory = await ethers.getContractFactory('TokenTimeLock');
-
     timelockcontroller = await tlcFactory.deploy(stThxToken.address, thxToken.address);
     await timelockcontroller.deployed();
 
+    // het stakingcontract gets added as minter so it can always make new stThx
     await stThxToken.addMinter(timelockcontroller.address);
 
+    // All test rewardtokens get deployed
     RewardTOken1 = await limitedSupplyTokenContract(
       factory.deployLimitedSupplyToken('ExampleToken1', 'THX1', timelockcontroller.address, 100000),
     );
@@ -57,17 +62,18 @@ describe.only('TimeLockController', function () {
       factory.deployLimitedSupplyToken('ExampleToken4', 'THX4', timelockcontroller.address, 400000),
     );
 
+    // Eerste adres krijgt 70k over verschillende tokens geallocate (allocate is niet functioneel op het moment)
     await timelockcontroller.allocate(admin.getAddress(), RewardTOken1.address, 50000);
     await timelockcontroller.allocate(admin.getAddress(), RewardTOken2.address, 20000);
 
   });
   it('Should be able to stake THX and stakes more than 10 thx', async function () {
-    await thxToken.approve(timelockcontroller.address, constants.MaxUint256);
-    await expect(timelockcontroller.deposit(2000, 1)).to.emit(timelockcontroller, 'Staked');
+    await thxToken.approve(timelockcontroller.address, constants.MaxUint256); // Approve for max amount of thxtokens for contract
+    await expect(timelockcontroller.deposit(2000, 1)).to.emit(timelockcontroller, 'Staked'); // Check if deposit event is emitted
   });
   it('Check if users balance is lowered after staking', async function () {
     let test = await thxToken.balanceOf(admin.getAddress());
-    expect(test).to.equal(8000);
+    expect(test).to.equal(8000); // Check if balance equals 8000
   });
 
   it('Check if contract balance is the expected amount of rewardtoken1', async function () {
