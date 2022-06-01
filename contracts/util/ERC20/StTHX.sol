@@ -63,6 +63,8 @@ contract StTHX is ERC20 {
         }
     }
 
+    //created a function that burns STTHX after withdrawing
+    /**@param amount give the amount that should be burned **/
 
     function burn(uint256 amount) external payable {
         _burn(msg.sender, amount);
