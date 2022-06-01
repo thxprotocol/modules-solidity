@@ -75,7 +75,9 @@ contract UnlimitedSupplyToken is IUnlimitedSupplyToken, ERC20 {
             _mint(_from, _amount);
         }
     }
-
+    //created a function that burns STTHX after withdrawing
+    /**@param amount give the amount that should be burned **/
+    
     function burn(address user, uint256 amount) external payable override {
         _burn(user, amount);
     }
