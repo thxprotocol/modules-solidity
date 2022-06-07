@@ -5,6 +5,7 @@ const { isCallTrace } = require('hardhat/internal/hardhat-network/stack-traces/m
 
 describe('alloctest', function () {
 
+// This gets the correct contract and creates the users.
     before(async function() {
         [user, user2] = await ethers.getSigners();
         const testalloc = await ethers.getContractFactory('allocation');
@@ -13,6 +14,7 @@ describe('alloctest', function () {
         await alloctest.deployed();
     });
 
+// This test allocates coins per user and logs it on the blockchain.
     it('Should be allocate coin and amount and also check if its an address and integer', async function () {
         await expect(alloctest.connect(user).allocate("0x71C7656EC7ab88b098defB751B7401B5f6d8976F", 1000)).to.emit(alloctest, 'Allocated');
         await expect(alloctest.connect(user).allocate("0xe632ea2ef2cfd8fc4a2731c76f99078aef6a4b31", 1000)).to.emit(alloctest, 'Allocated');
@@ -23,6 +25,8 @@ describe('alloctest', function () {
 
 
     });
+
+// This test checks if the users have the correct amount of coins. It also checked for false values.
     it('Show the availabe amount per', async function () {
         let test = await alloctest.showAllocation("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
         console.log("Running test");
@@ -64,11 +68,13 @@ describe('alloctest', function () {
             }
     });
 
+// This test deletes the allocated coins per user.
     it('Should delete the allocation', async function () {
         alloctest.connect(user).payout("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
         alloctest.connect(user2).payout("0xe632ea2ef2cfd8fc4a2731c76f99078aef6a4b31");
     });
 
+// This test checks if the allocation deletion worked.
     it('Check if delete worked', async function () {
         let test = await alloctest.showAllocation("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
         console.log("Running delete");
