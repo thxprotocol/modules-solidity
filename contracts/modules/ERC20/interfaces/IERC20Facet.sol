@@ -6,7 +6,7 @@ interface IERC20Facet {
     event ERC20Updated(address old, address current);
     event RegistryUpdated(address old, address current);
     event DepositFeeCollected(uint256 fee);
-    event Depositted(address sender, uint256 amount);
+    event Deposited(address sender, uint256 amount);
     event TransferFeeCollected(uint256 fee);
     event TransferredTo(address recipient, uint256 amount);
 
