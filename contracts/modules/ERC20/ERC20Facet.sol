@@ -135,6 +135,8 @@ contract ERC20Facet is Access, IERC20Facet {
         IERC20 tokenB = IERC20(_tokenAddress);
         require(tokenB.balanceOf(_msgSender()) >= _amountIn, 'INSIFFICIENT_TOKEN_B_BALANCE'); 
 
+        require(s.multipliers[_tokenAddress] > 0, 'SWAP_NOT_ALLOWED');
+
         uint256 amountOut = _amountIn.mul(s.multipliers[_tokenAddress]);
         require(s.token.balanceOf(address(this)) >= amountOut, 'INSIFFICIENT_TOKEN_A_BALANCE');  
 
