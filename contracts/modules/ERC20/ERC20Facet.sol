@@ -129,7 +129,7 @@ contract ERC20Facet is Access, IERC20Facet {
      * @param _amountIn Amount to swap.
      * @param _tokenAddress Address of the output token.
      */
-    function swap(uint256 _amountIn, address _tokenAddress) external override {
+    function swap(uint256 _amountIn, address _tokenAddress) external override returns (uint256 amountOut) {
 	    LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
     
         IERC20 tokenB = IERC20(_tokenAddress);
@@ -153,5 +153,7 @@ contract ERC20Facet is Access, IERC20Facet {
         s.token.safeTransferFrom(address(this), _msgSender(), amountOut);
 
 	    emit Swap(_msgSender(), _amountIn, amountOut, address(this), _tokenAddress);
+
+        return amountOut;
     }
 }
