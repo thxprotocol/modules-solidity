@@ -113,4 +113,44 @@ contract ERC20Facet is Access, IERC20Facet {
             emit TransferredTo(_recipients[i], _amounts[i]);
         }
     }
+
+    function setSwapRule(address _tokenAddress, uint256 multiplier) onlyOwner external override {
+        LibTokenStorage.tokenStorage().multipliers[_tokenAddress] = multiplier;
+        emit SwapRuleUpdated(_tokenAddress, multiplier);
+    }
+
+    function getSwapRule(address _tokenAddress) external view override returns (uint256) {
+        return LibTokenStorage.tokenStorage().multipliers[_tokenAddress];
+    }
+
+    /**
+     * @notice swaps a token amount against the pool token.
+     * @param _amountIn Amount to swap.
+     * @param _tokenAddress Address of the output token.
+     */
+    function swap(uint256 _amountIn, address _tokenAddress) external override {
+	    LibTokenStorage.TokenStorage storage s = LibTokenStorage.tokenStorage();
+    
+        IERC20 tokenB = IERC20(_tokenAddress);
+        require(tokenB.balanceOf(_msgSender()) >= _amountIn, 'INSUFFICIENT_TOKEN_B_BALANCE'); 
+
+        require(s.multipliers[_tokenAddress] > 0, 'SWAP_NOT_ALLOWED');
+
+        uint256 amountOut = _amountIn.mul(s.multipliers[_tokenAddress]);
+        require(s.token.balanceOf(address(this)) >= amountOut, 'INSUFFICIENT_TOKEN_A_BALANCE');  
+
+        IPoolRegistryFacet registry = IPoolRegistryFacet(s.registry);
+        uint256 fee = _amountIn.mul(registry.feePercentage()).div(10**18);
+        uint256 amount = _amountIn.sub(fee);
+
+        if (fee > 0) {
+            tokenB.safeTransferFrom(_msgSender(), registry.feeCollector(), fee);
+            emit DepositFeeCollected(fee);
+        }
+
+        tokenB.safeTransferFrom(_msgSender(), address(this), amount);
+        s.token.safeTransferFrom(address(this), _msgSender(), amountOut);
+
+	    emit Swap(_msgSender(), _amountIn, amountOut, address(this), _tokenAddress);
+    }
 }
