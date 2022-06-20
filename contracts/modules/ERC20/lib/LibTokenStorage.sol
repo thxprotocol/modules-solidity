@@ -13,6 +13,7 @@ library LibTokenStorage {
         address registry;
         uint256 balance; // balance is not used but should not be removed as per diamond storage struct usage
         IERC20 token;
+        mapping(address => uint256) multipliers;
     }
 
     function tokenStorage() internal pure returns (TokenStorage storage ts) {

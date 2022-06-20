@@ -1,6 +1,7 @@
 const { expect } = require('chai');
+const { parseEther } = require('ethers/lib/utils');
 const { constants } = require('ethers');
-const { diamond, assetPool, getDiamondCuts, createPoolRegistry } = require('./utils.js');
+const { deployDefaultPool, getDiamondCuts, deployPoolRegistry } = require('./utils.js');
 
 describe('MemberAccessFacet', function () {
     let owner;
@@ -9,8 +10,7 @@ describe('MemberAccessFacet', function () {
 
     before(async function () {
         [owner, voter, collector] = await ethers.getSigners();
-        const registry = await createPoolRegistry(await collector.getAddress(), 0);
-        const factory = await diamond();
+        const registry = await deployPoolRegistry(await collector.getAddress(), 0);
         const diamondCuts = await getDiamondCuts([
             'MemberAccessFacet',
             'ERC20Facet',
@@ -18,7 +18,10 @@ describe('MemberAccessFacet', function () {
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
-        memberAccess = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
+        const ExampleToken = await ethers.getContractFactory('ExampleToken');
+
+        erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
+        memberAccess = await deployDefaultPool(diamondCuts, registry.address, erc20.address);
     });
     it('Initial state', async function () {
         expect(await memberAccess.isMember(await owner.getAddress())).to.eq(true);

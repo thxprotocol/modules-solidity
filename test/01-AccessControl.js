@@ -1,12 +1,12 @@
 const { expect } = require('chai');
+const { parseEther } = require('ethers/lib/utils');
 const {
-    diamond,
-    assetPool,
+    deployDefaultPool,
     MEMBER_ROLE,
     MANAGER_ROLE,
     ADMIN_ROLE,
     getDiamondCuts,
-    createPoolRegistry,
+    deployPoolRegistry,
 } = require('./utils.js');
 
 describe('AccessControlFacet', function () {
@@ -16,8 +16,7 @@ describe('AccessControlFacet', function () {
 
     before(async function () {
         [owner, voter, collector] = await ethers.getSigners();
-        const registry = await createPoolRegistry(await collector.getAddress(), 0);
-        const factory = await diamond();
+        const registry = await deployPoolRegistry(await collector.getAddress(), 0);
         const diamondCuts = await getDiamondCuts([
             'MemberAccessFacet',
             'MockSetup',
@@ -26,7 +25,11 @@ describe('AccessControlFacet', function () {
             'DiamondLoupeFacet',
             'OwnershipFacet',
         ]);
-        accessControl = await assetPool(factory.deployAssetPool(diamondCuts, registry.address));
+        const ExampleToken = await ethers.getContractFactory('ExampleToken');
+
+        erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
+        accessControl = await deployDefaultPool(diamondCuts, registry.address, erc20.address);
+
         await accessControl.setupMockAccess(
             [MEMBER_ROLE, MANAGER_ROLE, ADMIN_ROLE],
             [await owner.getAddress(), await owner.getAddress(), await owner.getAddress()],
