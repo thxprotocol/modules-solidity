@@ -5,7 +5,7 @@ const { getDiamondCuts, deployPoolRegistry, deployDefaultPool } = require('./uti
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
-describe.only('ERC20Facet', function () {
+describe('ERC20Facet', function () {
     let owner;
     let token, registry, diamondCuts;
 
