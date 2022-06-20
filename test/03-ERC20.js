@@ -7,7 +7,7 @@ const onePercent = ethers.BigNumber.from('10').pow(16);
 
 describe('ERC20Facet', function () {
     let owner, voter;
-    let token, token2, registry, diamondCuts;
+    let token, registry, diamondCuts;
 
     before(async function () {
         [owner, collector, recipient, voter] = await ethers.getSigners();
@@ -26,7 +26,6 @@ describe('ERC20Facet', function () {
 
         const ExampleToken2 = await ethers.getContractFactory('ExampleToken');
         erc202 = await ExampleToken2.deploy(await voter.getAddress(), parseEther('1000000'));
-        token2 = await deployDefaultPool(diamondCuts, registry.address, erc202.address);
     });
     it('Test token', async function () {
         expect(await token.getERC20()).to.eq(erc20.address);
