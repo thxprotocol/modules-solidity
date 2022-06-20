@@ -21,6 +21,6 @@ interface IERC20Facet {
     function topup(uint256 _amount) external;
     function transferToMany(address[] memory _recipients, uint256[] memory _amounts) external;
     function setSwapRule(address _tokenAddress, uint256 multiplier) external;
-    function getSwapRule(address _tokenAddress) external returns (uint256);
-    function swap(uint256 _amountIn, address _tokenAddress) external returns (uint256 amountOut);
+    function getSwapRule(address _tokenAddress) external view returns (uint256);
+    function swap(uint256 _amountIn, address _tokenAddress) external;
 }

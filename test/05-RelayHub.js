@@ -72,4 +72,19 @@ describe('RelayHubFacet', function () {
         expect(receipt.events[receipt.events.length - 2].args.success).to.eq(true);
         expect(receipt.events[receipt.events.length - 1].args.success).to.eq(true);
     });
+    it('Relayception', async function () {
+        // Approve for the deposit call
+        await erc20.connect(voter).approve(solution.address, parseEther('1'));
+
+        const call = solution.interface.encodeFunctionData('deposit', [parseEther('1')]);
+        const nonce = Number(await solution.getLatestNonce(await voter.getAddress())) + 1;
+        const hash = web3.utils.soliditySha3(call, nonce);
+        const sig = await voter.signMessage(ethers.utils.arrayify(hash));
+        const receipt = await helpSign(solution, 'call', [call, nonce, sig], owner);
+
+        expect(receipt.events[receipt.events.length - 3].args.sender).to.eq(await voter.getAddress());
+        expect(receipt.events[receipt.events.length - 3].args.amount).to.eq(parseEther('1'));
+        expect(receipt.events[receipt.events.length - 2].args.success).to.eq(true);
+        expect(receipt.events[receipt.events.length - 1].args.success).to.eq(true);
+    });
 });

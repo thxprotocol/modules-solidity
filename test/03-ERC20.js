@@ -22,8 +22,7 @@ describe('ERC20Facet', function () {
 
         const ExampleToken = await ethers.getContractFactory('ExampleToken');
         erc20 = await ExampleToken.deploy(await owner.getAddress(), parseEther('1000000'));
-        token = await deployDefaultPool(diamondCuts, registry.address, erc20.address);  
-        
+        token = await deployDefaultPool(diamondCuts, registry.address, erc20.address);
 
         const ExampleToken2 = await ethers.getContractFactory('ExampleToken');
         erc202 = await ExampleToken2.deploy(await voter.getAddress(), parseEther('1000000'));
@@ -71,6 +70,7 @@ describe('ERC20Facet', function () {
     it('Test set swap rule', async function () {
         const multiplier = 10;
         expect(await token.setSwapRule(erc202.address, multiplier)).to.emit(registry, 'SwapRuleUpdated');
+        expect(await token.getSwapRule(erc202.address)).to.eq(multiplier);
     });
     it('Test swap', async function () {
         // Approvals
@@ -87,13 +87,13 @@ describe('ERC20Facet', function () {
         expect(await erc202.balanceOf(await registry.feeCollector())).to.eq(parseEther('0'));
         expect(await token.connect(voter).swap(amountIn, erc202.address)).to.emit(registry, 'Swap');
         expect(await erc202.balanceOf(await voter.address)).to.eq(parseEther('999990'));
-        
+
         // Bob receives 100 token from the pools
         expect(await erc20.balanceOf(voter.address)).to.eq(parseEther('100'));
 
         // The pool receives 9.9 ABC from Bob
         expect(await erc202.balanceOf(await token.address)).to.eq(parseEther('9.9'));
-        
+
         //The FeeCollector receives 0.1 token2 from the pool (1%)
         expect(await erc202.balanceOf(await registry.feeCollector())).to.eq(parseEther('0.1'));
     });
