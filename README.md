@@ -1,4 +1,4 @@
-# THX Asset Pool Modules
+# Diamond Facets &amp; Factories
 
 Maintainer:
 [Peter Polman](mailto:peter@thx.network)
@@ -25,13 +25,13 @@ sh ./scripts/publish.sh [major, minor, nonce] (default=patch)
 
 ## Diamonds
 
-Pools are build and managed using the Nick Mudges [Diamonds](https://github.com/ethereum/EIPs/issues/2535) concept. Listen to Nick explain them in [this interview](https://www.youtube.com/watch?v=64VfajtPGJ4). To increase the maintainability of the diamond facets we have grouped facets into modules that indicate the dependencies to one and other. Since we plan on opening up the contract layer to new module proposals we have named them TMP's: THX Module Proposals.
+Pools are build and managed using the Nick Mudges [Diamonds](https://github.com/ethereum/EIPs/issues/2535) concept. Listen to Nick explain them in [this interview](https://www.youtube.com/watch?v=64VfajtPGJ4). 
 
 Reasons for diamonds implementation:
 
 -   No contract size limit
--   Stable contract addresses
--   Maintain contract functionality
+-   Deterministic contract addresses
+-   Maintain contract functionality after upgrade
 
 ## Pool Factory
 
@@ -47,4 +47,4 @@ The Fee Collector address is set in the registry and will receive the deposit fe
 
 ## Tests
 
-All the meaningfull logic in the contracts is covered with tests. Run the tests with `npx hardhat test`. Read the test scripts to get more insight into the asset pool features.
+All the meaningfull logic in the contracts is and should be covered with tests. Run the tests with `npm test`. Read the test scripts to get more insight into the facet features.
