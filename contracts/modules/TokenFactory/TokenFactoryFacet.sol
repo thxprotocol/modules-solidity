@@ -21,8 +21,6 @@ contract TokenFactoryFacet is ITokenFactoryFacet {
         string memory _baseURI,
         address _owner
     ) external override {
-        LibDiamond.enforceIsContractOwner();
-
         NonFungibleToken t = new NonFungibleToken(_name, _symbol, _baseURI, _owner);
         emit TokenDeployed(address(t), TokenType.NonFungible);
     }
@@ -39,8 +37,6 @@ contract TokenFactoryFacet is ITokenFactoryFacet {
         address _to,
         uint256 _amount
     ) external override {
-        LibDiamond.enforceIsContractOwner();
-
         LimitedSupplyToken t = new LimitedSupplyToken(_name, _symbol, _to, _amount);
         emit TokenDeployed(address(t), TokenType.Limited);
     }
@@ -55,8 +51,6 @@ contract TokenFactoryFacet is ITokenFactoryFacet {
         string memory _symbol,
         address _owner
     ) external override {
-        LibDiamond.enforceIsContractOwner();
-
         UnlimitedSupplyToken t = new UnlimitedSupplyToken(_name, _symbol, _owner);
         emit TokenDeployed(address(t), TokenType.Unlimited);
     }
