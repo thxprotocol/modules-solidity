@@ -12,7 +12,8 @@ interface IPoolFactoryFacet {
     function deployDefaultPool(
         IDiamondCut.FacetCut[] memory _facets,
         address _registry,
-        address _token
+        address _erc20,
+        address _erc721
     ) external;
 
     function deployNFTPool(IDiamondCut.FacetCut[] memory _facets, address _token) external;

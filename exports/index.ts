@@ -54,6 +54,7 @@ const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
         'AccessControlFacet',
         'MemberAccessFacet',
         'ERC20Facet',
+        'ERC721Facet',
         'RelayHubFacet',
         'BasePollProxyFacet',
         'WithdrawByFacet',

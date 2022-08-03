@@ -28,21 +28,27 @@ contract PoolFactoryFacet is IPoolFactoryFacet, Access {
     function deployDefaultPool(
         IDiamondCut.FacetCut[] memory _facets,
         address _registry,
-        address _token
+        address _erc20,
+        address _erc721
     ) external override {
         require(_registry != address(0), 'NO_REGISTRY');
-        require(_token != address(0), 'NO_TOKEN');
+        require(_erc20 != address(0), 'NO_TOKEN');
 
         LibFactoryStorage.Data storage s = LibFactoryStorage.s();
         RelayDiamond diamond = new RelayDiamond(_facets, address(this));
 
         IDefaultDiamond pool = IDefaultDiamond(address(diamond));
         pool.setPoolRegistry(_registry);
-        pool.setERC20(_token);
+        pool.setERC20(_erc20);
+
+        if(_erc721 != address(0)) {
+            pool.setERC721(_erc721);
+        }
+        
         pool.transferOwnership(s.defaultController);
         pool.initializeRoles(s.defaultController);
 
-        emit PoolDeployed(address(diamond), _token);
+        emit PoolDeployed(address(diamond), _erc20);
     }
 
     /**
