@@ -138,13 +138,13 @@ const deployPoolRegistry = async (feeCollector, feePercentage) => {
     return registry;
 };
 
-const deployDefaultPool = async (diamondCuts, registryAddress, arc20Address, erc721Address = '0x0000000000000000000000000000000000000000') => {
+const deployDefaultPool = async (diamondCuts, registryAddress, erc20Address, erc721Address = '0x0000000000000000000000000000000000000000') => {
     [owner] = await ethers.getSigners();
     const factory = await deployPoolFactory();
     const { call, nonce, sig } = await getCallData(
         factory,
         'deployDefaultPool',
-        [diamondCuts, registryAddress, arc20Address, erc721Address],
+        [diamondCuts, registryAddress, erc20Address, erc721Address],
         owner,
     );
     const receipt = await (await factory.call(call, nonce, sig)).wait();
