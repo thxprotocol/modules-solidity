@@ -124,7 +124,12 @@
       },
       {
         "internalType": "address",
-        "name": "_token",
+        "name": "_erc20",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_erc721",
         "type": "address"
       }
     ],

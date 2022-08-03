@@ -41,10 +41,10 @@ contract PoolFactoryFacet is IPoolFactoryFacet, Access {
         pool.setPoolRegistry(_registry);
         pool.setERC20(_erc20);
 
-        if(_erc721 != address(0)) {
+        if (_erc721 != address(0)) {
             pool.setERC721(_erc721);
         }
-        
+
         pool.transferOwnership(s.defaultController);
         pool.initializeRoles(s.defaultController);
 
