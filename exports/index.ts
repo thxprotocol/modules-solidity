@@ -12,11 +12,6 @@ export const contractNames = [
     'DiamondLoupeFacet',
     'OwnershipFacet',
 
-    // Tokens
-    'LimitedSupplyToken',
-    'UnlimitedSupplyToken',
-    'NonFungibleToken',
-
     // Diamonds
     'Factory',
     'Registry',
@@ -51,6 +46,7 @@ export const contractNames = [
     'WithdrawByPollProxyFacet',
 ] as const;
 export type ContractName = typeof contractNames[number];
+export type TokenContractName = 'LimitedSupplyToken' | 'UnlimitedSupplyToken' | 'NonFungibleToken';
 
 export interface ContractConfig {
     address: string;
@@ -130,7 +126,7 @@ export const diamondAbi = (network: TNetworkName, variant: DiamondVariant, versi
 
 export const contractConfig = (
     network: TNetworkName,
-    contractName: ContractName,
+    contractName: ContractName | TokenContractName,
     version?: string | undefined,
 ): ContractConfig => {
     const artifacts = getArtifacts(network, version || currentVersion);

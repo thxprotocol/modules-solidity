@@ -1,7 +1,7 @@
 import { constants, Contract, ContractReceipt, ContractTransaction } from 'ethers';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { ethers } from 'hardhat';
-import { ContractName } from 'exports';
+import { ContractName, TokenContractName } from 'exports';
 import { FacetCut } from 'hardhat-deploy/types';
 
 export enum FacetCutAction {
@@ -51,7 +51,7 @@ export const getSelectors = function (contract: Contract) {
     return signatures;
 };
 
-export const deployToken = async (contractName: ContractName, args: any[]) => {
+export const deployToken = async (contractName: TokenContractName, args: any[]) => {
     const factory = await ethers.getContractFactory(contractName);
     const erc20 = await factory.deploy(...args);
     return await ethers.getContractAt(contractName, erc20.address);
