@@ -12,7 +12,6 @@ rimraf.sync(path.join(dir, '*'));
 
 for (const contractName of contractNames) {
     const config = contractConfig('hardhat', contractName);
-    console.log(contractName, config);
     if (config) {
         fs.writeFileSync(path.resolve(dir, `${contractName}.json`), JSON.stringify(config.abi, null, 2));
     }

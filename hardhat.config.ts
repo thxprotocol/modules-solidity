@@ -71,7 +71,7 @@ const config: HardhatUserConfig = {
     },
 };
 
-if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
+if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID && config.networks) {
     config.networks.mumbai = {
         url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY],
@@ -83,7 +83,7 @@ if (POLYGON_PRIVATE_KEY && INFURA_PROJECT_ID) {
         timeout: 2483647,
     };
 }
-if (POLYGON_PRIVATE_KEY_DEV && INFURA_PROJECT_ID) {
+if (POLYGON_PRIVATE_KEY_DEV && INFURA_PROJECT_ID && config.networks) {
     config.networks.mumbaidev = {
         url: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
         accounts: [POLYGON_PRIVATE_KEY_DEV],

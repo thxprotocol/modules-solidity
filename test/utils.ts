@@ -32,14 +32,14 @@ export const getDiamondCuts = async (facetContractNames: ContractName[]) => {
 
 export const findEvent = async (tx: ContractTransaction, eventName: string) => {
     const receipt: ContractReceipt = await tx.wait();
-    return receipt.events.find((ev) => ev.event == eventName);
+    return receipt.events?.find((ev) => ev.event == eventName);
 };
 
 export const filterEvents = (events: any[], eventName: string) => {
     return events.filter((ev) => ev.event == eventName);
 };
 
-export const timestamp = async (tx: ContractTransaction) => {
+export const timestamp = async (tx: ContractReceipt) => {
     return (await ethers.provider.getBlock(tx.blockNumber)).timestamp;
 };
 
@@ -60,7 +60,7 @@ export const deployToken = async (contractName: ContractName, args: any[]) => {
 export const deploy = async (factory: Contract, diamondCuts: FacetCut[], erc20: string, erc721 = ADDRESS_ZERO) => {
     const tx = await factory.deploy(diamondCuts, erc20, erc721);
     const event = await findEvent(tx, 'DiamondDeployed');
-    return await ethers.getContractAt('IDefaultDiamond', event.args.diamond);
+    return await ethers.getContractAt('IDefaultDiamond', event?.args?.diamond);
 };
 
 export const deployFactory = async (owner: string, registry: string) => {
