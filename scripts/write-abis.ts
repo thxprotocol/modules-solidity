@@ -1,4 +1,4 @@
-import { contractConfig, contractNames, diamondAbi, diamondVariants } from '../exports';
+import { contractConfig, contractNames, tokenContractNames, diamondAbi, diamondVariants } from '../exports';
 import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
@@ -17,22 +17,13 @@ for (const contractName of contractNames) {
     }
 }
 
-fs.writeFileSync(
-    path.resolve(dir, `ERC20.json`),
-    JSON.stringify(contractConfig('hardhat', 'LimitedSupplyToken'), null, 2),
-);
-fs.writeFileSync(
-    path.resolve(dir, `LimitedSupplyToken.json`),
-    JSON.stringify(contractConfig('hardhat', 'LimitedSupplyToken'), null, 2),
-);
-fs.writeFileSync(
-    path.resolve(dir, `UnlimitedSupplyToken.json`),
-    JSON.stringify(contractConfig('hardhat', 'UnlimitedSupplyToken'), null, 2),
-);
-fs.writeFileSync(
-    path.resolve(dir, `NonFungibleToken.json`),
-    JSON.stringify(contractConfig('hardhat', 'NonFungibleToken'), null, 2),
-);
+for (const contractName of tokenContractNames) {
+    console.log(contractName, contractConfig('hardhat', contractName));
+    fs.writeFileSync(
+        path.resolve(dir, `${contractName}.json`),
+        JSON.stringify(contractConfig('hardhat', contractName).abi, null, 2),
+    );
+}
 
 for (const diamondVariant of diamondVariants) {
     const abi = diamondAbi('hardhat', diamondVariant);

@@ -11,7 +11,7 @@ rm -rf $BASE_DIR/artifacts
 cd $BASE_DIR
 
 # # Store latest version for hardhat network.
-npx hardhat deploy --export exports/hardhat/latest.json
+npx hardhat deploy --network hardhat --export exports/hardhat/latest.json
 
 # Deploy and export for all networks.
 for NETWORK in mumbaidev maticdev mumbai matic
@@ -23,3 +23,4 @@ done
 
 # Exports the latest versions of abis for direct imports.
 npx ts-node $BASE_DIR/scripts/write-abis.ts
+npx ts-node $BASE_DIR/scripts/write-bytecodes.ts

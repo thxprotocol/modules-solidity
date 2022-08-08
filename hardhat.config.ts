@@ -33,6 +33,7 @@ const config: HardhatUserConfig = {
     },
     networks: {
         hardhat: {
+            saveDeployments: true,
             accounts: [
                 {
                     balance: '100000000000000000000',
