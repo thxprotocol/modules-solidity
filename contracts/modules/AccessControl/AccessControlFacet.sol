@@ -3,24 +3,13 @@
 
 pragma solidity >=0.6.0 <0.8.0;
 
-/******************************************************************************\
-* @title Access Control
-* @author Evert Kors <evert@thx.network>
-* @notice Implement role-based access control.
-* 
-* @dev
-* Implementations: 
-* TMP-1 Access Control: https://github.com/thxprotocol/modules/issues/1
-/******************************************************************************/
-
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import './interfaces/IAccessControlFacet.sol';
 import './lib/LibAccessStorage.sol';
 import '../../interfaces/IAccessControlEvents.sol';
-import '../../utils/RelayReceiver.sol';
 
-contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents, RelayReceiver {
+contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents {
     using EnumerableSet for EnumerableSet.AddressSet;
     using Address for address;
 
@@ -69,7 +58,7 @@ contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents, RelayR
      */
     function grantRole(bytes32 role, address account) external override {
         require(
-            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, _msgSender()),
+            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, msg.sender),
             'AccessControl: sender must be an admin to grant'
         );
         _grantRole(role, account);
@@ -82,7 +71,7 @@ contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents, RelayR
      */
     function revokeRole(bytes32 role, address account) external override {
         require(
-            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, _msgSender()),
+            _hasRole(LibAccessStorage.roleStorage().roles[role].adminRole, msg.sender),
             'AccessControl: sender must be an admin to revoke'
         );
         _revokeRole(role, account);
@@ -94,7 +83,7 @@ contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents, RelayR
      * @param account Address of the account
      */
     function renounceRole(bytes32 role, address account) external override {
-        require(account == _msgSender(), 'AccessControl: can only renounce roles for self');
+        require(account == msg.sender, 'AccessControl: can only renounce roles for self');
         _revokeRole(role, account);
     }
 
@@ -139,7 +128,7 @@ contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents, RelayR
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.add(account)) {
-            emit RoleGranted(role, account, _msgSender());
+            emit RoleGranted(role, account, msg.sender);
         }
     }
 
@@ -151,7 +140,7 @@ contract AccessControlFacet is IAccessControlFacet, IAccessControlEvents, RelayR
         LibAccessStorage.RoleStorage storage rs = LibAccessStorage.roleStorage();
 
         if (rs.roles[role].members.remove(account)) {
-            emit RoleRevoked(role, account, _msgSender());
+            emit RoleRevoked(role, account, msg.sender);
         }
     }
 }

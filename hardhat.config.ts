@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { HardhatUserConfig } from 'hardhat/types/config';
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
@@ -11,10 +12,10 @@ const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
 const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 const POLYGON_PRIVATE_KEY_DEV = process.env.POLYGON_PRIVATE_KEY_DEV || '';
 
-const config: any = {
+const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
     solidity: {
-        version: '0.7.4',
+        version: '0.7.6',
         settings: {
             optimizer: {
                 enabled: true,
@@ -27,7 +28,7 @@ const config: any = {
             default: 0,
         },
         collector: {
-            default: '0x960911a62FdDf7BA84D0d3aD016EF7D15966F7Dc',
+            default: '0x802505465CB707c9347B9631818e14f6066f7513',
         },
     },
     networks: {

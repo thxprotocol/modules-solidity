@@ -7,20 +7,35 @@ export const networkNames = ['mumbai', 'matic', 'mumbaidev', 'maticdev', 'hardha
 export type TNetworkName = typeof networkNames[number];
 
 export const contractNames = [
+    // Default
+    'DiamondCutFacet',
+    'DiamondLoupeFacet',
+    'OwnershipFacet',
+
     // Tokens
     'LimitedSupplyToken',
     'UnlimitedSupplyToken',
     'NonFungibleToken',
-    // Factories
+
+    // Facets
+    'FactoryFacet',
+    'RegistryFacet',
+    'RegistryProxyFacet',
+    'AccessControlFacet',
+    'ERC20ProxyFacet',
+    'ERC20RegistryFacet',
+    'ERC20DepositFacet',
+    'ERC20WithdrawFacet',
+    'ERC20SwapFacet',
+    'ERC721ProxyFacet',
+
+    // Deprecated facets
     'TokenFactory',
     'PoolRegistry',
     'PoolFactory',
-    // Facets
     'TokenFactoryFacet',
     'PoolRegistryFacet',
     'PoolFactoryFacet',
-    'AccessControlFacet',
-    'MemberAccessFacet',
     'ERC20Facet',
     'ERC721Facet',
     'BasePollProxyFacet',
@@ -31,9 +46,6 @@ export const contractNames = [
     'WithdrawByFacet',
     'WithdrawByPollFacet',
     'WithdrawByPollProxyFacet',
-    'DiamondCutFacet',
-    'DiamondLoupeFacet',
-    'OwnershipFacet',
 ] as const;
 export type ContractName = typeof contractNames[number];
 
@@ -48,23 +60,18 @@ export interface ExportJsonFile {
     contracts: { [key: string]: ContractConfig };
 }
 
-export type DiamondVariant = 'defaultPool' | 'nftPool' | 'poolFactory' | 'tokenFactory' | 'poolRegistry';
+export type DiamondVariant = 'defaultDiamond' | 'registry' | 'factory';
 const diamondVariantsConfig: { [key in DiamondVariant]: ContractName[] } = {
-    defaultPool: [
-        'AccessControlFacet',
-        'MemberAccessFacet',
-        'ERC20Facet',
-        'ERC721Facet',
-        'RelayHubFacet',
-        'BasePollProxyFacet',
-        'WithdrawByFacet',
-        'WithdrawByPollFacet',
-        'WithdrawByPollProxyFacet',
+    defaultDiamond: [
+        'RegistryProxyFacet',
+        'ERC20ProxyFacet',
+        'ERC20DepositFacet',
+        'ERC20WithdrawFacet',
+        'ERC20SwapFacet',
+        'ERC721ProxyFacet',
     ],
-    nftPool: ['AccessControlFacet', 'MemberAccessFacet', 'ERC721Facet', 'RelayHubFacet'],
-    poolRegistry: ['PoolRegistryFacet', 'RelayHubFacet'],
-    poolFactory: ['PoolFactoryFacet', 'RelayHubFacet'],
-    tokenFactory: ['TokenFactoryFacet', 'RelayHubFacet'],
+    registry: ['RegistryFacet'],
+    factory: ['FactoryFacet'],
 };
 
 export const diamondVariants = Object.keys(diamondVariantsConfig) as DiamondVariant[];

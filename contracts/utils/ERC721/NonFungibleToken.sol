@@ -1,18 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.7.4;
-
-/******************************************************************************\
-* @title ERC721 URI Storage
-* @author Peter Polman <peter@thx.network>
-* @notice Used for point systems with a limited supply. Mints the full supply to the to argument given in the contructor. 
-* @dev Not upgradable contract.
-/******************************************************************************/
+pragma solidity ^0.7.6;
 
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
-
 import './INonFungibleToken.sol';
 
 contract NonFungibleToken is INonFungibleToken, ERC721, AccessControl, Ownable {
@@ -32,14 +24,14 @@ contract NonFungibleToken is INonFungibleToken, ERC721, AccessControl, Ownable {
         _setBaseURI(baseURI_);
     }
 
-    function mint(address recipient, string memory tokenURI) external override returns (uint256) {
+    function mint(address _recipient, string memory _tokenURI) external override returns (uint256) {
         require(hasRole(MINTER_ROLE, msg.sender), 'NOT_MINTER');
 
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+        _mint(_recipient, newItemId);
+        _setTokenURI(newItemId, _tokenURI);
 
         return newItemId;
     }
