@@ -2,5 +2,6 @@
   "001_registry": 1652262109,
   "002_asset_pool_factory": 1652262152,
   "003_token_factory": 1652262182,
-  "004_example_token": 1652262319
+  "004_example_token": 1652262319,
+  "002_factory": 1659943367
 }

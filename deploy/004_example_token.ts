@@ -36,4 +36,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.id = '004_example_token';
-func.tags = ['LimitedSupplyToken'];
+func.tags = ['LimitedSupplyToken', 'UnlimitedSupplyToken', 'NonFungibleToken'];

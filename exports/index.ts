@@ -23,7 +23,6 @@ export const contractNames = [
     'RegistryProxyFacet',
     'AccessControlFacet',
     'ERC20ProxyFacet',
-    'ERC20RegistryFacet',
     'ERC20DepositFacet',
     'ERC20WithdrawFacet',
     'ERC20SwapFacet',
