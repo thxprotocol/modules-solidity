@@ -17,6 +17,10 @@ export const contractNames = [
     'UnlimitedSupplyToken',
     'NonFungibleToken',
 
+    // Diamonds
+    'Factory',
+    'Registry',
+
     // Facets
     'FactoryFacet',
     'RegistryFacet',
