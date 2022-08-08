@@ -1,16 +1,7 @@
 import { Contract, Signer } from 'ethers';
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import {
-    MINTER_ROLE,
-    deployFactory,
-    deployRegistry,
-    deploy,
-    getDiamondCuts,
-    findEvent,
-    deployToken,
-    ADDRESS_ZERO,
-} from './utils';
+import { MINTER_ROLE, deployFactory, deployRegistry, getDiamondCuts, deployToken, ADDRESS_ZERO } from './utils';
 import { parseEther } from 'ethers/lib/utils';
 
 describe('FactoryFacet', function () {
@@ -26,11 +17,13 @@ describe('FactoryFacet', function () {
         const name = 'Test Token',
             symbol = 'TEST',
             totalSupply = parseEther('1000');
-        let diamond: Contract, erc20: Contract;
+        let erc20: Contract;
+
+        before(async function () {
+            erc20 = await deployToken('LimitedSupplyToken', [name, symbol, await owner.getAddress(), totalSupply]);
+        });
 
         it('deployERC20()', async function () {
-            erc20 = await deployToken('LimitedSupplyToken', [name, symbol, await owner.getAddress(), totalSupply]);
-
             const diamondCuts = await getDiamondCuts(['RegistryProxyFacet', 'ERC20ProxyFacet']);
             await expect(factory.deploy(diamondCuts, erc20.address, ADDRESS_ZERO)).to.emit(factory, 'DiamondDeployed');
         });
@@ -39,9 +32,11 @@ describe('FactoryFacet', function () {
     describe('ERC20 Unlimited', async function () {
         let erc20: Contract;
 
-        it('deployERC20()', async function () {
+        before(async function () {
             erc20 = await deployToken('UnlimitedSupplyToken', ['Test Token', 'TEST', await owner.getAddress()]);
+        });
 
+        it('deployERC20()', async function () {
             const diamondCuts = await getDiamondCuts(['RegistryProxyFacet', 'ERC20ProxyFacet']);
             await expect(factory.deploy(diamondCuts, erc20.address, ADDRESS_ZERO)).to.emit(factory, 'DiamondDeployed');
         });
@@ -86,73 +81,69 @@ describe('FactoryFacet', function () {
     });
 
     describe('NFT', function () {
-        const baseURI = 'https://api.thx.network/v1/metadata',
-            name = 'Test Non Fungible Token',
-            symbol = 'TST-NFT';
-        let erc721: Contract, diamond: Contract;
+        const name = 'Test Non Fungible Token',
+            symbol = 'TST-NFT',
+            baseURI = 'https://api.thx.network/v1/metadata/',
+            uri = '123456789123';
+        let erc721: Contract;
 
         before(async function () {
             erc721 = await deployToken('NonFungibleToken', [name, symbol, baseURI, await owner.getAddress()]);
-            const diamondCuts = await getDiamondCuts(['RegistryProxyFacet', 'ERC20ProxyFacet']);
-            const tx = await factory.deploy(diamondCuts, ADDRESS_ZERO, erc721.address);
-            const event = await findEvent(tx, 'DiamondDeployed');
-            diamond = await ethers.getContractAt('IDefaultDiamond', event.args.diamond);
+        });
+
+        it('deployERC20()', async function () {
+            const diamondCuts = await getDiamondCuts(['RegistryProxyFacet', 'ERC721ProxyFacet']);
+            await expect(factory.deploy(diamondCuts, ADDRESS_ZERO, erc721.address)).to.emit(factory, 'DiamondDeployed');
         });
 
         it('Initial state', async () => {
-            expect(await diamond.balanceOf(await owner.getAddress())).to.eq(0);
-            expect(await diamond.totalSupply()).to.eq(0);
-            expect(await diamond.name()).to.eq(name);
-            expect(await diamond.symbol()).to.eq(symbol);
+            expect(await erc721.balanceOf(await owner.getAddress())).to.eq(0);
+            expect(await erc721.totalSupply()).to.eq(0);
+            expect(await erc721.name()).to.eq(name);
+            expect(await erc721.symbol()).to.eq(symbol);
         });
 
         it('mint', async function () {
-            const uri = '/123456789123';
-
-            await expect(diamond.connect(recipient).mint(await recipient.getAddress(), uri)).to.revertedWith(
+            await expect(erc721.connect(recipient).mint(await recipient.getAddress(), uri)).to.revertedWith(
                 'NOT_MINTER',
             );
-            await expect(diamond.mint(await recipient.getAddress(), uri)).to.emit(diamond, 'Transfer');
+            await expect(erc721.mint(await recipient.getAddress(), uri)).to.emit(erc721, 'Transfer');
 
-            expect(await diamond.balanceOf(await recipient.getAddress())).to.eq(1);
-            expect(await diamond.totalSupply()).to.eq(1);
-            expect(await diamond.tokenURI(1)).to.eq(baseURI + uri);
+            expect(await erc721.balanceOf(await recipient.getAddress())).to.eq(1);
+            expect(await erc721.totalSupply()).to.eq(1);
+            expect(await erc721.tokenURI(1)).to.eq(baseURI + uri);
         });
 
         it('transfer', async function () {
-            expect(await diamond.balanceOf(await owner.getAddress())).to.eq(0);
-            expect(diamond.connect(recipient).approve(await owner.getAddress(), 1)).to.emit(diamond, 'Approval');
+            expect(await erc721.balanceOf(await owner.getAddress())).to.eq(0);
+            expect(erc721.connect(recipient).approve(await owner.getAddress(), 1)).to.emit(erc721, 'Approval');
             expect(
-                diamond.connect(recipient).transferFrom(await recipient.getAddress(), await owner.getAddress(), 1),
-            ).to.emit(diamond, 'Transfer');
-            expect(await diamond.balanceOf(await owner.getAddress())).to.eq(1);
-            expect(await diamond.balanceOf(await recipient.getAddress())).to.eq(0);
+                erc721.connect(recipient).transferFrom(await recipient.getAddress(), await owner.getAddress(), 1),
+            ).to.emit(erc721, 'Transfer');
+            expect(await erc721.balanceOf(await owner.getAddress())).to.eq(1);
+            expect(await erc721.balanceOf(await recipient.getAddress())).to.eq(0);
         });
 
         it('owner should grant minter role', async () => {
-            expect(await diamond.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(false);
-            await expect(diamond.grantRole(MINTER_ROLE, await recipient.getAddress())).to.emit(diamond, 'RoleGranted');
-            expect(await diamond.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(true);
+            expect(await erc721.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(false);
+            await expect(erc721.grantRole(MINTER_ROLE, await recipient.getAddress())).to.emit(erc721, 'RoleGranted');
+            expect(await erc721.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(true);
         });
 
         it('recipient should mint and not fail', async () => {
-            const uri = '/123456789123';
-
-            expect(await diamond.balanceOf(await recipient.getAddress())).to.eq(0);
-            expect(await diamond.balanceOf(await owner.getAddress())).to.eq(1);
-            await expect(diamond.connect(recipient).mint(await owner.getAddress(), uri)).to.emit(diamond, 'Transfer');
-            expect(await diamond.balanceOf(await recipient.getAddress())).to.eq(0);
-            expect(await diamond.balanceOf(await owner.getAddress())).to.eq(2);
+            expect(await erc721.balanceOf(await recipient.getAddress())).to.eq(0);
+            expect(await erc721.balanceOf(await owner.getAddress())).to.eq(1);
+            await expect(erc721.connect(recipient).mint(await owner.getAddress(), uri)).to.emit(erc721, 'Transfer');
+            expect(await erc721.balanceOf(await recipient.getAddress())).to.eq(0);
+            expect(await erc721.balanceOf(await owner.getAddress())).to.eq(2);
         });
 
         it('owner should revoke minter role', async () => {
-            const uri = '/123456789123';
-
-            expect(await diamond.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(true);
-            await expect(diamond.revokeRole(MINTER_ROLE, await recipient.getAddress())).to.emit(diamond, 'RoleRevoked');
-            expect(await diamond.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(false);
-            expect(await diamond.balanceOf(await recipient.getAddress())).to.eq(0);
-            await expect(diamond.connect(recipient).mint(await owner.getAddress(), uri)).to.be.revertedWith(
+            expect(await erc721.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(true);
+            await expect(erc721.revokeRole(MINTER_ROLE, await recipient.getAddress())).to.emit(erc721, 'RoleRevoked');
+            expect(await erc721.hasRole(MINTER_ROLE, await recipient.getAddress())).to.eq(false);
+            expect(await erc721.balanceOf(await recipient.getAddress())).to.eq(0);
+            await expect(erc721.connect(recipient).mint(await owner.getAddress(), uri)).to.be.revertedWith(
                 'NOT_MINTER',
             );
         });

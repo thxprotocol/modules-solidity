@@ -6,8 +6,8 @@ import { ethers } from 'hardhat';
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
-describe('ERC20ProxyFacet', function () {
-    let owner: Signer, collector: Signer, diamond: Contract, registry: Contract;
+describe('RegistryFacet', function () {
+    let owner: Signer, collector: Signer, registry: Contract;
 
     before(async function () {
         [owner, collector] = await ethers.getSigners();
@@ -24,24 +24,32 @@ describe('ERC20ProxyFacet', function () {
         expect(await registry.feePercentage()).to.eq(String(onePercent));
     });
 
-    it('Deploy RegistryProxy', async function () {
-        const factory = await deployFactory(await owner.getAddress(), registry.address);
-        const erc20 = await deployToken('LimitedSupplyToken', [
-            'Test Token',
-            'TEST',
-            await owner.getAddress(),
-            parseEther('1000000'),
-        ]);
-        diamond = await deploy(factory, await getDiamondCuts(['RegistryProxyFacet', 'ERC20ProxyFacet']), erc20.address);
-    });
+    describe('RegistryProxyFacet', function () {
+        let diamond: Contract;
 
-    it('getRegistry()', async function () {
-        expect(await diamond.getRegistry()).to.eq(registry.address);
-        expect(await registry.feePercentage()).to.eq(onePercent);
-        expect(await registry.feeCollector()).to.eq(await collector.getAddress());
-    });
+        it('Deploy RegistryProxy', async function () {
+            const factory = await deployFactory(await owner.getAddress(), registry.address);
+            const erc20 = await deployToken('LimitedSupplyToken', [
+                'Test Token',
+                'TEST',
+                await owner.getAddress(),
+                parseEther('1000000'),
+            ]);
+            diamond = await deploy(
+                factory,
+                await getDiamondCuts(['RegistryProxyFacet', 'ERC20ProxyFacet']),
+                erc20.address,
+            );
+        });
 
-    it('setRegistry()', async function () {
-        await expect(diamond.setRegistry(registry.address)).to.emit(diamond, 'RegistryProxyUpdated');
+        it('getRegistry()', async function () {
+            expect(await diamond.getRegistry()).to.eq(registry.address);
+            expect(await registry.feePercentage()).to.eq(onePercent);
+            expect(await registry.feeCollector()).to.eq(await collector.getAddress());
+        });
+
+        it('setRegistry()', async function () {
+            await expect(diamond.setRegistry(registry.address)).to.emit(diamond, 'RegistryProxyUpdated');
+        });
     });
 });
