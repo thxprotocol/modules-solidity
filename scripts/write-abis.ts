@@ -18,7 +18,6 @@ for (const contractName of contractNames) {
 }
 
 for (const contractName of tokenContractNames) {
-    console.log(contractName, contractConfig('hardhat', contractName));
     fs.writeFileSync(
         path.resolve(dir, `${contractName}.json`),
         JSON.stringify(contractConfig('hardhat', contractName).abi, null, 2),

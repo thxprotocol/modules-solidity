@@ -20,11 +20,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
     const { deploy } = deployments;
 
-    const { deployer } = await getNamedAccounts();
+    const { owner } = await getNamedAccounts();
 
     for (const facet of facets) {
         await deploy(facet, {
-            from: deployer,
+            from: owner,
             args: [],
             log: true,
             autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks

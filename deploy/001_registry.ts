@@ -9,10 +9,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
     const { diamond } = deployments;
 
-    const { deployer, collector } = await getNamedAccounts();
+    const { owner, collector } = await getNamedAccounts();
 
     await diamond.deploy('Registry', {
-        from: deployer,
+        from: owner,
         log: true,
         facets: ['RegistryFacet'],
         execute: {

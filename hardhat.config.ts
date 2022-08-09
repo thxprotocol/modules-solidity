@@ -24,11 +24,19 @@ const config: HardhatUserConfig = {
         },
     },
     namedAccounts: {
-        deployer: {
-            default: 0,
+        owner: {
+            hardhat: '0x08302CF8648A961c607e3e7Bd7B7Ec3230c2A6c5',
+            mumbaidev: '0xf8a2f1e8fb38a6463a19b838d82a35340678390c',
+            maticdev: '0x1ece1975d2372c881d0c27c36f3c4f2df055ee40',
+            mumbai: '0x74a8e2579971649fcafde14c8a8cc0fbec35f579',
+            matic: '0xc6313fc1998de4ccefd3e7096fb62e196c429043',
         },
         collector: {
-            default: '0x802505465CB707c9347B9631818e14f6066f7513',
+            hardhat: '0xaf9d56684466fcFcEA0a2B7fC137AB864d642946',
+            mumbaidev: '0x960911a62FdDf7BA84D0d3aD016EF7D15966F7Dc',
+            maticdev: '0x960911a62FdDf7BA84D0d3aD016EF7D15966F7Dc',
+            mumbai: '0x2e2fe80CD6C4933B3B97b4c0B5c8eC56b073bE27',
+            matic: '0x802505465CB707c9347B9631818e14f6066f7513',
         },
     },
     networks: {
@@ -37,7 +45,7 @@ const config: HardhatUserConfig = {
             accounts: [
                 {
                     balance: '100000000000000000000',
-                    privateKey: '873c254263b17925b686f971d7724267710895f1585bb0533db8e693a2af32ff',
+                    privateKey: '0x873c254263b17925b686f971d7724267710895f1585bb0533db8e693a2af32ff',
                 },
                 {
                     balance: '100000000000000000000',
@@ -52,11 +60,6 @@ const config: HardhatUserConfig = {
                     privateKey: 'eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0',
                 },
             ],
-        },
-        fork: {
-            url: `http://127.0.0.1:8545/`,
-            accounts: ['eea0247bd059ac4d2528adb36bb0de003d62ba568e3197984b61c41d9a132df0'],
-            timeout: 2483647,
         },
     },
     paths: {

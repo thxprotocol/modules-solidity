@@ -1,20 +1,20 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { ADDRESS_ZERO } from '../test/utils';
+import { contractConfig, currentVersion } from '../exports';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
     const { diamond } = deployments;
-
-    const { deployer } = await getNamedAccounts();
+    const { owner } = await getNamedAccounts();
+    const { address } = contractConfig('hardhat', 'Registry', currentVersion);
 
     await diamond.deploy('Factory', {
-        from: deployer,
+        from: owner,
         log: true,
         facets: ['FactoryFacet'],
         execute: {
             methodName: 'initialize',
-            args: [deployer, ADDRESS_ZERO],
+            args: [owner, address],
         },
         autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
         waitConfirmations: network.live ? 3 : 0,
