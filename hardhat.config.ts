@@ -25,11 +25,7 @@ const config: HardhatUserConfig = {
     },
     namedAccounts: {
         owner: {
-            hardhat: '0x08302CF8648A961c607e3e7Bd7B7Ec3230c2A6c5',
-            mumbaidev: '0xf8a2f1e8fb38a6463a19b838d82a35340678390c',
-            maticdev: '0x1ece1975d2372c881d0c27c36f3c4f2df055ee40',
-            mumbai: '0x74a8e2579971649fcafde14c8a8cc0fbec35f579',
-            matic: '0xc6313fc1998de4ccefd3e7096fb62e196c429043',
+            default: 0,
         },
         collector: {
             hardhat: '0xaf9d56684466fcFcEA0a2B7fC137AB864d642946',
