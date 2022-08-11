@@ -34,11 +34,11 @@ contract ERC20WithdrawFacet is Access, IERC20WithdrawFacet {
         uint256 fee = _amount.mul(registry.feePercentage()).div(10**18);
 
         if (fee > 0) {
-            s.token.safeTransferFrom(address(this), registry.feeCollector(), fee);
+            s.token.safeTransfer(registry.feeCollector(), fee);
             emit ERC20WithdrawFeeCollected(fee);
         }
 
-        s.token.safeTransferFrom(address(this), _receiver, _amount);
+        s.token.safeTransfer(_receiver, _amount);
         emit ERC20WithdrawFor(_receiver, _amount);
     }
 }
