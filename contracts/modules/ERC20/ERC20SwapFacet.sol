@@ -44,12 +44,12 @@ contract ERC20SwapFacet is Access, IERC20SwapFacet {
         uint256 amount = _amountIn.sub(fee);
 
         if (fee > 0) {
-            tokenB.safeTransferFrom(_sender, registry.feeCollector(), fee);
+            tokenB.transferFrom(_sender, registry.feeCollector(), fee);
             emit ERC20SwapFeeCollected(fee);
         }
 
         tokenB.safeTransferFrom(_sender, address(this), amount);
-        s.token.safeTransferFrom(address(this), _sender, amountOut);
+        s.token.safeTransfer(_sender, amountOut);
 
         emit ERC20SwapFor(_sender, _amountIn, amountOut, address(this), _tokenAddress);
     }

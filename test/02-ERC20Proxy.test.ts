@@ -3,7 +3,6 @@ import { parseEther } from 'ethers/lib/utils';
 import { BigNumber, constants, Contract, Signer } from 'ethers';
 import { getDiamondCuts, filterEvents, deployRegistry, deployFactory, deploy, deployToken } from './utils';
 import { ethers } from 'hardhat';
-import { parse } from 'path';
 
 const onePercent = ethers.BigNumber.from('10').pow(16);
 
@@ -20,6 +19,13 @@ describe('ERC20ProxyFacet', function () {
         const factory = await deployFactory(await owner.getAddress(), registry.address);
         erc20 = await deployToken('LimitedSupplyToken', [name, symbol, await owner.getAddress(), totalSupply]);
         diamond = await deploy(factory, await getDiamondCuts(['RegistryProxyFacet', 'ERC20ProxyFacet']), erc20.address);
+    });
+    it('setERC20', async function () {
+        await expect(diamond.setERC20(erc20.address)).to.emit(diamond, 'ERC20ProxyUpdated');
+    });
+    it('setERC20 for new token reverts', async function () {
+        const newERC20 = await deployToken('LimitedSupplyToken', [name, symbol, await owner.getAddress(), totalSupply]);
+        await expect(diamond.setERC20(newERC20.address)).to.be.revertedWith('ADDRESS_INIT');
     });
     it('transferFrom', async function () {
         expect(await diamond.balanceOf(diamond.address)).to.eq(0);
