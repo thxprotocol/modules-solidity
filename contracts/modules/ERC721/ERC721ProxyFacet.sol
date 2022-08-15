@@ -14,7 +14,7 @@ import './lib/LibERC721Storage.sol';
 import '../../utils/ERC721/INonFungibleToken.sol';
 import '../../utils/Access.sol';
 
-contract ERC721ProxyFacet is Access, IERC721ProxyFacet {
+contract ERC721ProxyFacet is Access, IERC721ProxyFacet, EIP2981RoyaltyOverride {
     using SafeMath for uint256;
 
     /**
