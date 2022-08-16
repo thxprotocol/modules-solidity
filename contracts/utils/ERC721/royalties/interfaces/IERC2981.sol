@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (interfaces/IERC2981.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.6;
 
-import "@openzeppelin/contracts/introspection/ERC165.sol";
 
 /**
  * @dev Interface for the NFT Royalty Standard.
@@ -13,7 +12,7 @@ import "@openzeppelin/contracts/introspection/ERC165.sol";
  *
  * _Available since v4.5._
  */
-interface IERC2981 is IERC165 {
+interface IERC2981  {
     /**
      * @dev Returns how much royalty is owed and to whom, based on a sale price that may be denominated in any unit of
      * exchange. The royalty amount is denominated and should be paid in that same unit of exchange.

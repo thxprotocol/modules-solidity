@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity 0.7.6;
+pragma abicoder v2;
 
 /// @author: manifold.xyz
-
 import "@openzeppelin/contracts/introspection/ERC165.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "./interfaces/IRoyaltyOverride.sol";
-
+import "./interfaces/IERC2981.sol";
 
 /**
- * Simple EIP2981 reference override implementation
+ * Simple ERC2981 reference override implementation
  */
-abstract contract EIP2981RoyaltyOverrideCore is IEIP2981, IEIP2981RoyaltyOverride, ERC165 {
+abstract contract ERC2981RoyaltyOverrideCore is IERC2981, IERC2981RoyaltyOverride, ERC165 {
     using EnumerableSet for EnumerableSet.UintSet;
 
     TokenRoyalty public defaultRoyalty;
@@ -20,7 +20,7 @@ abstract contract EIP2981RoyaltyOverrideCore is IEIP2981, IEIP2981RoyaltyOverrid
     EnumerableSet.UintSet private _tokensWithRoyalties;
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
-        return interfaceId == type(IEIP2981).interfaceId || interfaceId == type(IEIP2981RoyaltyOverride).interfaceId || super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC2981).interfaceId || interfaceId == type(IERC2981RoyaltyOverride).interfaceId || super.supportsInterface(interfaceId);
     }
 
     /**
@@ -54,14 +54,14 @@ abstract contract EIP2981RoyaltyOverrideCore is IEIP2981, IEIP2981RoyaltyOverrid
     }
 
     /**
-     * @dev See {IEIP2981RoyaltyOverride-getTokenRoyaltiesCount}.
+     * @dev See {IERC2981RoyaltyOverride-getTokenRoyaltiesCount}.
      */
     function getTokenRoyaltiesCount() external override view returns(uint256) {
         return _tokensWithRoyalties.length();
     }
 
     /**
-     * @dev See {IEIP2981RoyaltyOverride-getTokenRoyaltyByIndex}.
+     * @dev See {IERC2981RoyaltyOverride-getTokenRoyaltyByIndex}.
      */
     function getTokenRoyaltyByIndex(uint256 index) external override view returns(TokenRoyaltyConfig memory) {
         uint256 tokenId = _tokensWithRoyalties.at(index);
@@ -70,7 +70,7 @@ abstract contract EIP2981RoyaltyOverrideCore is IEIP2981, IEIP2981RoyaltyOverrid
     }
 
     /**
-     * @dev See {IEIP2981RoyaltyOverride-royaltyInfo}.
+     * @dev See {IERC2981RoyaltyOverride-royaltyInfo}.
      */
     function royaltyInfo(uint256 tokenId, uint256 value) public override view returns (address, uint256) {
         if (_tokenRoyalties[tokenId].recipient != address(0)) {

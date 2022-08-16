@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.6;
+pragma abicoder v2;
 
 /// @author: manifold.xyz
 
-import "@openzeppelin/contracts/introspection/ERC165.sol";
+import "@openzeppelin/contracts/introspection/IERC165.sol";
 
 /**
- * Simple EIP2981 reference override implementation
+ * Simple ERC2981 reference override implementation
  */
-interface IEIP2981RoyaltyOverride is IERC165 {
+interface IERC2981RoyaltyOverride is IERC165 {
 
     event TokenRoyaltyRemoved(uint256 tokenId);
     event TokenRoyaltySet(uint256 tokenId, address recipient, uint16 bps);
