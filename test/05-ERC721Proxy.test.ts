@@ -4,7 +4,13 @@ import { ethers } from 'hardhat';
 import { deploy, deployFactory, deployRegistry, deployToken, getDiamondCuts, ADDRESS_ZERO, MINTER_ROLE } from './utils';
 
 describe('ERC721ProxyFacet', function () {
-    let owner: Signer, collector: Signer, recipient: Signer, newOwner: Signer, diamond: Contract, erc721: Contract;
+    let owner: Signer,
+        collector: Signer,
+        recipient: Signer,
+        newOwner: Signer,
+        diamond: Contract,
+        erc721: Contract,
+        royaltyBps;
     const baseUrl = 'https://www.example.com/metadata/';
 
     before(async function () {
@@ -12,11 +18,14 @@ describe('ERC721ProxyFacet', function () {
 
         const registry = await deployRegistry(await collector.getAddress(), '0');
         const factory = await deployFactory(await owner.getAddress(), registry.address);
+        royaltyBps = 1000; // means 10%
         erc721 = await deployToken('NonFungibleToken', [
             'Test Collectible',
             'TEST-NFT',
             baseUrl,
             await owner.getAddress(),
+            await recipient.getAddress(),
+            royaltyBps,
         ]);
         diamond = await deploy(
             factory,

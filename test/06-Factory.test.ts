@@ -86,9 +86,17 @@ describe('FactoryFacet', function () {
             baseURI = 'https://api.thx.network/v1/metadata/',
             uri = '123456789123';
         let erc721: Contract;
-
+        const royaltyRecipient = '0x0000000000000000000000000000000000000000';
+        const royaltyBps = 0;
         before(async function () {
-            erc721 = await deployToken('NonFungibleToken', [name, symbol, baseURI, await owner.getAddress()]);
+            erc721 = await deployToken('NonFungibleToken', [
+                name,
+                symbol,
+                baseURI,
+                await owner.getAddress(),
+                royaltyRecipient,
+                royaltyBps,
+            ]);
         });
 
         it('deployERC20()', async function () {
