@@ -1,7 +1,10 @@
+import dotenv from 'dotenv';
 import { expect } from 'chai';
 import { Contract, Signer } from 'ethers';
 import { ethers } from 'hardhat';
 import { deploy, deployFactory, deployRegistry, deployToken, getDiamondCuts, ADDRESS_ZERO, MINTER_ROLE } from './utils';
+const RoyaltyRegistryABI = require('./abis/royalty-registry.abi.json');
+dotenv.config();
 
 describe('ERC721ProxyFacet', function () {
     let owner: Signer,
@@ -10,7 +13,8 @@ describe('ERC721ProxyFacet', function () {
         newOwner: Signer,
         diamond: Contract,
         erc721: Contract,
-        royaltyBps;
+        royaltyBps: number;
+
     const baseUrl = 'https://www.example.com/metadata/';
 
     before(async function () {
@@ -18,6 +22,7 @@ describe('ERC721ProxyFacet', function () {
 
         const registry = await deployRegistry(await collector.getAddress(), '0');
         const factory = await deployFactory(await owner.getAddress(), registry.address);
+
         royaltyBps = 1000; // means 10%
         erc721 = await deployToken('NonFungibleToken', [
             'Test Collectible',
@@ -59,6 +64,15 @@ describe('ERC721ProxyFacet', function () {
         await expect(diamond.mintFor(await recipient.getAddress(), uri)).to.emit(diamond, 'ERC721Minted');
         expect(await erc721.balanceOf(await recipient.getAddress())).to.eq(1);
         expect(await erc721.tokenURI(1)).to.eq(baseUrl + uri);
+    });
+
+    it('can get royalty info', async () => {
+        const registry = await ethers.getContractAt(
+            RoyaltyRegistryABI,
+            process.env.ROYALTY_REGISTRY_HARDHAT + '',
+            owner,
+        );
+        console.log('ROYALTY REGISTRY', registry);
     });
 
     it('can transfer nft ownership', async () => {
