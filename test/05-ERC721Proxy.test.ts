@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { Contract, Signer } from 'ethers';
 import { ethers } from 'hardhat';
 import { deploy, deployFactory, deployRegistry, deployToken, getDiamondCuts, ADDRESS_ZERO, MINTER_ROLE } from './utils';
-const RoyaltyRegistryABI = require('./abis/royalty-registry.abi.json');
 dotenv.config();
 
 describe('ERC721ProxyFacet', function () {
@@ -67,12 +66,10 @@ describe('ERC721ProxyFacet', function () {
     });
 
     it('can get royalty info', async () => {
-        const registry = await ethers.getContractAt(
-            RoyaltyRegistryABI,
-            process.env.ROYALTY_REGISTRY_HARDHAT + '',
-            owner,
-        );
-        console.log('ROYALTY REGISTRY', registry);
+        let value = 500;
+        const result = await erc721.royaltyInfo(1, value);
+        expect(result[0]).to.eq(await recipient.getAddress());
+        expect(result[1]).to.eq((value * 100) / royaltyBps);
     });
 
     it('can transfer nft ownership', async () => {
