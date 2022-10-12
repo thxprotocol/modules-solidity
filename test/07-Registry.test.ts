@@ -15,9 +15,10 @@ describe('RegistryFacet', function () {
 
     it('Deploy Registry', async function () {
         const DiamondFactory = await ethers.getContractFactory('Diamond');
-        const { address } = await DiamondFactory.deploy(await getDiamondCuts(['RegistryFacet']), [
+        const { address } = await DiamondFactory.deploy(
             await owner.getAddress(),
-        ]);
+            await getDiamondCuts(['RegistryFacet']),
+        );
         registry = await ethers.getContractAt('IRegistry', address);
         await registry.initialize(await collector.getAddress(), String(onePercent));
         expect(await registry.feeCollector()).to.eq(await collector.getAddress());

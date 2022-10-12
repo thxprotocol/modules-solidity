@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.7.6;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
 
-import { Diamond } from 'diamond-2/contracts/Diamond.sol';
+import 'diamond-2/contracts/Diamond.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 import '../../interfaces/IDefaultDiamond.sol';
 import './interfaces/IFactoryFacet.sol';
@@ -47,11 +46,17 @@ contract FactoryFacet is IFactoryFacet {
     }
 
     function _deploy(IDiamondCut.FacetCut[] memory _facets, address _registry) internal returns (IDefaultDiamond) {
-        Diamond.DiamondArgs memory args;
+        require(_facets.length > 0, 'it must contains at min 1 facet');
+        Diamond diamond = new Diamond(address(this), _facets[0].facetAddress);
 
-        args.owner = address(this);
-
-        Diamond diamond = new Diamond(_facets, args);
+        // remove the first element from the array of facets
+        if (_facets.length > 1) {
+            IDiamondCut.FacetCut[] memory facets2 = new IDiamondCut.FacetCut[](_facets.length - 1);
+            for (uint256 i = 1; i < _facets.length; i++) {
+                facets2[i - 1] = _facets[i];
+            }
+            LibDiamond.diamondCut(facets2, address(0), '');
+        }
         IDefaultDiamond d = IDefaultDiamond(address(diamond));
 
         d.setRegistry(_registry);

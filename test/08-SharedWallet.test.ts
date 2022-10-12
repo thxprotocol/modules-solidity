@@ -24,7 +24,7 @@ describe('SharedWallet TEST', function () {
         console.log('MockERC721Contract DEPLOYED');
 
         const SharedWalletContract = await ethers.getContractFactory('SharedWallet');
-        sharedWallet = await upgrades.deployProxy(SharedWalletContract, await user.getAddress());
+        sharedWallet = await upgrades.deployProxy(SharedWalletContract, [await user.getAddress()]);
         await sharedWallet.deployed();
         console.log('SharedWallet DEPLOYED');
     });

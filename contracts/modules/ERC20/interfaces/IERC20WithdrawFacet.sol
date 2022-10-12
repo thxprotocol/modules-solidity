@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 interface IERC20WithdrawFacet {
     event ERC20WithdrawFeeCollected(uint256 fee);

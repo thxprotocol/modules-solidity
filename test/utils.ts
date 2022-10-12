@@ -66,7 +66,7 @@ export const deploy = async (factory: Contract, diamondCuts: FacetCut[], erc20: 
 export const deployFactory = async (owner: string, registry: string) => {
     const diamondCuts = await getDiamondCuts(['FactoryFacet']);
     const DiamondFactory = await ethers.getContractFactory('Diamond');
-    const diamond = await DiamondFactory.deploy(diamondCuts, [owner]);
+    const diamond = await DiamondFactory.deploy(owner, diamondCuts);
     const factory = await ethers.getContractAt('IFactory', diamond.address);
 
     await factory.initialize(owner, registry);
@@ -77,13 +77,15 @@ export const deployFactory = async (owner: string, registry: string) => {
 export const deployRegistry = async (feeCollector: string, feePercentage: string) => {
     const [owner] = await ethers.getSigners();
     const diamondCuts = await getDiamondCuts(['RegistryFacet']);
-    const DiamondFactory = await ethers.getContractFactory('Diamond');
-    const diamond = await DiamondFactory.deploy(diamondCuts, [await owner.getAddress()]);
-    const registry = await ethers.getContractAt('IRegistry', diamond.address);
+    const DiamondFactory = await ethers.getContractFactory('DiamondFactory');
+    const diamondFactory = await DiamondFactory.deploy();
+    await diamondFactory.createDiamond(await owner.getAddress(), diamondCuts);
+    const diamond = await diamondFactory.getDiamond();
+    console.log('diamond', diamond);
+    // const registry = await ethers.getContractAt('IRegistry', diamond);
+    // await registry.initialize(feeCollector, feePercentage);
 
-    await registry.initialize(feeCollector, feePercentage);
-
-    return registry;
+    // return registry;
 };
 
 export function createUnlockDate(numMonths: number) {

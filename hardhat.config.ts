@@ -5,6 +5,7 @@ import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
 import 'hardhat-gas-reporter';
 import 'hardhat-deploy';
+import '@openzeppelin/hardhat-upgrades';
 
 dotenv.config();
 
@@ -15,44 +16,16 @@ const POLYGON_PRIVATE_KEY_DEV = process.env.POLYGON_PRIVATE_KEY_DEV || '';
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
     solidity: {
-        compilers: [
-            {
-                version: '0.7.6',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
+        version: '0.8.6',
+        settings: {
+            optimizer: {
+                runs: 200,
+                enabled: true,
+                details: {
+                    yul: false,
                 },
             },
-            {
-                version: '0.8.0',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-            {
-                version: '0.8.1',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-            {
-                version: '0.8.2',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-        ],
+        },
     },
     namedAccounts: {
         owner: {

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
+
 
 /******************************************************************************\
 * @title ERC721 Connector
@@ -7,7 +8,7 @@ pragma solidity ^0.7.0;
 * @notice Connect ERC721 token contract.
 /******************************************************************************/
 
-import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 import './interfaces/IERC721ProxyFacet.sol';
 import './lib/LibERC721Storage.sol';
@@ -22,7 +23,7 @@ contract ERC721ProxyFacet is Access, IERC721ProxyFacet {
      * @dev Can only be set once.
      */
     function setERC721(address _token) external override onlyOwner {
-        require(LibERC721Storage.s().token == INonFungibleToken(0), 'INIT');
+        require(LibERC721Storage.s().token == INonFungibleToken(address(0)), 'INIT');
         require(_token != address(0), 'ZERO');
 
         LibERC721Storage.s().token = INonFungibleToken(_token);
@@ -41,7 +42,7 @@ contract ERC721ProxyFacet is Access, IERC721ProxyFacet {
      */
     function mintFor(address _recipient, string memory _tokenUri) external override onlyOwner {
         LibERC721Storage.ERC721Storage storage s = LibERC721Storage.s();
-        require(s.token != INonFungibleToken(0), 'NO_TOKEN');
+        require(s.token != INonFungibleToken(address(0)), 'NO_TOKEN');
 
         INonFungibleToken nft = INonFungibleToken(LibERC721Storage.s().token);
         uint256 tokenId = nft.mint(_recipient, _tokenUri);

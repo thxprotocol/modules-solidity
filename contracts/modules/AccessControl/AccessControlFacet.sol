@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // source: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/AccessControl.sol
 
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/utils/EnumerableSet.sol';
+import '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import './interfaces/IAccessControlFacet.sol';
 import './lib/LibAccessStorage.sol';

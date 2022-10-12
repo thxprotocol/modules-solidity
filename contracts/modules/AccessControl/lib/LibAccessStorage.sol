@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.7.6;
-import '@openzeppelin/contracts/utils/EnumerableSet.sol';
+pragma solidity ^0.8.0;
+import '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
 
 library LibAccessStorage {
     // TODO test with conflicting storage (with other pools)

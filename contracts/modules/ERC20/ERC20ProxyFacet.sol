@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
+import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import 'diamond-2/contracts/libraries/LibDiamond.sol';
 import '../../utils/Access.sol';
 import './interfaces/IERC20ProxyFacet.sol';
@@ -20,7 +21,7 @@ contract ERC20ProxyFacet is Access, IERC20ProxyFacet {
     function setERC20(address _erc20) external override onlyOwner {
         LibERC20Storage.ERC20Storage storage s = LibERC20Storage.s();
 
-        require(s.token == IERC20(0) || s.token == IERC20(_erc20), 'ADDRESS_INIT');
+        require(s.token == IERC20(address(0)) || s.token == IERC20(_erc20), 'ADDRESS_INIT');
         require(_erc20 != address(0), 'ADDRESS_ZERO');
 
         uint256 MAX_INT = 2**256 - 1;
