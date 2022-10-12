@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
-import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
+import '@openzeppelin/contracts-v4.7.3/token/ERC20/utils/SafeERC20.sol';
+import '@openzeppelin/contracts-v4.7.3/token/ERC721/IERC721.sol';
 
 contract SharedWallet is Initializable, OwnableUpgradeable {
     using SafeERC20 for IERC20;
@@ -12,7 +12,7 @@ contract SharedWallet is Initializable, OwnableUpgradeable {
     /**
      * @param _owner Address of the Owner contract.
      */
-    function initialize(_owner) public initializer {
+    function initialize(address _owner) public initializer {
          transferOwnership(_owner);
     }
 

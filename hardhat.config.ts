@@ -5,7 +5,7 @@ import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-web3';
 import 'hardhat-gas-reporter';
 import 'hardhat-deploy';
-
+import '@openzeppelin/hardhat-upgrades';
 dotenv.config();
 
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || '';
