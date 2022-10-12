@@ -7,14 +7,13 @@ import { MANAGER_ROLE } from './utils';
 describe('SharedWallet TEST', function () {
     let owner,
         user: Signer,
-        user2: Signer,
         erc20: Contract,
         erc721: Contract,
-        sharedWallet: Contract,
+        sharedWalletProxy: Contract,
         contractOwnerAddress: string;
 
     before(async function () {
-        [owner, user2] = await ethers.getSigners();
+        [owner, user] = await ethers.getSigners();
 
         const MockERC20TokenContract = await ethers.getContractFactory('LimitedSupplyToken');
         erc20 = await MockERC20TokenContract.deploy(
@@ -32,27 +31,27 @@ describe('SharedWallet TEST', function () {
         console.log('MockERC721Contract DEPLOYED');
 
         const SharedWalletContract = await ethers.getContractFactory('SharedWallet');
-        sharedWallet = await upgrades.deployProxy(SharedWalletContract, [contractOwnerAddress]);
-        await sharedWallet.deployed();
+        sharedWalletProxy = await upgrades.deployProxy(SharedWalletContract, [contractOwnerAddress]);
+        await sharedWalletProxy.deployed();
         console.log('SharedWallet DEPLOYED');
     });
 
     it('Should approveERC20', async function () {
         const amount = ethers.utils.parseEther('1');
-        const receiverAddress = await user2.getAddress();
+        const receiverAddress = await user.getAddress();
 
-        const tx = await sharedWallet.approveERC20(erc20.address, receiverAddress, amount);
+        const tx = await sharedWalletProxy.approveERC20(erc20.address, receiverAddress, amount);
         await tx.wait();
 
-        expect(await erc20.allowance(sharedWallet.address, receiverAddress)).to.equal(amount);
+        expect(await erc20.allowance(sharedWalletProxy.address, receiverAddress)).to.equal(amount);
     });
 
     it('Should transferERC20', async function () {
         const amount = ethers.utils.parseEther('1');
-        const receiverAddress = await user2.getAddress();
-        let tx = await erc20.approve(sharedWallet.address, amount);
+        const receiverAddress = await user.getAddress();
+        let tx = await erc20.approve(sharedWalletProxy.address, amount);
         await tx.wait();
-        tx = await sharedWallet.transferERC20(erc20.address, receiverAddress, amount);
+        tx = await sharedWalletProxy.transferERC20(erc20.address, receiverAddress, amount);
         await tx.wait();
 
         expect(await erc20.balanceOf(receiverAddress)).to.equal(amount);
@@ -60,43 +59,49 @@ describe('SharedWallet TEST', function () {
 
     it('Should approveERC721', async function () {
         const tokenId = 1;
-        const receiverAddress = await user2.getAddress();
+        const receiverAddress = await user.getAddress();
 
         let tx = await erc721.mint(contractOwnerAddress, 'tokenURI');
         await tx.wait();
 
         console.log('ownerOf', await erc721.ownerOf(tokenId));
-        tx = await sharedWallet.approveERC721(erc721.address, receiverAddress, tokenId);
+        tx = await sharedWalletProxy.approveERC721(erc721.address, receiverAddress, tokenId);
         await tx.wait();
 
         expect(await erc721.getApproved(tokenId)).to.equal(receiverAddress);
     });
 
     it('Should transferERC721', async function () {
-        const receiverAddress = await user2.getAddress();
+        const receiverAddress = await user.getAddress();
 
         let tx = await erc721.mint(contractOwnerAddress, 'tokenURI');
         await tx.wait();
         const tokenId = 1;
-        tx = await erc721.approve(sharedWallet.address, tokenId);
+        tx = await erc721.approve(sharedWalletProxy.address, tokenId);
         await tx.wait();
-        tx = await sharedWallet.transferERC721(erc721.address, receiverAddress, tokenId);
+        tx = await sharedWalletProxy.transferERC721(erc721.address, receiverAddress, tokenId);
         await tx.wait();
 
         expect(await erc721.ownerOf(tokenId)).to.equal(receiverAddress);
     });
 
     it('Should grant a Manager Role', async function () {
-        const receiverAddress = await user2.getAddress();
-        await sharedWallet.grantRole(MANAGER_ROLE, receiverAddress);
+        const receiverAddress = await user.getAddress();
+        await sharedWalletProxy.grantRole(MANAGER_ROLE, receiverAddress);
 
-        expect(await sharedWallet.hasRole(MANAGER_ROLE, receiverAddress)).to.equal(true);
+        expect(await sharedWalletProxy.hasRole(MANAGER_ROLE, receiverAddress)).to.equal(true);
     });
 
     it('Should revoke a Manager Role', async function () {
-        const receiverAddress = await user2.getAddress();
-        await sharedWallet.revokeRole(MANAGER_ROLE, receiverAddress);
+        const receiverAddress = await user.getAddress();
+        await sharedWalletProxy.revokeRole(MANAGER_ROLE, receiverAddress);
 
-        expect(await sharedWallet.hasRole(MANAGER_ROLE, receiverAddress)).to.equal(false);
+        expect(await sharedWalletProxy.hasRole(MANAGER_ROLE, receiverAddress)).to.equal(false);
+    });
+
+    it.only('Should upgrade the contract to Version 2', async function () {
+        const SharedWalletContractV2 = await ethers.getContractFactory('SharedWalletV2');
+        sharedWalletProxy = await upgrades.upgradeProxy(sharedWalletProxy, SharedWalletContractV2);
+        expect(await sharedWalletProxy.isContractUpgraded()).to.equal(true);
     });
 });
