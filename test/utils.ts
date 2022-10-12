@@ -95,4 +95,5 @@ export function createUnlockDate(numMonths: number) {
 }
 
 export const MINTER_ROLE = keccak256(toUtf8Bytes('MINTER_ROLE'));
+export const MANAGER_ROLE = keccak256(toUtf8Bytes('MANAGER_ROLE'));
 export const ADDRESS_ZERO = constants.AddressZero;
