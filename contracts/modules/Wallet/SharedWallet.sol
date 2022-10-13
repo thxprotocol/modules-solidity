@@ -7,7 +7,6 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
-import 'hardhat/console.sol';
 
 contract SharedWallet is Initializable, AccessControlUpgradeable, OwnableUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -21,7 +20,6 @@ contract SharedWallet is Initializable, AccessControlUpgradeable, OwnableUpgrade
      * @param _owner Address of the Owner contract.
      */
     function initialize(address _owner) public initializer {
-          console.log('_owner', _owner);
           __Ownable_init();
           transferOwnership(_owner);
           _grantRole(MANAGER_ROLE, _owner);
@@ -32,9 +30,9 @@ contract SharedWallet is Initializable, AccessControlUpgradeable, OwnableUpgrade
     }
 
     function approveERC721(address _tokenAddress, address _address, uint256 _tokenId) external onlyManager {
-        IERC721Upgradeable token = IERC721Upgradeable(_tokenAddress);
-        console.log('ownerOf shared wallet', token.ownerOf(_tokenId));
-        token.approve(_address, _tokenId);
+        IERC721Upgradeable erc721Token = IERC721Upgradeable(_tokenAddress); 
+        require(erc721Token.ownerOf(_tokenId) == _msgSender(), 'Sender is not the owner of the token');
+        erc721Token.approve(_address, _tokenId);
     }
 
     function transferERC20(address _tokenAddress, address _to, uint256 _amount) external onlyManager {
@@ -45,6 +43,7 @@ contract SharedWallet is Initializable, AccessControlUpgradeable, OwnableUpgrade
 
     function transferERC721(address _tokenAddress, address _to, uint256 _tokenId) external onlyManager {
         IERC721Upgradeable erc721Token = IERC721Upgradeable(_tokenAddress);
+        require(erc721Token.ownerOf(_tokenId) == _msgSender(), 'Sender is not the owner of the token');
         erc721Token.safeTransferFrom(_msgSender(), _to, _tokenId);
     }
 
