@@ -20,13 +20,7 @@ describe('SharedWallet TEST', function () {
     before(async function () {
         [owner, user, user2, user3] = await ethers.getSigners();
 
-        console.log('owner', owner.address);
-        console.log('user', await user.getAddress());
-        console.log('user2', await user2.getAddress());
-        console.log('user3', await user3.getAddress());
-
         contractOwnerAddress = await owner.getAddress();
-        console.log('contractOwnerAddress', contractOwnerAddress);
         receiverAddress = await user.getAddress();
         transferAmount = ethers.utils.parseEther('1');
         tokenId = 1;
@@ -34,7 +28,6 @@ describe('SharedWallet TEST', function () {
         const SharedWalletContract = await ethers.getContractFactory('SharedWallet');
         sharedWalletProxy = await upgrades.deployProxy(SharedWalletContract, [contractOwnerAddress]);
         await sharedWalletProxy.deployed();
-        console.log('SharedWallet DEPLOYED');
 
         const MockERC20TokenContract = await ethers.getContractFactory('LimitedSupplyToken');
         erc20 = await MockERC20TokenContract.deploy(
@@ -44,12 +37,10 @@ describe('SharedWallet TEST', function () {
             ethers.utils.parseEther('10'),
         );
         await erc20.deployed();
-        console.log('MockERC20TokenContract DEPLOYED');
 
         const MockERC721Contract = await ethers.getContractFactory('NonFungibleToken');
         erc721 = await MockERC721Contract.deploy('ExampleERC721', 'EX721', 'baseURI', contractOwnerAddress);
         await erc721.deployed();
-        console.log('MockERC721Contract DEPLOYED');
 
         // set the proxycontract as operator
         await erc721.setApprovalForAll(sharedWalletProxy.address, true);
