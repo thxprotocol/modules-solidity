@@ -27,6 +27,9 @@ export const contractNames = [
     'ERC20SwapFacet',
     'ERC721ProxyFacet',
 
+    // Wallet
+    'SharedWallet',
+
     // Deprecated facets
     'TokenFactory',
     'PoolRegistry',
